@@ -39,7 +39,7 @@ export default function ContactCTA() {
                 aria-label="Abrir ubicación de Ingenium en Google Maps"
                 className="text-sm font-semibold text-[#B88A3B] hover:text-[#a97c33]"
               >
-                Ver en Google Maps
+                Ver ubicación en Google Maps
               </a>
             </div>
             <a

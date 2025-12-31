@@ -11,6 +11,9 @@ export default function Conditions() {
           <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#3f2f20] sm:text-3xl">
             {conditions.title}
           </h2>
+          <p className="text-sm leading-relaxed text-[#6a5743] sm:text-base">
+            {conditions.preface}
+          </p>
           <ul className="space-y-3 text-sm leading-relaxed text-[#6a5743] sm:text-base">
             {conditions.bullets.map((bullet) => (
               <li key={bullet} className="flex gap-3">
