@@ -1,6 +1,13 @@
 import { ingeniumCopy } from "@/content/ingenium.copy";
 import Section from "@/components/ui/Section";
-import { media } from "@/data/media";
+import { ingeniumMedia } from "@/content/ingenium.media";
+
+const audienceIllustrations = [
+  ingeniumMedia.audience.primary,
+  ingeniumMedia.audience.secondary,
+  ingeniumMedia.audience.motivation,
+  ingeniumMedia.audience.personalized,
+];
 import Image from "next/image";
 
 export default function Audience() {
@@ -23,8 +30,8 @@ export default function Audience() {
               >
                 <div className="relative h-36 w-full overflow-hidden rounded-[1.75rem] border border-[#edd9bf] bg-[#f6efe5] shadow-inner">
                   <Image
-                    src={media.audience[index % media.audience.length]}
-                    alt={item.title}
+                    src={audienceIllustrations[index % audienceIllustrations.length]}
+                    alt={`Ilustración ${item.title.toLowerCase()}`}
                     fill
                     className="object-cover"
                     sizes="(min-width: 1024px) 18vw, (min-width: 768px) 40vw, 90vw"
