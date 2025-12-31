@@ -6,10 +6,10 @@ export default function ContactCTA() {
 
   return (
     <Section id="contacto" className="pb-20">
-      <div className="rounded-[2.5rem] border border-[#eadfce] bg-gradient-to-br from-white/90 via-white/80 to-[#f7efe4] p-8 shadow-[0_12px_40px_rgba(184,138,59,0.12)] backdrop-blur sm:p-12">
+      <div className="rounded-[2.75rem] border border-[#eadfce] bg-gradient-to-br from-white/90 via-white/80 to-[#f7efe4] p-8 shadow-[0_16px_50px_rgba(184,138,59,0.14)] backdrop-blur sm:p-12">
         <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
           <div className="space-y-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#B88A3B]">
+            <p className="text-xs font-medium tracking-[0.3em] text-[#B88A3B]">
               {brand.name}
             </p>
             <h2 className="text-2xl font-semibold tracking-tight text-[#3f2f20] sm:text-3xl">
@@ -20,7 +20,7 @@ export default function ContactCTA() {
               estudiante y proponer un plan de acompañamiento a medida.
             </p>
           </div>
-          <div className="space-y-4 rounded-3xl border border-[#eadfce] bg-white/80 p-6 text-left shadow-sm">
+          <div className="space-y-4 rounded-3xl border border-[#eadfce] bg-white/85 p-6 text-left shadow-sm">
             <p className="text-sm font-semibold text-[#4a3725]">
               Contacto
             </p>
