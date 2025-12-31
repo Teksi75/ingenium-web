@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 280" role="img" aria-label="Familia acompañada">
+  <defs>
+    <linearGradient id="bg2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f7efe4"/>
+      <stop offset="100%" stop-color="#e9d3b8"/>
+    </linearGradient>
+  </defs>
+  <rect width="360" height="280" fill="url(#bg2)"/>
+  <circle cx="125" cy="95" r="40" fill="#f6e7d6" stroke="#4a3725" stroke-width="4"/>
+  <circle cx="225" cy="100" r="45" fill="#f6e7d6" stroke="#4a3725" stroke-width="4"/>
+  <path d="M70 210C90 170 110 150 125 150C140 150 160 170 180 210Z" fill="#f3c35a" stroke="#4a3725" stroke-width="4"/>
+  <path d="M170 220C190 175 210 155 225 155C240 155 260 175 280 220Z" fill="#f7d86c" stroke="#4a3725" stroke-width="4"/>
+  <circle cx="300" cy="65" r="18" fill="#f7d86c" stroke="#4a3725" stroke-width="4"/>
+  <circle cx="300" cy="65" r="4" fill="#4a3725"/>
+</svg>

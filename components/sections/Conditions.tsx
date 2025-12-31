@@ -6,7 +6,7 @@ export default function Conditions() {
 
   return (
     <Section id="condiciones">
-      <div className="rounded-[2.75rem] border border-[#eadfce] bg-white/80 p-8 shadow-[0_18px_50px_rgba(184,138,59,0.12)] backdrop-blur sm:p-12">
+      <div className="rounded-[3rem] border border-[#eadfce] bg-white/85 p-8 shadow-[0_20px_55px_rgba(184,138,59,0.12)] backdrop-blur sm:p-12 lg:p-14">
         <div className="space-y-6">
           <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#3f2f20] sm:text-3xl">
             {conditions.title}

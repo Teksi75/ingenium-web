@@ -1,12 +1,14 @@
 import { ingeniumCopy } from "@/content/ingenium.copy";
 import Section from "@/components/ui/Section";
+import { media } from "@/data/media";
+import Image from "next/image";
 
 export default function Hero() {
   const { brand, hero } = ingeniumCopy;
 
   return (
-    <Section className="pt-16 sm:pt-20">
-      <div className="rounded-[2.75rem] border border-[#eadfce] bg-white/80 p-8 shadow-[0_20px_60px_rgba(184,138,59,0.16)] backdrop-blur sm:p-12">
+    <Section className="pt-16 sm:pt-24">
+      <div className="rounded-[3rem] border border-[#eadfce] bg-white/85 p-8 shadow-[0_24px_70px_rgba(184,138,59,0.14)] backdrop-blur sm:p-12 lg:p-14">
         <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="space-y-6">
             <div className="space-y-3">
@@ -39,8 +41,15 @@ export default function Hero() {
             </div>
           </div>
           <div className="relative">
-            <div className="flex aspect-[4/3] items-center justify-center rounded-[2.5rem] border border-[#eadfce] bg-[radial-gradient(circle_at_top,_rgba(255,255,255,0.9),_rgba(246,230,210,0.9)),linear-gradient(135deg,_rgba(255,255,255,0.6),_rgba(244,224,198,0.85))] text-sm font-semibold uppercase tracking-[0.2em] text-[#b58a44] shadow-inner">
-              Imagen
+            <div className="relative aspect-[4/3] overflow-hidden rounded-[2.75rem] border border-[#eadfce] bg-[#f6efe5] shadow-[inset_0_0_40px_rgba(255,255,255,0.7),_0_22px_40px_rgba(121,91,52,0.18)]">
+              <Image
+                src={media.hero}
+                alt="Acompañamiento personalizado para estudiantes"
+                fill
+                priority
+                className="object-cover"
+                sizes="(min-width: 1024px) 42vw, 100vw"
+              />
             </div>
           </div>
         </div>

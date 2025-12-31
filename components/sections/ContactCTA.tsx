@@ -6,7 +6,7 @@ export default function ContactCTA() {
 
   return (
     <Section id="contacto" className="pb-20">
-      <div className="rounded-[2.75rem] border border-[#eadfce] bg-gradient-to-br from-white/95 via-white/85 to-[#f7efe4] p-8 shadow-[0_18px_50px_rgba(184,138,59,0.14)] backdrop-blur sm:p-12">
+      <div className="rounded-[3rem] border border-[#eadfce] bg-gradient-to-br from-white/95 via-white/85 to-[#f7efe4] p-8 shadow-[0_20px_55px_rgba(184,138,59,0.14)] backdrop-blur sm:p-12 lg:p-14">
         <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
           <div className="space-y-4">
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#B88A3B]">
@@ -20,7 +20,7 @@ export default function ContactCTA() {
               estudiante y proponer un plan de acompañamiento a medida.
             </p>
           </div>
-          <div className="space-y-4 rounded-3xl border border-[#eadfce] bg-white/85 p-6 text-left shadow-[0_10px_30px_rgba(157,121,68,0.12)]">
+          <div className="space-y-4 rounded-[2.25rem] border border-[#eadfce] bg-white/85 p-6 text-left shadow-[0_14px_35px_rgba(157,121,68,0.12)]">
             <p className="text-sm font-semibold text-[#4a3725]">
               Contacto
             </p>
