@@ -1,31 +1,4 @@
-export type IngeniumCopy = {
-  brand: {
-    name: string;
-    tagline: string;
-    intro: string;
-  };
-  hero: {
-    title: string;
-    subtitle: string;
-    ctaPrimary: { label: string; href: string };
-    ctaSecondary: { label: string; href: string };
-  };
-  howWeWork: {
-    title: string;
-    items: Array<{ title: string; body: string }>;
-  };
-  audience: {
-    title: string;
-    items: Array<{ title: string; body: string }>;
-  };
-  conditions: {
-    title: string;
-    bullets: string[];
-    disclaimer: string;
-  };
-};
-
-export const ingeniumCopy: IngeniumCopy = {
+export const ingeniumCopy = {
   brand: {
     name: "Ingenium",
     tagline: "Un espacio para aprender a organizarse por dentro",
@@ -90,4 +63,4 @@ export const ingeniumCopy: IngeniumCopy = {
     disclaimer:
       "La información presentada es orientativa. Las condiciones completas del acompañamiento se acuerdan de manera personalizada al momento de la inscripción.",
   },
-};
+} as const;
