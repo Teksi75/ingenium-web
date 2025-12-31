@@ -6,31 +6,31 @@ export default function ContactCTA() {
 
   return (
     <Section id="contacto" className="pb-20">
-      <div className="rounded-[2.75rem] border border-[#eadfce] bg-gradient-to-br from-white/95 via-white/85 to-[#f7efe4] p-8 shadow-[0_18px_50px_rgba(184,138,59,0.14)] backdrop-blur sm:p-12">
+      <div className="card-surface bg-gradient-to-br from-white/95 via-white/85 to-[#f7efe4] p-8 sm:p-12">
         <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
           <div className="space-y-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#B88A3B]">
+            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-[var(--ingenium-gold)]">
               {brand.name}
             </p>
-            <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#3f2f20] sm:text-3xl">
+            <h2 className="font-serif text-2xl font-semibold tracking-tight text-[var(--ingenium-ink)] sm:text-3xl">
               {brand.tagline}
             </h2>
-            <p className="text-sm leading-relaxed text-[#6a5743] sm:text-base">
+            <p className="text-sm leading-relaxed text-[var(--ingenium-ink-soft)] sm:text-base">
               Coordinemos una entrevista para conocer la situación de cada
               estudiante y proponer un plan de acompañamiento a medida.
             </p>
           </div>
-          <div className="space-y-4 rounded-3xl border border-[#eadfce] bg-white/85 p-6 text-left shadow-[0_10px_30px_rgba(157,121,68,0.12)]">
+          <div className="panel-surface space-y-4 p-6 text-left">
             <p className="text-sm font-semibold text-[#4a3725]">
               Contacto
             </p>
-            <p className="text-sm leading-relaxed text-[#6a5743]">
+            <p className="text-sm leading-relaxed text-[var(--ingenium-ink-soft)]">
               Dejanos tu consulta y nos pondremos en contacto para coordinar
               disponibilidad, modalidad y objetivos de acompañamiento.
             </p>
             <a
               href={hero.ctaPrimary.href}
-              className="inline-flex w-full items-center justify-center rounded-full bg-[#B88A3B] px-6 py-3 text-sm font-semibold text-white shadow-md shadow-[#B88A3B]/20 transition hover:translate-y-0.5 hover:bg-[#a97c33] sm:w-auto sm:text-base"
+              className="btn-primary w-full sm:w-auto sm:text-base"
             >
               {hero.ctaPrimary.label}
             </a>

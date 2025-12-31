@@ -7,7 +7,7 @@ import HowWeWork from "@/components/sections/HowWeWork";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-paper text-[#3f2f20]">
+    <div className="min-h-screen bg-paper text-[var(--ingenium-ink)]">
       <main>
         <PaperBackground variant="hero">
           <FlowerDecor position="hero-left" />
@@ -21,8 +21,14 @@ export default function Home() {
           <FlowerDecor position="section-right" />
           <Audience />
         </PaperBackground>
-        <Conditions />
-        <ContactCTA />
+        <PaperBackground variant="section">
+          <FlowerDecor position="section-left" />
+          <Conditions />
+        </PaperBackground>
+        <PaperBackground variant="section">
+          <FlowerDecor position="section-top-right" />
+          <ContactCTA />
+        </PaperBackground>
       </main>
     </div>
   );
