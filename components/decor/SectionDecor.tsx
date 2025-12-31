@@ -6,19 +6,24 @@ import { cn } from "@/lib/utils";
 
 const decorMap = {
   "hero-left": {
-    src: "/decor/flowers-left.svg",
+    src: "/decor/flower-spray-left.svg",
     className:
-      "bottom-0 left-0 w-[140px] sm:w-[180px] md:w-[220px] opacity-90",
+      "bottom-0 left-0 w-[150px] sm:w-[190px] md:w-[230px] opacity-90",
   },
   "section-left": {
-    src: "/decor/flowers-small.svg",
+    src: "/decor/flower-spray-top.svg",
     className:
-      "top-6 left-0 w-[120px] sm:w-[160px] md:w-[190px] opacity-60",
+      "top-6 left-[-10px] w-[140px] sm:w-[170px] md:w-[200px] opacity-70",
   },
   "section-right": {
-    src: "/decor/flowers-sprinkles.svg",
+    src: "/decor/flower-spray-right.svg",
     className:
-      "bottom-6 right-0 w-[140px] sm:w-[180px] md:w-[220px] opacity-60",
+      "bottom-6 right-[-10px] w-[150px] sm:w-[190px] md:w-[230px] opacity-70",
+  },
+  "section-top-right": {
+    src: "/decor/flower-spray-right.svg",
+    className:
+      "top-4 right-[-20px] w-[120px] sm:w-[160px] md:w-[190px] opacity-60 rotate-[-12deg]",
   },
 } as const;
 

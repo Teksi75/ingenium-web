@@ -6,15 +6,15 @@ export default function Conditions() {
 
   return (
     <Section id="condiciones">
-      <div className="rounded-[2.75rem] border border-[#eadfce] bg-white/80 p-8 shadow-[0_18px_50px_rgba(184,138,59,0.12)] backdrop-blur sm:p-12">
+      <div className="card-surface p-8 sm:p-12">
         <div className="space-y-6">
-          <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#3f2f20] sm:text-3xl">
+          <h2 className="font-serif text-2xl font-semibold tracking-tight text-[var(--ingenium-ink)] sm:text-3xl">
             {conditions.title}
           </h2>
-          <ul className="space-y-3 text-sm leading-relaxed text-[#6a5743] sm:text-base">
+          <ul className="space-y-3 text-sm leading-relaxed text-[var(--ingenium-ink-soft)] sm:text-base">
             {conditions.bullets.map((bullet) => (
               <li key={bullet} className="flex gap-3">
-                <span className="mt-2 h-2 w-2 rounded-full bg-[#B88A3B]" />
+                <span className="mt-2 h-2 w-2 rounded-full bg-[var(--ingenium-gold)]" />
                 <span>{bullet}</span>
               </li>
             ))}
