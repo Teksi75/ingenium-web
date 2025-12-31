@@ -123,3 +123,51 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .bg-paper {
+    background-color: #f6efe7;
+    background-image: radial-gradient(
+        circle at top,
+        rgba(255, 255, 255, 0.75),
+        rgba(246, 233, 217, 0.95)
+      ),
+      radial-gradient(
+        circle at 80% 20%,
+        rgba(255, 245, 230, 0.85),
+        rgba(246, 233, 217, 0.2)
+      );
+  }
+
+  .bg-paper-section {
+    background-color: #f7f1ea;
+    background-image: radial-gradient(
+        circle at 20% 20%,
+        rgba(255, 255, 255, 0.7),
+        rgba(247, 239, 229, 0.9)
+      ),
+      radial-gradient(
+        circle at 90% 80%,
+        rgba(250, 236, 220, 0.65),
+        rgba(247, 239, 229, 0.2)
+      );
+  }
+
+  .bg-grain {
+    background-image: repeating-linear-gradient(
+        0deg,
+        rgba(80, 60, 40, 0.05) 0px,
+        rgba(80, 60, 40, 0.05) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      repeating-linear-gradient(
+        90deg,
+        rgba(80, 60, 40, 0.04) 0px,
+        rgba(80, 60, 40, 0.04) 1px,
+        transparent 1px,
+        transparent 4px
+      );
+    mix-blend-mode: multiply;
+  }
+}
