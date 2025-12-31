@@ -28,6 +28,20 @@ export default function ContactCTA() {
               Dejanos tu consulta y nos pondremos en contacto para coordinar
               disponibilidad, modalidad y objetivos de acompañamiento.
             </p>
+            <div className="space-y-1 text-sm text-[#6a5743]">
+              <p>
+                📍 Suyai 2632, Barrio Cordón del Plata, Vistalba, Luján de Cuyo
+              </p>
+              <a
+                href="https://www.google.com/maps/search/?api=1&query=Suyai%202632%20Barrio%20Cord%C3%B3n%20del%20Plata%2C%20Vistalba%2C%20Luj%C3%A1n%20de%20Cuyo%2C%20Mendoza%2C%20Argentina"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Abrir ubicación de Ingenium en Google Maps"
+                className="text-sm font-semibold text-[#B88A3B] hover:text-[#a97c33]"
+              >
+                Ver en Google Maps
+              </a>
+            </div>
             <a
               href={hero.ctaPrimary.href}
               className="inline-flex w-full items-center justify-center rounded-full bg-[#B88A3B] px-6 py-3 text-sm font-semibold text-white shadow-md shadow-[#B88A3B]/20 transition hover:translate-y-0.5 hover:bg-[#a97c33] sm:w-auto sm:text-base"
