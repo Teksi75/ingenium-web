@@ -1,3 +1,5 @@
+import { ingeniumContact } from "@/content/ingenium.contact";
+
 export const ingeniumCopy = {
   brand: {
     name: "Ingenium",
@@ -9,7 +11,10 @@ export const ingeniumCopy = {
     title: "Un espacio para aprender a organizarse por dentro",
     subtitle:
       "Apoyo educativo desde una mirada multidisciplinaria para potenciar hábitos de estudio, gestión del tiempo y bienestar emocional.",
-    ctaPrimary: { label: "Consultar por WhatsApp", href: "#contacto" },
+    ctaPrimary: {
+      label: "Consultar por WhatsApp",
+      href: ingeniumContact.whatsappUrl,
+    },
     ctaSecondary: { label: "Coordinar una entrevista", href: "#contacto" },
   },
   howWeWork: {

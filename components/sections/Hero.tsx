@@ -1,6 +1,6 @@
 import { ingeniumCopy } from "@/content/ingenium.copy";
 import Section from "@/components/ui/Section";
-import { media } from "@/data/media";
+import { ingeniumMedia } from "@/content/ingenium.media";
 import Image from "next/image";
 
 export default function Hero() {
@@ -43,8 +43,8 @@ export default function Hero() {
           <div className="relative">
             <div className="relative aspect-[4/3] overflow-hidden rounded-[2.75rem] border border-[#eadfce] bg-[#f6efe5] shadow-[inset_0_0_40px_rgba(255,255,255,0.7),_0_22px_40px_rgba(121,91,52,0.18)]">
               <Image
-                src={media.hero}
-                alt="Acompañamiento personalizado para estudiantes"
+                src={ingeniumMedia.hero.main}
+                alt="Acompañamiento educativo"
                 fill
                 priority
                 className="object-cover"
