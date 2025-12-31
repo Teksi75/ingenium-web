@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 280" role="img" aria-label="Adolescente en acompañamiento">
+  <defs>
+    <linearGradient id="bg4" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f8efe1"/>
+      <stop offset="100%" stop-color="#efd8bb"/>
+    </linearGradient>
+  </defs>
+  <rect width="360" height="280" fill="url(#bg4)"/>
+  <circle cx="190" cy="95" r="50" fill="#f6e7d6" stroke="#4a3725" stroke-width="4"/>
+  <path d="M120 220C140 180 165 160 190 160C215 160 240 180 260 220Z" fill="#f3c35a" stroke="#4a3725" stroke-width="4"/>
+  <circle cx="170" cy="95" r="6" fill="#4a3725"/>
+  <circle cx="210" cy="95" r="6" fill="#4a3725"/>
+  <path d="M175 115C185 125 195 125 205 115" fill="none" stroke="#4a3725" stroke-width="4" stroke-linecap="round"/>
+  <circle cx="80" cy="55" r="22" fill="#f7d86c" stroke="#4a3725" stroke-width="4"/>
+  <circle cx="80" cy="55" r="4" fill="#4a3725"/>
+</svg>

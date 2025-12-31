@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Retrato de acompañamiento escolar">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f9efe0"/>
+      <stop offset="100%" stop-color="#ead7bd"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <circle cx="560" cy="170" r="100" fill="#f7d86c" stroke="#4a3725" stroke-width="6"/>
+  <circle cx="560" cy="170" r="12" fill="#4a3725"/>
+  <circle cx="535" cy="150" r="6" fill="#4a3725"/>
+  <circle cx="585" cy="195" r="6" fill="#4a3725"/>
+  <path d="M250 470C270 390 330 350 400 350C470 350 530 390 550 470Z" fill="#f3c35a" stroke="#4a3725" stroke-width="6"/>
+  <circle cx="400" cy="260" r="90" fill="#f6e7d6" stroke="#4a3725" stroke-width="6"/>
+  <path d="M330 255C350 290 380 310 400 310C420 310 450 290 470 255" fill="none" stroke="#4a3725" stroke-width="6" stroke-linecap="round"/>
+  <circle cx="370" cy="240" r="8" fill="#4a3725"/>
+  <circle cx="430" cy="240" r="8" fill="#4a3725"/>
+  <path d="M120 520C210 470 300 430 420 430C540 430 640 470 720 520" fill="none" stroke="#4a3725" stroke-width="5" stroke-linecap="round" opacity="0.5"/>
+</svg>

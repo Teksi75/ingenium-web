@@ -1,4 +1,4 @@
-import { FlowerDecor, PaperBackground } from "@/components/decor/SectionDecor";
+import { FloralDecor, PaperBackground } from "@/components/FloralDecor";
 import Audience from "@/components/sections/Audience";
 import Conditions from "@/components/sections/Conditions";
 import ContactCTA from "@/components/sections/ContactCTA";
@@ -10,15 +10,15 @@ export default function Home() {
     <div className="min-h-screen bg-paper text-[#3f2f20]">
       <main>
         <PaperBackground variant="hero">
-          <FlowerDecor position="hero-left" />
+          <FloralDecor variant="leftTop" />
           <Hero />
         </PaperBackground>
         <PaperBackground variant="section">
-          <FlowerDecor position="section-left" />
+          <FloralDecor variant="leftMid" />
           <HowWeWork />
         </PaperBackground>
         <PaperBackground variant="section">
-          <FlowerDecor position="section-right" />
+          <FloralDecor variant="rightBottom" />
           <Audience />
         </PaperBackground>
         <Conditions />
