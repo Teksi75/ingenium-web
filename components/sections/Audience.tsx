@@ -1,10 +1,16 @@
 import { ingeniumCopy } from "@/content/ingenium.copy";
 import Section from "@/components/ui/Section";
-import { media } from "@/data/media";
+import { ingeniumMedia } from "@/content/ingenium.media";
 import Image from "next/image";
 
 export default function Audience() {
   const { audience } = ingeniumCopy;
+  const audienceImages = [
+    ingeniumMedia.audience.primary,
+    ingeniumMedia.audience.secondary,
+    ingeniumMedia.audience.motivation,
+    ingeniumMedia.audience.personalized,
+  ];
 
   return (
     <Section id="para-quien">
@@ -21,9 +27,9 @@ export default function Audience() {
                 key={item.title}
                 className="flex h-full flex-col gap-4 rounded-[2.25rem] border border-[#eadfce] bg-white/90 p-5 shadow-[0_14px_35px_rgba(157,121,68,0.12)]"
               >
-                <div className="relative h-36 w-full overflow-hidden rounded-[1.75rem] border border-[#edd9bf] bg-[#f6efe5] shadow-inner">
+                <div className="relative w-full aspect-[4/3] overflow-hidden rounded-[1.75rem] border border-[#edd9bf] bg-[#f6efe5] shadow-inner">
                   <Image
-                    src={media.audience[index % media.audience.length]}
+                    src={audienceImages[index % audienceImages.length]}
                     alt={item.title}
                     fill
                     className="object-cover"
