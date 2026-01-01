@@ -35,7 +35,7 @@ export const ingeniumCopy = {
     ],
   },
   audience: {
-    title: "¿Para quién es Ingenium?",
+    title: "¿En qué momentos acompaña Ingenium?",
     items: [
       {
         title: "Primaria",
