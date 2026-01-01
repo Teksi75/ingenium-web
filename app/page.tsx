@@ -2,6 +2,7 @@ import { FloralDecor, PaperBackground } from "@/components/FloralDecor";
 import Audience from "@/components/sections/Audience";
 import Conditions from "@/components/sections/Conditions";
 import ContactCTA from "@/components/sections/ContactCTA";
+import FloralSeparator from "@/components/sections/FloralSeparator";
 import Hero from "@/components/sections/Hero";
 import HowWeWork from "@/components/sections/HowWeWork";
 
@@ -18,9 +19,9 @@ export default function Home() {
           <HowWeWork />
         </PaperBackground>
         <PaperBackground variant="section" allowOverflow>
-          <FloralDecor variant="rightBottom" />
           <Audience />
         </PaperBackground>
+        <FloralSeparator />
         <Conditions />
         <ContactCTA />
       </main>
