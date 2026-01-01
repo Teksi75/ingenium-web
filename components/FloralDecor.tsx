@@ -27,7 +27,7 @@ type FloralDecorProps = {
 };
 
 type FloralIconProps = {
-  icon?: "flor" | "flores" | "corazon" | "floresCorazon";
+  icon?: "flor" | "flores" | "corazon";
   className?: string;
 };
 
@@ -39,10 +39,9 @@ const decorImages = {
 } as const;
 
 const iconImages = {
-  flor: "/media/ingenium/illustrations/flor-sola.png",
-  flores: "/media/ingenium/illustrations/flores-dos.png",
-  corazon: "/media/ingenium/illustrations/corazon.png",
-  floresCorazon: "/media/ingenium/illustrations/flores-corazon.png",
+  flor: "/media/ingenium/icons/flor-sola.png",
+  flores: "/media/ingenium/icons/flores-dos.png",
+  corazon: "/media/ingenium/icons/corazon.png",
 } as const;
 
 export function PaperBackground({
