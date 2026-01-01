@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import Image from "next/image";
 
 import { cn } from "@/lib/utils";
 
@@ -25,77 +26,23 @@ type FloralDecorProps = {
 };
 
 type FloralIconProps = {
+  icon?: "flor" | "flores" | "corazon" | "floresCorazon";
   className?: string;
 };
 
-function FloralSvg({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 240 240"
-      aria-hidden="true"
-      className={className}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M120 215C118 178 120 142 122 110"
-        stroke="#4a3725"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M122 118C104 102 93 86 84 66"
-        stroke="#4a3725"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M125 128C144 112 160 92 170 70"
-        stroke="#4a3725"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-      <circle
-        cx="84"
-        cy="60"
-        r="20"
-        fill="#f7d86c"
-        stroke="#4a3725"
-        strokeWidth="4"
-      />
-      <circle
-        cx="170"
-        cy="64"
-        r="18"
-        fill="#f7d86c"
-        stroke="#4a3725"
-        strokeWidth="4"
-      />
-      <circle cx="84" cy="60" r="4" fill="#4a3725" />
-      <circle cx="170" cy="64" r="4" fill="#4a3725" />
-      <circle cx="96" cy="50" r="2.5" fill="#4a3725" />
-      <circle cx="72" cy="70" r="2.5" fill="#4a3725" />
-      <circle cx="160" cy="54" r="2.5" fill="#4a3725" />
-      <circle cx="182" cy="74" r="2.5" fill="#4a3725" />
-      <path
-        d="M110 164C96 150 80 142 66 130"
-        stroke="#4a3725"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <path
-        d="M132 166C148 152 164 146 178 134"
-        stroke="#4a3725"
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-      <circle cx="66" cy="130" r="8" fill="#f7d86c" stroke="#4a3725" strokeWidth="3" />
-      <circle cx="178" cy="134" r="8" fill="#f7d86c" stroke="#4a3725" strokeWidth="3" />
-      <circle cx="66" cy="130" r="2" fill="#4a3725" />
-      <circle cx="178" cy="134" r="2" fill="#4a3725" />
-    </svg>
-  );
-}
+const decorImages = {
+  leftTop: "/media/ingenium/illustrations/flor-sola.png",
+  leftMid: "/media/ingenium/illustrations/flores-dos.png",
+  rightTop: "/media/ingenium/illustrations/corazon.png",
+  rightBottom: "/media/ingenium/illustrations/flores-corazon.png",
+} as const;
+
+const iconImages = {
+  flor: "/media/ingenium/illustrations/flor-sola.png",
+  flores: "/media/ingenium/illustrations/flores-dos.png",
+  corazon: "/media/ingenium/illustrations/corazon.png",
+  floresCorazon: "/media/ingenium/illustrations/flores-corazon.png",
+} as const;
 
 export function PaperBackground({
   variant,
@@ -132,12 +79,20 @@ export function FloralDecor({ variant, className }: FloralDecorProps) {
         className,
       )}
     >
-      <FloralSvg className="h-full w-full" />
+      <Image
+        src={decorImages[variant]}
+        alt=""
+        aria-hidden="true"
+        width={240}
+        height={240}
+        className="h-full w-full object-contain"
+      />
+      {/* Tip: pass "mix-blend-multiply" or "mix-blend-soft-light" via className to enable blending. */}
     </div>
   );
 }
 
-export function FloralIcon({ className }: FloralIconProps) {
+export function FloralIcon({ icon = "flor", className }: FloralIconProps) {
   return (
     <div
       aria-hidden="true"
@@ -146,7 +101,14 @@ export function FloralIcon({ className }: FloralIconProps) {
         className,
       )}
     >
-      <FloralSvg className="h-8 w-8" />
+      <Image
+        src={iconImages[icon]}
+        alt=""
+        aria-hidden="true"
+        width={32}
+        height={32}
+        className="h-8 w-8 object-contain"
+      />
     </div>
   );
 }
