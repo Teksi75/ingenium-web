@@ -9,15 +9,15 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-paper text-[#3f2f20]">
       <main>
-        <PaperBackground variant="hero">
+        <PaperBackground variant="hero" allowOverflow>
           <FloralDecor variant="leftTop" />
           <Hero />
         </PaperBackground>
-        <PaperBackground variant="section">
+        <PaperBackground variant="section" allowOverflow>
           <FloralDecor variant="leftMid" />
           <HowWeWork />
         </PaperBackground>
-        <PaperBackground variant="section">
+        <PaperBackground variant="section" allowOverflow>
           <FloralDecor variant="rightBottom" />
           <Audience />
         </PaperBackground>

@@ -5,18 +5,19 @@ import { cn } from "@/lib/utils";
 
 const decorVariants = {
   leftTop:
-    "left-0 top-4 w-[160px] sm:w-[210px] md:w-[260px] opacity-35",
+    "-left-6 top-4 w-[160px] opacity-35 sm:-left-10 sm:w-[210px] md:-left-14 md:w-[260px]",
   leftMid:
-    "left-0 top-1/2 w-[140px] -translate-y-1/2 sm:w-[190px] md:w-[230px] opacity-30",
+    "-left-6 top-1/2 w-[140px] -translate-y-1/2 opacity-30 sm:-left-10 sm:w-[190px] md:-left-14 md:w-[230px]",
   rightBottom:
-    "bottom-0 right-0 w-[170px] sm:w-[220px] md:w-[270px] opacity-30",
+    "-right-6 bottom-0 w-[170px] opacity-30 sm:-right-10 sm:w-[220px] md:-right-14 md:w-[270px]",
   rightTop:
-    "right-0 top-6 w-[150px] sm:w-[200px] md:w-[240px] opacity-35",
+    "-right-6 top-6 w-[150px] opacity-35 sm:-right-10 sm:w-[200px] md:-right-14 md:w-[240px]",
 } as const;
 
 type PaperBackgroundProps = {
   variant: "hero" | "section";
   className?: string;
+  allowOverflow?: boolean;
   children: ReactNode;
 };
 
@@ -47,6 +48,7 @@ const iconImages = {
 export function PaperBackground({
   variant,
   className,
+  allowOverflow = false,
   children,
 }: PaperBackgroundProps) {
   const backgroundClass =
@@ -55,14 +57,15 @@ export function PaperBackground({
   return (
     <section
       className={cn(
-        "relative overflow-hidden",
+        "relative",
+        allowOverflow ? "overflow-visible" : "overflow-hidden",
         backgroundClass,
         className,
       )}
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 bg-grain opacity-45"
+        className="pointer-events-none absolute inset-0 z-0 bg-grain opacity-45"
       />
       <div className="relative z-10">{children}</div>
     </section>
@@ -74,7 +77,7 @@ export function FloralDecor({ variant, className }: FloralDecorProps) {
     <div
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute z-0 select-none blur-[0.4px]",
+        "pointer-events-none absolute z-[1] select-none blur-[0.4px]",
         decorVariants[variant],
         className,
       )}
@@ -97,7 +100,7 @@ export function FloralIcon({ icon = "flor", className }: FloralIconProps) {
     <div
       aria-hidden="true"
       className={cn(
-        "flex h-12 w-12 items-center justify-center rounded-full bg-[#f8ecd7]",
+        "flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-[#f8ecd7]",
         className,
       )}
     >
@@ -105,9 +108,9 @@ export function FloralIcon({ icon = "flor", className }: FloralIconProps) {
         src={iconImages[icon]}
         alt=""
         aria-hidden="true"
-        width={32}
-        height={32}
-        className="h-8 w-8 object-contain"
+        width={40}
+        height={40}
+        className="h-10 w-10 scale-[1.35] object-contain"
       />
     </div>
   );
