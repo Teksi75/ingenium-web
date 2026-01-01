@@ -3,14 +3,14 @@ import { ingeniumContact } from "@/lib/contact";
 export const ingeniumCopy = {
   brand: {
     name: "Ingenium",
-    tagline: "Un espacio para aprender a organizarse por dentro",
+    tagline: "Acompañamiento para organizarse por dentro",
     intro:
-      "Ingenium es un espacio educativo de acompañamiento integral, orientado a personas en distintas etapas de la vida. Trabajamos de forma personalizada, respetando los tiempos, intereses y potencialidades de cada estudiante, fortaleciendo la autonomía, la organización personal y la relación con el aprendizaje.",
+      "Espacio educativo de acompañamiento integral para distintas etapas de la vida. Trabajo personalizado que fortalece autonomía, organización y vínculo con el aprendizaje.",
   },
   hero: {
-    title: "Un espacio para aprender a organizarse por dentro",
+    title: "Aprender a organizarse",
     subtitle:
-      "Acompañamiento educativo en distintas etapas de la vida, desde una mirada multidisciplinaria que fortalece hábitos de estudio, comprensión de procesos y bienestar emocional.",
+      "Acompañamiento educativo en cada etapa. Hábitos, comprensión y bienestar.",
     ctaPrimary: {
       label: "Consultar por WhatsApp",
       href: ingeniumContact.whatsappUrl,
@@ -22,15 +22,15 @@ export const ingeniumCopy = {
     items: [
       {
         title: "Organización y hábitos",
-        body: "Acompañamos la construcción de rutinas de estudio, planificación del tiempo y organización de tareas, con estrategias simples que favorecen la autonomía en momentos cotidianos o de transición académica.",
+        body: "Rutinas de estudio y organización del tiempo con estrategias simples para ganar autonomía.",
       },
       {
         title: "Comprensión y procesos",
-        body: "Guiamos al estudiante a comprender cómo aprende, con recursos para interpretar consignas, resolver problemas y afianzar contenidos en instancias de evaluación.",
+        body: "Recursos para comprender consignas, resolver problemas y afianzar contenidos en evaluaciones.",
       },
       {
         title: "Acompañamiento emocional",
-        body: "Ofrecemos un entorno de confianza que fortalece la autoestima, reduce el estrés académico y mejora la relación con el aprendizaje en momentos de mayor exigencia.",
+        body: "Entorno de confianza que reduce el estrés y mejora la relación con el aprendizaje.",
       },
     ],
   },
@@ -39,34 +39,34 @@ export const ingeniumCopy = {
     items: [
       {
         title: "Sostener el estudio",
-        body: "Acompañamiento para afianzar contenidos y construir hábitos de estudio cuando cuesta sostener el ritmo.",
+        body: "Afianzar contenidos y hábitos cuando cuesta sostener el ritmo.",
       },
       {
         title: "Organización y planificación",
-        body: "Espacios para ordenar tiempos, tareas y prioridades, favoreciendo una relación más clara con el estudio.",
+        body: "Ordenar tiempos, tareas y prioridades para estudiar con más claridad.",
       },
       {
         title: "Instancias exigentes",
-        body: "Acompañamiento en momentos de mayor demanda académica, como evaluaciones o exámenes de ingreso, con estrategias ajustadas a cada proceso.",
+        body: "Estrategias a medida para evaluaciones o exámenes de ingreso.",
       },
       {
         title: "Trayectorias en transición",
-        body: "Personas que retoman estudios o reordenan su recorrido educativo con un apoyo personalizado, combinando lo académico con lo emocional.",
+        body: "Apoyo personalizado para retomar o reordenar el recorrido educativo.",
       },
     ],
   },
   conditions: {
     title: "Condiciones y marco de trabajo",
     preface:
-      "El acompañamiento puede realizarse de forma presencial u online, según acuerdo previo. Las condiciones, frecuencia y modalidad se conversan de manera personalizada con cada persona o familia, priorizando un encuadre claro y respetuoso.",
+      "El acompañamiento puede ser presencial u online, según acuerdo. Condiciones y frecuencia se conversan de forma personalizada.",
     bullets: [
-      "Asistencia: las inasistencias deben avisarse con anticipación. Las clases no avisadas con antelación no son recuperables.",
-      "Pagos: los honorarios se acuerdan previamente y el pago se realiza de forma mensual.",
-      "Comunicación: el seguimiento se realiza en diálogo con las personas acompañadas y sus familias, priorizando una comunicación clara y respetuosa.",
-      "Marco: promovemos un espacio basado en respeto, tolerancia y confianza mutua.",
-      "Alcance: el acompañamiento no reemplaza tratamientos médicos ni terapéuticos cuando sean necesarios.",
+      "Asistencia: avisar inasistencias con anticipación; clases no avisadas no se recuperan.",
+      "Pagos: honorarios acordados previamente; pago mensual.",
+      "Comunicación: seguimiento en diálogo con personas y familias, con trato claro y respetuoso.",
+      "Marco: espacio con respeto, tolerancia y confianza mutua.",
+      "Alcance: no reemplaza tratamientos médicos ni terapéuticos cuando se requieran.",
     ],
     disclaimer:
-      "La información presentada es orientativa. Las condiciones completas del acompañamiento se acuerdan de manera personalizada al momento de la inscripción.",
+      "Información orientativa. Las condiciones completas se acuerdan al inscribirse.",
   },
 } as const;
