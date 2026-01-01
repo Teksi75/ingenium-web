@@ -7,7 +7,7 @@ const decorVariants = {
   leftTop:
     "-left-6 top-4 w-[160px] opacity-35 sm:-left-10 sm:w-[210px] md:-left-14 md:w-[260px]",
   leftMid:
-    "-left-6 top-1/2 w-[140px] -translate-y-1/2 opacity-30 sm:-left-10 sm:w-[190px] md:-left-14 md:w-[230px]",
+    "-left-10 top-2 w-[190px] opacity-35 sm:-left-14 sm:-top-2 sm:w-[240px] md:-left-20 md:-top-4 md:w-[280px]",
   rightBottom:
     "-right-6 bottom-0 w-[170px] opacity-30 sm:-right-10 sm:w-[220px] md:-right-14 md:w-[270px]",
   rightTop:
