@@ -1,4 +1,4 @@
-import { ingeniumContact } from "@/content/ingenium.contact";
+import { ingeniumContact } from "@/lib/contact";
 
 export const ingeniumCopy = {
   brand: {

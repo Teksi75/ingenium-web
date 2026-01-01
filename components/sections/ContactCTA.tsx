@@ -1,4 +1,5 @@
 import { ingeniumCopy } from "@/content/ingenium.copy";
+import { ingeniumContact } from "@/lib/contact";
 import Section from "@/components/ui/Section";
 
 export default function ContactCTA() {
@@ -30,10 +31,10 @@ export default function ContactCTA() {
             </p>
             <div className="space-y-1 text-sm text-[#6a5743]">
               <p>
-                📍 Suyai 2632, Barrio Cordón del Plata, Vistalba, Luján de Cuyo
+                📍 {ingeniumContact.addressLine}
               </p>
               <a
-                href="https://www.google.com/maps/search/?api=1&query=Suyai%202632%20Barrio%20Cord%C3%B3n%20del%20Plata%2C%20Vistalba%2C%20Luj%C3%A1n%20de%20Cuyo%2C%20Mendoza%2C%20Argentina"
+                href={ingeniumContact.googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Abrir ubicación de Ingenium en Google Maps"
