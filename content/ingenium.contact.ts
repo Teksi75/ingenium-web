@@ -1,3 +1,3 @@
 export const ingeniumContact = {
-  whatsappUrl: "https://wa.me/549261010488",
+  whatsappUrl: "https://wa.me/5492615010488",
 } as const;
