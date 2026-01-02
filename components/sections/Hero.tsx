@@ -12,12 +12,12 @@ export default function Hero() {
         <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="space-y-6">
             <div className="space-y-3">
-              <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#B88A3B]">
+              <h1 className="text-3xl font-semibold uppercase tracking-[0.25em] text-[#B88A3B] sm:text-4xl lg:text-5xl">
                 {brand.name}
-              </p>
-              <h1 className="font-serif text-3xl font-semibold tracking-tight text-[#3f2f20] sm:text-4xl lg:text-5xl">
-                {hero.title}
               </h1>
+              <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#3f2f20] sm:text-3xl lg:text-4xl">
+                {hero.title}
+              </h2>
               <p className="text-base leading-relaxed text-[#5c4a36] sm:text-lg">
                 {hero.subtitle}
               </p>
