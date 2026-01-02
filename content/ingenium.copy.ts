@@ -5,12 +5,12 @@ export const ingeniumCopy = {
     name: "Ingenium",
     tagline: "Acompañamiento para organizarse por dentro",
     intro:
-      "Espacio educativo de acompañamiento integral para distintas etapas de la vida. Trabajo personalizado que fortalece autonomía, organización y vínculo con el aprendizaje.",
+      "Organización, hábitos, comprensión y bienestar.",
   },
   hero: {
-    title: "Aprender a organizarse",
+    title: "Apoyo escolar",
     subtitle:
-      "Acompañamiento educativo en cada etapa. Hábitos, comprensión y bienestar.",
+      "Primaria, Secundaria y Universidad. Modalidad individual o grupal en grupos reducidos.",
     ctaPrimary: {
       label: "Consultar por WhatsApp",
       href: ingeniumContact.whatsappUrl,
@@ -18,19 +18,19 @@ export const ingeniumCopy = {
     ctaSecondary: { label: "Coordinar una entrevista", href: "#contacto" },
   },
   howWeWork: {
-    title: "¿Cómo trabajamos?",
+    title: "¿Qué brindamos?",
     items: [
       {
-        title: "Organización y hábitos",
-        body: "Rutinas de estudio y organización del tiempo con estrategias simples para ganar autonomía.",
+        title: "Apoyo escolar",
+        body: "Acompañamiento para primaria, secundaria y universidad. Modalidad individual o grupal en grupos reducidos.",
       },
       {
-        title: "Comprensión y procesos",
-        body: "Recursos para comprender consignas, resolver problemas y afianzar contenidos en evaluaciones.",
+        title: "Ingreso",
+        body: "Preparación para ingresos a colegios secundarios de la UNCuyo. Preparación para ingresos universitarios (principalmente UNCuyo).",
       },
       {
-        title: "Acompañamiento emocional",
-        body: "Entorno de confianza que reduce el estrés y mejora la relación con el aprendizaje.",
+        title: "Cursos",
+        body: "Cursos y capacitaciones a medida, diseñados según la necesidad de quien los solicita.",
       },
     ],
   },
