@@ -99,7 +99,7 @@ export function FloralIcon({ icon = "flor", className }: FloralIconProps) {
     <div
       aria-hidden="true"
       className={cn(
-        "flex h-12 w-12 items-center justify-center overflow-hidden rounded-full bg-[#f8ecd7]",
+        "flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-[#f8ecd7]",
         className,
       )}
     >
@@ -109,7 +109,7 @@ export function FloralIcon({ icon = "flor", className }: FloralIconProps) {
         aria-hidden="true"
         width={40}
         height={40}
-        className="h-10 w-10 scale-[1.35] object-contain"
+        className="h-12 w-12 scale-[1.35] object-contain"
       />
     </div>
   );
