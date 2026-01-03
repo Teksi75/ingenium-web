@@ -1,10 +1,10 @@
-import { ingeniumCopy } from "@/content/ingenium.copy";
 import Section from "@/components/ui/Section";
 import { ingeniumMedia } from "@/content/ingenium.media";
+import { ingeniumSections } from "@/data/ingeniumSections";
 import Image from "next/image";
 
 export default function Audience() {
-  const { audience } = ingeniumCopy;
+  const { how } = ingeniumSections.sections;
   const audienceImages = [
     ingeniumMedia.audience.primary,
     ingeniumMedia.audience.secondary,
@@ -13,16 +13,19 @@ export default function Audience() {
   ];
 
   return (
-    <Section id="para-quien">
+    <Section id={how.id}>
       <div className="rounded-[3rem] border border-[#eadfce] bg-white/85 p-8 shadow-[0_20px_55px_rgba(184,138,59,0.12)] backdrop-blur sm:p-12 lg:p-14">
         <div className="space-y-10">
-          <div className="text-center">
+          <div className="space-y-4 text-center">
             <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#3f2f20] sm:text-3xl">
-              {audience.title}
+              {how.title}
             </h2>
+            <p className="text-sm leading-relaxed text-[#6a5743] sm:text-base">
+              {how.body}
+            </p>
           </div>
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-            {audience.items.map((item, index) => (
+            {how.items?.map((item, index) => (
               <div
                 key={item.title}
                 className="flex h-full flex-col gap-4 rounded-[2.25rem] border border-[#eadfce] bg-white/90 p-5 shadow-[0_14px_35px_rgba(157,121,68,0.12)]"
@@ -47,6 +50,19 @@ export default function Audience() {
               </div>
             ))}
           </div>
+          {how.ctas?.length ? (
+            <div className="flex justify-center">
+              {how.ctas.map((cta) => (
+                <a
+                  key={cta.label}
+                  href={cta.href}
+                  className="inline-flex items-center justify-center rounded-full border border-[#d9c3a1] bg-white/80 px-6 py-3 text-sm font-semibold text-[#6b4d25] shadow-sm transition hover:-translate-y-0.5 hover:border-[#cfae7a] sm:text-base"
+                >
+                  {cta.label}
+                </a>
+              ))}
+            </div>
+          ) : null}
         </div>
       </div>
     </Section>

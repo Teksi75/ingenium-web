@@ -1,10 +1,10 @@
-import { ingeniumCopy } from "@/content/ingenium.copy";
 import Section from "@/components/ui/Section";
 import { ingeniumMedia } from "@/content/ingenium.media";
+import { ingeniumSections } from "@/data/ingeniumSections";
 import Image from "next/image";
 
 export default function Hero() {
-  const { brand, hero } = ingeniumCopy;
+  const { hero } = ingeniumSections;
 
   return (
     <Section className="pt-16 sm:pt-24">
@@ -13,31 +13,28 @@ export default function Hero() {
           <div className="space-y-6">
             <div className="space-y-3">
               <h1 className="text-3xl font-semibold uppercase tracking-[0.25em] text-[#B88A3B] sm:text-4xl lg:text-5xl">
-                {brand.name}
+                {hero.brand}
               </h1>
               <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#3f2f20] sm:text-3xl lg:text-4xl">
                 {hero.title}
               </h2>
               <p className="text-base leading-relaxed text-[#5c4a36] sm:text-lg">
-                {hero.subtitle}
+                {hero.body}
               </p>
             </div>
             <p className="text-sm leading-relaxed text-[#6a5743] sm:text-base">
-              {brand.intro}
+              {hero.microText}
             </p>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <a
-                href={hero.ctaPrimary.href}
-                className="inline-flex w-full items-center justify-center rounded-full bg-[#B88A3B] px-6 py-3 text-sm font-semibold text-white shadow-md shadow-[#B88A3B]/25 transition hover:-translate-y-0.5 hover:bg-[#a97c33] sm:w-auto sm:text-base"
-              >
-                {hero.ctaPrimary.label}
-              </a>
-              <a
-                href={hero.ctaSecondary.href}
-                className="inline-flex w-full items-center justify-center rounded-full border border-[#d9c3a1] bg-white/80 px-6 py-3 text-sm font-semibold text-[#6b4d25] shadow-sm transition hover:-translate-y-0.5 hover:border-[#cfae7a] sm:w-auto sm:text-base"
-              >
-                {hero.ctaSecondary.label}
-              </a>
+              {hero.ctas.map((cta) => (
+                <a
+                  key={cta.label}
+                  href={cta.href}
+                  className="inline-flex w-full items-center justify-center rounded-full bg-[#B88A3B] px-6 py-3 text-sm font-semibold text-white shadow-md shadow-[#B88A3B]/25 transition hover:-translate-y-0.5 hover:bg-[#a97c33] sm:w-auto sm:text-base"
+                >
+                  {cta.label}
+                </a>
+              ))}
             </div>
           </div>
           <div className="relative">
