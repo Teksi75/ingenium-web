@@ -1,8 +1,8 @@
 import { ingeniumSectionsById } from "@/data/ingeniumSections";
 import Section from "@/components/ui/Section";
 
-export default function ProposalsSection() {
-  const section = ingeniumSectionsById["apoyo-escolar"];
+export default function ExamsSection() {
+  const section = ingeniumSectionsById["examenes-previas"];
 
   return (
     <Section id={section.id}>
@@ -16,7 +16,7 @@ export default function ProposalsSection() {
               {section.body}
             </p>
           </div>
-          <div className="grid gap-6 lg:grid-cols-3">
+          <div className="grid gap-6 lg:grid-cols-1">
             {section.items?.map((item) => (
               <div
                 key={item.title}
@@ -26,14 +26,6 @@ export default function ProposalsSection() {
                   {item.title}
                 </h3>
                 <div className="space-y-3 text-sm leading-relaxed text-[#6a5743]">
-                  {item.meta?.map((metaItem) => (
-                    <p key={metaItem.label}>
-                      <span className="font-semibold text-[#4a3725]">
-                        {metaItem.label}:
-                      </span>{" "}
-                      {metaItem.value}
-                    </p>
-                  ))}
                   {item.list ? (
                     <div className="space-y-2">
                       {item.listLabel ? (

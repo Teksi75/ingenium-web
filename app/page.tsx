@@ -1,6 +1,7 @@
 import { FloralDecor, PaperBackground } from "@/components/FloralDecor";
 import FloralSeparator from "@/components/sections/FloralSeparator";
 import ContactCTA from "@/components/sections/ContactCTA";
+import ExamsSection from "@/components/sections/ExamsSection";
 import FamiliesSection from "@/components/sections/FamiliesSection";
 import FaqSection from "@/components/sections/FaqSection";
 import GroupsSection from "@/components/sections/GroupsSection";
@@ -23,27 +24,30 @@ export default function Home() {
         <StickyNav />
         <PaperBackground variant="section" allowOverflow>
           <FloralDecor variant="leftMid" />
-          <SupportSection />
-        </PaperBackground>
-        <PaperBackground variant="section" allowOverflow>
-          <PedagogicSection />
-        </PaperBackground>
-        <PaperBackground variant="section" allowOverflow>
-          <FloralDecor variant="rightTop" />
           <ProposalsSection />
         </PaperBackground>
         <PaperBackground variant="section" allowOverflow>
-          <GroupsSection />
+          <FloralDecor variant="rightTop" />
+          <ExamsSection />
         </PaperBackground>
         <PaperBackground variant="section" allowOverflow>
-          <FamiliesSection />
+          <SupportSection />
+        </PaperBackground>
+        <PaperBackground variant="section" allowOverflow>
+          <InterviewSection />
+        </PaperBackground>
+        <PaperBackground variant="section" allowOverflow>
+          <PedagogicSection />
         </PaperBackground>
         <PaperBackground variant="section" allowOverflow>
           <FloralDecor variant="rightBottom" />
           <TechnologySection />
         </PaperBackground>
         <PaperBackground variant="section" allowOverflow>
-          <InterviewSection />
+          <FamiliesSection />
+        </PaperBackground>
+        <PaperBackground variant="section" allowOverflow>
+          <GroupsSection />
         </PaperBackground>
         <PaperBackground variant="section" allowOverflow>
           <FaqSection />
