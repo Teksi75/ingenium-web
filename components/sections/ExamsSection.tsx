@@ -1,8 +1,8 @@
 import { ingeniumSectionsById } from "@/data/ingeniumSections";
 import Section from "@/components/ui/Section";
 
-export default function ProposalsSection() {
-  const section = ingeniumSectionsById["apoyo-escolar"];
+export default function ExamsSection() {
+  const section = ingeniumSectionsById["examenes-previas"];
 
   return (
     <Section id={section.id}>
