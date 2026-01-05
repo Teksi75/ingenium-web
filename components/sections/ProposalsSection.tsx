@@ -1,8 +1,17 @@
-import { ingeniumSectionsById } from "@/data/ingeniumSections";
+import {
+  ingeniumSectionsById,
+  type IngeniumSectionId,
+} from "@/data/ingeniumSections";
 import Section from "@/components/ui/Section";
 
-export default function ProposalsSection() {
-  const section = ingeniumSectionsById["propuestas"];
+type ProposalsSectionProps = {
+  sectionId: IngeniumSectionId;
+};
+
+export default function ProposalsSection({
+  sectionId,
+}: ProposalsSectionProps) {
+  const section = ingeniumSectionsById[sectionId];
 
   return (
     <Section id={section.id}>
