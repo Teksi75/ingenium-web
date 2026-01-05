@@ -22,28 +22,31 @@ export default function Home() {
         </PaperBackground>
         <StickyNav />
         <PaperBackground variant="section" allowOverflow>
+          <FloralDecor variant="rightTop" />
+          <ProposalsSection sectionId="apoyo-escolar" />
+        </PaperBackground>
+        <PaperBackground variant="section" allowOverflow>
+          <ProposalsSection sectionId="examenes-previas" />
+        </PaperBackground>
+        <PaperBackground variant="section" allowOverflow>
           <FloralDecor variant="leftMid" />
           <SupportSection />
         </PaperBackground>
         <PaperBackground variant="section" allowOverflow>
+          <InterviewSection />
+        </PaperBackground>
+        <PaperBackground variant="section" allowOverflow>
           <PedagogicSection />
-        </PaperBackground>
-        <PaperBackground variant="section" allowOverflow>
-          <FloralDecor variant="rightTop" />
-          <ProposalsSection />
-        </PaperBackground>
-        <PaperBackground variant="section" allowOverflow>
-          <GroupsSection />
-        </PaperBackground>
-        <PaperBackground variant="section" allowOverflow>
-          <FamiliesSection />
         </PaperBackground>
         <PaperBackground variant="section" allowOverflow>
           <FloralDecor variant="rightBottom" />
           <TechnologySection />
         </PaperBackground>
         <PaperBackground variant="section" allowOverflow>
-          <InterviewSection />
+          <FamiliesSection />
+        </PaperBackground>
+        <PaperBackground variant="section" allowOverflow>
+          <GroupsSection />
         </PaperBackground>
         <PaperBackground variant="section" allowOverflow>
           <FaqSection />

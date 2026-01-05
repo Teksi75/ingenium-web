@@ -47,6 +47,58 @@ const hero = {
 
 const sections = [
   {
+    id: "apoyo-escolar",
+    navLabel: "Apoyo escolar",
+    title: "Apoyo escolar",
+    body:
+      "El apoyo escolar incluye primaria, secundaria y etapa preuniversitaria, con un acompañamiento preventivo y sostenido (hábitos, organización, comprensión y autonomía). No vendemos ‘paquetes’. Definimos la propuesta en una entrevista inicial según la necesidad real.",
+    items: [
+      {
+        title: "Acompañamiento sostenido (Apoyo escolar)",
+        meta: [
+          { label: "Para quién", value: "Primaria y secundaria." },
+          { label: "Modalidades", value: "Individual o grupal." },
+          {
+            label: "Enfoque",
+            value: "Contenidos escolares + hábitos + organización + comprensión.",
+          },
+        ],
+      },
+      {
+        title: "Cursos y talleres (duración acotada, enfoque práctico)",
+        listLabel: "Ejemplos:",
+        list: [
+          "Técnicas de estudio",
+          "Organización y planificación",
+          "Comprensión lectora",
+          "Razonamiento matemático",
+          "Acompañamiento en momentos críticos",
+        ],
+        body: "Grupos reducidos, contenidos focalizados y práctica guiada.",
+      },
+    ],
+  },
+  {
+    id: "examenes-previas",
+    navLabel: "Exámenes y previas",
+    title: "Exámenes y previas",
+    body:
+      "Primero aparecen los exámenes y, cuando una materia no se sostiene, las previas, entendidas también como exámenes de materias adeudadas. En ambos casos, el acompañamiento es intensivo, con metodología, planificación y manejo del estrés.",
+    items: [
+      {
+        title: "Exámenes y previas",
+        listLabel: "Incluye:",
+        list: [
+          "Preparación de materias pendientes (febrero / marzo)",
+          "Ingresos a colegios con examen",
+          "Preparación preuniversitaria",
+        ],
+        body:
+          "Acompañamiento intensivo, metodología, planificación y manejo del estrés.",
+      },
+    ],
+  },
+  {
     id: "como-acompana",
     navLabel: "Cómo acompaña",
     title: "Cómo acompaña Ingenium",
@@ -83,93 +135,6 @@ const sections = [
     ],
   },
   {
-    id: "enfoque",
-    navLabel: "",
-    title: "Enfoque pedagógico",
-    body:
-      "En Ingenium entendemos que aprender hoy combina dimensiones académicas, metodológicas, emocionales y tecnológicas. Por eso acompañamos el proceso completo, no solo el contenido del día.",
-    items: [
-      { title: "Hábitos de estudio sostenidos" },
-      { title: "Organización y jerarquización de actividades" },
-      { title: "Comprensión e interpretación (no memorización vacía)" },
-      { title: "Manejo del estrés y cuidado del clima emocional" },
-      { title: "Tecnología como herramienta (con criterio, no uso pasivo)" },
-      { title: "Articulación alumno–familia–escuela" },
-    ],
-  },
-  {
-    id: "propuestas",
-    navLabel: "Propuestas",
-    title: "Propuestas",
-    body:
-      "No vendemos ‘paquetes’. Definimos la propuesta en una entrevista inicial según la necesidad real.",
-    items: [
-      {
-        title: "Acompañamiento sostenido (Apoyo escolar)",
-        meta: [
-          { label: "Para quién", value: "Primaria y secundaria." },
-          { label: "Modalidades", value: "Individual o grupal." },
-          {
-            label: "Enfoque",
-            value: "Contenidos escolares + hábitos + organización + comprensión.",
-          },
-        ],
-      },
-      {
-        title: "Momentos de exigencia (previas e ingresos)",
-        listLabel: "Incluye:",
-        list: [
-          "Preparación de materias pendientes (febrero / marzo)",
-          "Ingresos a colegios con examen",
-          "Preparación preuniversitaria",
-        ],
-        body:
-          "Acompañamiento intensivo, metodología, planificación y manejo del estrés.",
-      },
-      {
-        title: "Cursos y talleres (duración acotada, enfoque práctico)",
-        listLabel: "Ejemplos:",
-        list: [
-          "Técnicas de estudio",
-          "Organización y planificación",
-          "Comprensión lectora",
-          "Razonamiento matemático",
-          "Acompañamiento en momentos críticos",
-        ],
-        body: "Grupos reducidos, contenidos focalizados y práctica guiada.",
-      },
-    ],
-  },
-  {
-    id: "grupos-reducidos",
-    navLabel: "Grupos reducidos",
-    title: "Grupos reducidos",
-    body:
-      "Ingenium trabaja con grupos reducidos como decisión pedagógica, no como estrategia comercial.",
-    subtitle:
-      "Esto permite seguimiento cercano, respeto por ritmos individuales y procesos más sostenidos.",
-    items: [
-      { title: "Primaria: hasta 3 estudiantes" },
-      { title: "Secundaria: hasta 4 estudiantes" },
-    ],
-  },
-  {
-    id: "familias-escuelas",
-    navLabel: "Familias y escuelas",
-    title: "Familias y escuelas",
-    body:
-      "La familia forma parte del proceso. Trabajamos con comunicación clara, acuerdos y seguimiento para sostener hábitos y organización también fuera de Ingenium.",
-    subtitle:
-      "También articulamos con la escuela cuando hace falta, respetando criterios, tiempos y exigencias.",
-  },
-  {
-    id: "tecnologia",
-    navLabel: "",
-    title: "Tecnología con criterio",
-    body:
-      "En Ingenium la tecnología no reemplaza el acompañamiento: se integra de manera consciente para organizar el estudio, acceder a contenidos y mejorar la comprensión, evitando el uso pasivo o desordenado.",
-  },
-  {
     id: "entrevista",
     navLabel: "",
     title: "Entrevista inicial",
@@ -192,9 +157,53 @@ const sections = [
     ],
   },
   {
+    id: "enfoque",
+    navLabel: "",
+    title: "Enfoque pedagógico",
+    body:
+      "En Ingenium entendemos que aprender hoy combina dimensiones académicas, metodológicas, emocionales y tecnológicas. Por eso acompañamos el proceso completo, no solo el contenido del día.",
+    items: [
+      { title: "Hábitos de estudio sostenidos" },
+      { title: "Organización y jerarquización de actividades" },
+      { title: "Comprensión e interpretación (no memorización vacía)" },
+      { title: "Manejo del estrés y cuidado del clima emocional" },
+      { title: "Tecnología como herramienta (con criterio, no uso pasivo)" },
+      { title: "Articulación alumno–familia–escuela" },
+    ],
+  },
+  {
+    id: "tecnologia",
+    navLabel: "",
+    title: "Tecnología con criterio",
+    body:
+      "En Ingenium la tecnología no reemplaza el acompañamiento: se integra de manera consciente para organizar el estudio, acceder a contenidos y mejorar la comprensión, evitando el uso pasivo o desordenado.",
+  },
+  {
+    id: "grupos-reducidos",
+    navLabel: "",
+    title: "Grupos reducidos",
+    body:
+      "Ingenium trabaja con grupos reducidos como decisión pedagógica, no como estrategia comercial.",
+    subtitle:
+      "Esto permite seguimiento cercano, respeto por ritmos individuales y procesos más sostenidos.",
+    items: [
+      { title: "Primaria: hasta 3 estudiantes" },
+      { title: "Secundaria: hasta 4 estudiantes" },
+    ],
+  },
+  {
+    id: "familias-escuelas",
+    navLabel: "",
+    title: "Familias y escuelas",
+    body:
+      "La familia forma parte del proceso. Trabajamos con comunicación clara, acuerdos y seguimiento para sostener hábitos y organización también fuera de Ingenium.",
+    subtitle:
+      "También articulamos con la escuela cuando hace falta, respetando criterios, tiempos y exigencias.",
+  },
+  {
     id: "faq",
     navLabel: "",
-    title: "FAQ",
+    title: "Antes de empezar",
     body: "",
     items: [
       {
