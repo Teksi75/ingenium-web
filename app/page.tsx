@@ -55,6 +55,25 @@ export default function Home() {
         <FloralSeparator />
         <ContactCTA />
       </main>
+      <footer className="px-6 pb-16 pt-6">
+        <div className="mx-auto flex max-w-6xl items-center justify-center">
+          <a
+            href="https://www.instagram.com/ingenium_barbaratomba?igsh=ZDhzMWhuNTdzMWp3"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram de Ingenium"
+            className="inline-flex items-center justify-center text-[#6a5743] transition hover:text-[#B88A3B]"
+          >
+            <img
+              src="/media/ingenium/icons/instagram.svg"
+              alt="Instagram"
+              width="24"
+              height="24"
+              className="h-6 w-6"
+            />
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }
