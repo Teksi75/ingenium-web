@@ -1,0 +1,3 @@
+Contact: mailto:pablosiklosi@gmail.com
+Expires: 2026-12-31
+Policy: https://ingenium-web.vercel.app
