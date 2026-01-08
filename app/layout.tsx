@@ -31,8 +31,11 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "/media/ingenium/illustrations/flores-corazon.png",
+        url: "https://ingenium-web.vercel.app/og-image.png",
         alt: "Ingenium — Apoyo educativo",
+        width: 1200,
+        height: 630,
+        type: "image/png",
       },
     ],
   },
