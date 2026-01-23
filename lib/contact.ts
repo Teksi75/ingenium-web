@@ -1,7 +1,13 @@
+const whatsappPrefillMessage =
+  "Hola, quisiera información sobre el acompañamiento educativo en Ingenium.\nQuería saber cómo trabajan y si tienen disponibilidad.";
+
 export const ingeniumContact = {
   name: "INGENIUM Apoyo escolar",
   whatsappNumber: "+54 9 2615010488",
-  whatsappUrl: "https://wa.me/5492615010488",
+  whatsappMessage: whatsappPrefillMessage,
+  whatsappUrl: `https://wa.me/5492615010488?text=${encodeURIComponent(
+    whatsappPrefillMessage,
+  )}`,
   addressLine:
     "Suyai 2632, Barrio Valle Cordón del Plata, Vistalba, Luján de Cuyo, Mendoza, Argentina",
   addressParts: {
