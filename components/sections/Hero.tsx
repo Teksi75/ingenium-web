@@ -1,6 +1,7 @@
 import { ingeniumSections } from "@/data/ingeniumSections";
 import Section from "@/components/ui/Section";
 import { ingeniumMedia } from "@/content/ingenium.media";
+import { buttonVariants } from "@/components/ui/button";
 import Image from "next/image";
 
 export default function Hero() {
@@ -16,20 +17,18 @@ export default function Hero() {
               <h1 className="text-3xl font-semibold uppercase tracking-[0.25em] text-[#B88A3B] sm:text-4xl lg:text-5xl">
                 {hero.title}
               </h1>
-              <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#3f2f20] sm:text-3xl lg:text-4xl">
+              <h2 className="section-heading sm:text-3xl lg:text-4xl">
                 {hero.subtitle}
               </h2>
               <p className="text-base leading-relaxed text-[#5c4a36] sm:text-lg">
                 {hero.body}
               </p>
             </div>
-            <p className="text-sm leading-relaxed text-[#6a5743] sm:text-base">
-              {hero.microtext}
-            </p>
+            <p className="section-body">{hero.microtext}</p>
             <div className="flex flex-col gap-3 sm:flex-row">
               <a
                 href={primaryCta.href}
-                className="inline-flex w-full items-center justify-center rounded-full bg-[#B88A3B] px-6 py-3 text-sm font-semibold text-white shadow-md shadow-[#B88A3B]/25 transition hover:-translate-y-0.5 hover:bg-[#a97c33] sm:w-auto sm:text-base"
+                className={buttonVariants({ variant: "primary", fullWidth: true })}
               >
                 {primaryCta.label}
               </a>

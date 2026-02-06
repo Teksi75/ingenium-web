@@ -15,7 +15,7 @@ export default function StickyNav() {
           <a
             key={item.id}
             href={`#${item.id}`}
-            className="rounded-full px-2 py-1 transition hover:text-[#B88A3B] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B88A3B]"
+            className="rounded-full px-2 py-1 transition hover:text-[#B88A3B]"
           >
             {item.navLabel}
           </a>

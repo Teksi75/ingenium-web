@@ -1,5 +1,7 @@
 import { ingeniumCopy } from "@/content/ingenium.copy";
 import { ingeniumContact } from "@/lib/contact";
+import { Card } from "@/components/ui/card";
+import { buttonVariants } from "@/components/ui/button";
 import Section from "@/components/ui/Section";
 
 export default function ContactCTA() {
@@ -13,26 +15,20 @@ export default function ContactCTA() {
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#B88A3B]">
               {brand.name}
             </p>
-            <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#3f2f20] sm:text-3xl">
-              {brand.tagline}
-            </h2>
-            <p className="text-sm leading-relaxed text-[#6a5743] sm:text-base">
+            <h2 className="section-heading sm:text-3xl">{brand.tagline}</h2>
+            <p className="section-body">
               Coordinemos una entrevista para conocer la situación de cada
               estudiante y proponer un plan de acompañamiento a medida.
             </p>
           </div>
-          <div className="space-y-4 rounded-[2.25rem] border border-[#eadfce] bg-white/85 p-6 text-left shadow-[0_14px_35px_rgba(157,121,68,0.12)]">
-            <p className="text-sm font-semibold text-[#4a3725]">
-              Contacto
-            </p>
-            <p className="text-sm leading-relaxed text-[#6a5743]">
+          <Card className="space-y-4 text-left">
+            <p className="text-sm font-semibold text-[#4a3725]">Contacto</p>
+            <p className="section-secondary">
               Dejanos tu consulta y nos pondremos en contacto para coordinar
               disponibilidad, modalidad y objetivos de acompañamiento.
             </p>
             <div className="space-y-1 text-sm text-[#6a5743]">
-              <p>
-                📍 {ingeniumContact.addressLine}
-              </p>
+              <p>📍 {ingeniumContact.addressLine}</p>
               <a
                 href={ingeniumContact.googleMapsUrl}
                 target="_blank"
@@ -45,11 +41,11 @@ export default function ContactCTA() {
             </div>
             <a
               href={hero.ctaPrimary.href}
-              className="inline-flex w-full items-center justify-center rounded-full bg-[#B88A3B] px-6 py-3 text-sm font-semibold text-white shadow-md shadow-[#B88A3B]/20 transition hover:translate-y-0.5 hover:bg-[#a97c33] sm:w-auto sm:text-base"
+              className={buttonVariants({ variant: "primary", fullWidth: true })}
             >
               {hero.ctaPrimary.label}
             </a>
-          </div>
+          </Card>
         </div>
       </div>
     </Section>
