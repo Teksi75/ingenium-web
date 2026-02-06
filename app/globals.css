@@ -123,8 +123,35 @@ html {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
+  }
+
+  :where(a, button, input, textarea, select, [role="button"]):focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}
+
+@layer components {
+  .section-shell {
+    @apply rounded-[3rem] border border-[#eadfce] bg-white/85 p-8 shadow-[0_20px_55px_rgba(184,138,59,0.12)] backdrop-blur sm:p-12 lg:p-14;
+  }
+
+  .heading-h2 {
+    @apply text-2xl font-semibold tracking-tight text-[#3f2f20];
+  }
+
+  .heading-h3 {
+    @apply text-xl font-semibold text-[#4a3725];
+  }
+
+  .text-body {
+    @apply text-base leading-relaxed text-[#6a5743];
+  }
+
+  .text-secondary {
+    @apply text-sm text-[#6a5743];
   }
 }
 
