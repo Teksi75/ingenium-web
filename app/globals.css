@@ -175,3 +175,38 @@ html {
     mix-blend-mode: multiply;
   }
 }
+
+
+@layer components {
+  .section-shell {
+    @apply rounded-[3rem] border border-[#eadfce] bg-white/85 p-8 shadow-[0_20px_55px_rgba(184,138,59,0.12)] backdrop-blur sm:p-12 lg:p-14;
+  }
+
+  .section-heading {
+    @apply text-2xl font-semibold tracking-tight text-[#3f2f20];
+  }
+
+  .section-subheading {
+    @apply text-xl font-semibold text-[#4a3725];
+  }
+
+  .section-body {
+    @apply text-base leading-relaxed text-[#6a5743];
+  }
+
+  .section-secondary {
+    @apply text-sm leading-relaxed text-[#6a5743];
+  }
+}
+
+
+@layer base {
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible,
+  [role="button"]:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+}

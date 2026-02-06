@@ -14,10 +14,10 @@ export default function Audience() {
 
   return (
     <Section id="para-quien">
-      <div className="rounded-[3rem] border border-[#eadfce] bg-white/85 p-8 shadow-[0_20px_55px_rgba(184,138,59,0.12)] backdrop-blur sm:p-12 lg:p-14">
+      <div className="section-shell">
         <div className="space-y-10">
           <div className="text-center">
-            <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#3f2f20] sm:text-3xl">
+            <h2 className="section-heading sm:text-3xl">
               {audience.title}
             </h2>
           </div>
@@ -37,10 +37,10 @@ export default function Audience() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="font-serif text-lg font-semibold text-[#4a3725]">
+                  <h3 className="section-subheading">
                     {item.title}
                   </h3>
-                  <p className="text-sm leading-relaxed text-[#6a5743]">
+                  <p className="section-secondary">
                     {item.body}
                   </p>
                 </div>
