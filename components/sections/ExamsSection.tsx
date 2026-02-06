@@ -1,28 +1,29 @@
 import { ingeniumSectionsById } from "@/data/ingeniumSections";
 import Section from "@/components/ui/Section";
+import { Card } from "@/components/ui/card";
 
 export default function ExamsSection() {
   const section = ingeniumSectionsById["examenes-previas"];
 
   return (
     <Section id={section.id}>
-      <div className="rounded-[3rem] border border-[#eadfce] bg-white/85 p-8 shadow-[0_20px_55px_rgba(184,138,59,0.12)] backdrop-blur sm:p-12 lg:p-14">
+      <div className="section-shell">
         <div className="space-y-10">
           <div className="space-y-4 text-center">
-            <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#3f2f20] sm:text-3xl">
+            <h2 className="heading-h2">
               {section.title}
             </h2>
-            <p className="text-sm leading-relaxed text-[#6a5743] sm:text-base">
+            <p className="text-body">
               {section.body}
             </p>
           </div>
           <div className="grid gap-6 lg:grid-cols-1">
             {section.items?.map((item) => (
-              <div
+              <Card
                 key={item.title}
-                className="flex h-full flex-col gap-4 rounded-[2.25rem] border border-[#eadfce] bg-white/90 p-6 text-left shadow-[0_14px_35px_rgba(157,121,68,0.12)]"
+                className="flex h-full flex-col gap-4 text-left"
               >
-                <h3 className="font-serif text-lg font-semibold text-[#4a3725]">
+                <h3 className="heading-h3">
                   {item.title}
                 </h3>
                 <div className="space-y-3 text-sm leading-relaxed text-[#6a5743]">
@@ -45,7 +46,7 @@ export default function ExamsSection() {
                   ) : null}
                   {item.body ? <p>{item.body}</p> : null}
                 </div>
-              </div>
+              </Card>
             ))}
           </div>
         </div>

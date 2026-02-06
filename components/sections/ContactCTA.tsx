@@ -1,6 +1,8 @@
 import { ingeniumCopy } from "@/content/ingenium.copy";
 import { ingeniumContact } from "@/lib/contact";
 import Section from "@/components/ui/Section";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default function ContactCTA() {
   const { brand, hero } = ingeniumCopy;
@@ -13,10 +15,10 @@ export default function ContactCTA() {
             <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#B88A3B]">
               {brand.name}
             </p>
-            <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#3f2f20] sm:text-3xl">
+            <h2 className="heading-h2">
               {brand.tagline}
             </h2>
-            <p className="text-sm leading-relaxed text-[#6a5743] sm:text-base">
+            <p className="text-body">
               Coordinemos una entrevista para conocer la situación de cada
               estudiante y proponer un plan de acompañamiento a medida.
             </p>
@@ -45,7 +47,7 @@ export default function ContactCTA() {
             </div>
             <a
               href={hero.ctaPrimary.href}
-              className="inline-flex w-full items-center justify-center rounded-full bg-[#B88A3B] px-6 py-3 text-sm font-semibold text-white shadow-md shadow-[#B88A3B]/20 transition hover:translate-y-0.5 hover:bg-[#a97c33] sm:w-auto sm:text-base"
+              className={cn(buttonVariants(), "w-full sm:w-auto")}
             >
               {hero.ctaPrimary.label}
             </a>

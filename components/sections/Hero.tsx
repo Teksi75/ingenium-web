@@ -1,5 +1,7 @@
 import { ingeniumSections } from "@/data/ingeniumSections";
 import Section from "@/components/ui/Section";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { ingeniumMedia } from "@/content/ingenium.media";
 import Image from "next/image";
 
@@ -13,7 +15,7 @@ export default function Hero() {
         <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="space-y-6">
             <div className="space-y-3">
-              <h1 className="text-3xl font-semibold uppercase tracking-[0.25em] text-[#B88A3B] sm:text-4xl lg:text-5xl">
+              <h1 className="text-3xl font-semibold tracking-tight text-[#B88A3B] sm:text-4xl lg:text-5xl">
                 {hero.title}
               </h1>
               <h2 className="font-serif text-2xl font-semibold tracking-tight text-[#3f2f20] sm:text-3xl lg:text-4xl">
@@ -29,7 +31,7 @@ export default function Hero() {
             <div className="flex flex-col gap-3 sm:flex-row">
               <a
                 href={primaryCta.href}
-                className="inline-flex w-full items-center justify-center rounded-full bg-[#B88A3B] px-6 py-3 text-sm font-semibold text-white shadow-md shadow-[#B88A3B]/25 transition hover:-translate-y-0.5 hover:bg-[#a97c33] sm:w-auto sm:text-base"
+                className={cn(buttonVariants(), "w-full sm:w-auto")}
               >
                 {primaryCta.label}
               </a>
