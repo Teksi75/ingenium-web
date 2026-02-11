@@ -81,6 +81,22 @@ export default function RootLayout({
           }}
         />
         {children}
+        <footer className="flex justify-center pb-6 pt-4">
+          <a
+            href="https://www.instagram.com/ingenium_barbaratomba?igsh=ZDhzMWhuNTdzMWp3"
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Instagram de Ingenium"
+            className="inline-flex items-center justify-center"
+          >
+            <img
+              src="/media/ingenium/icons/instagram.svg"
+              alt="Instagram"
+              width="20"
+              height="20"
+            />
+          </a>
+        </footer>
       </body>
     </html>
   );
