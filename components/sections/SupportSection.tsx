@@ -29,7 +29,7 @@ export default function SupportSection() {
                   className={index % 2 === 1 ? "bg-[linear-gradient(160deg,#f6e5cb,#efd6b1)]" : undefined}
                 />
                 <div className="space-y-3">
-                  <h3 className="section-subheading">
+                  <h3 className="card-heading">
                     {item.title}
                   </h3>
                   <p className="section-secondary">

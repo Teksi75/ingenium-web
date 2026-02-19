@@ -37,7 +37,7 @@ export default function Audience() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <h3 className="section-subheading">
+                  <h3 className="card-heading">
                     {item.title}
                   </h3>
                   <p className="section-secondary">
