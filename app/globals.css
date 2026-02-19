@@ -241,7 +241,7 @@ html {
 
   .section-heading {
     font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-    font-size: clamp(2rem, 1.54rem + 1.7vw, 3.25rem);
+    font-size: clamp(1.8rem, 1.38rem + 1.25vw, 2.7rem);
     line-height: 1.08;
     color: var(--ink-950);
     text-wrap: balance;
