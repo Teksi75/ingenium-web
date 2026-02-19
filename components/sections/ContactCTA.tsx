@@ -15,8 +15,8 @@ export default function ContactCTA() {
             <p className="inline-flex rounded-full border border-[#d8c2a6] bg-white/80 px-4 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.2em] text-[var(--brand-copper-deep)]">
               {brand.name}
             </p>
-            <h2 className="section-heading">{brand.tagline}</h2>
-            <p className="section-body">
+            <h2 className="section-heading max-w-3xl">{brand.tagline}</h2>
+            <p className="section-body max-w-3xl">
               Coordinemos una entrevista inicial para conocer la situacion de
               cada estudiante y definir un plan de acompanamiento realista,
               claro y sostenido.
