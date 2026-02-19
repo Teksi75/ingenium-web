@@ -26,7 +26,7 @@ export default function SupportSection() {
               <Card key={item.title} className="flex h-full flex-col gap-4 text-left">
                 <FloralIcon
                   icon={iconByIndex[index % iconByIndex.length]}
-                  className={index % 2 === 1 ? "bg-[#f5e2c7]" : undefined}
+                  className={index % 2 === 1 ? "bg-[linear-gradient(160deg,#f6e5cb,#efd6b1)]" : undefined}
                 />
                 <div className="space-y-3">
                   <h3 className="section-subheading">

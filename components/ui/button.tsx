@@ -4,18 +4,18 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full text-sm font-semibold transition-all duration-200 ease-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full border text-[0.76rem] font-semibold uppercase tracking-[0.15em] transition-all duration-300 ease-out disabled:pointer-events-none disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
   {
     variants: {
       variant: {
         primary:
-          "bg-[#B88A3B] text-white shadow-md shadow-[#B88A3B]/25 hover:-translate-y-0.5 hover:shadow-lg hover:bg-[#a97c33] active:translate-y-0 active:shadow-sm",
+          "border-transparent bg-[linear-gradient(135deg,#aa7540_0%,#8d5a2f_52%,#6f4524_100%)] text-[#fff9f1] shadow-[0_14px_30px_rgba(91,52,24,0.3)] hover:-translate-y-0.5 hover:brightness-105 hover:shadow-[0_20px_35px_rgba(91,52,24,0.36)] active:translate-y-0 active:brightness-100",
         secondary:
-          "border border-[#d9c3a1] bg-white/85 text-[#6b4d25] shadow-sm hover:-translate-y-0.5 hover:shadow-md hover:border-[#cfae7a] active:translate-y-0 active:shadow-sm",
+          "border-[var(--paper-border)] bg-white/78 text-[var(--ink-700)] shadow-[0_10px_24px_rgba(69,48,25,0.1)] hover:-translate-y-0.5 hover:border-[#c89b62] hover:text-[var(--brand-copper-deep)] hover:shadow-[0_16px_28px_rgba(69,48,25,0.18)] active:translate-y-0",
       },
       size: {
-        default: "px-6 py-3 text-sm sm:text-base",
-        sm: "px-4 py-2 text-sm",
+        default: "px-6 py-3.5 sm:px-7 sm:py-4",
+        sm: "px-4 py-2.5 text-[0.7rem]",
       },
       fullWidth: {
         true: "w-full sm:w-auto",

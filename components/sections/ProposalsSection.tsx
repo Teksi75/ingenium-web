@@ -20,7 +20,7 @@ export default function ProposalsSection() {
                 <div className="space-y-3 section-secondary">
                   {item.meta?.map((metaItem) => (
                     <p key={metaItem.label}>
-                      <span className="font-semibold text-[#4a3725]">
+                      <span className="font-semibold text-[var(--ink-800)]">
                         {metaItem.label}:
                       </span>{" "}
                       {metaItem.value}
@@ -29,12 +29,12 @@ export default function ProposalsSection() {
                   {item.list ? (
                     <div className="space-y-2">
                       {item.listLabel ? (
-                        <p className="font-semibold text-[#4a3725]">{item.listLabel}</p>
+                        <p className="font-semibold text-[var(--ink-800)]">{item.listLabel}</p>
                       ) : null}
                       <ul className="space-y-2">
                         {item.list.map((entry) => (
                           <li key={entry} className="flex gap-3">
-                            <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#B88A3B]" />
+                            <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[var(--brand-copper)]" />
                             <span>{entry}</span>
                           </li>
                         ))}

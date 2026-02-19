@@ -12,9 +12,12 @@ export default function Section({ id, className, children }: SectionProps) {
   return (
     <section
       id={id}
-      className={cn("px-6 py-12 sm:py-14 lg:py-16", className)}
+      className={cn(
+        "relative px-5 py-14 sm:px-7 sm:py-[4.5rem] lg:px-10 lg:py-[5.5rem]",
+        className,
+      )}
     >
-      <div className="mx-auto w-full max-w-6xl">{children}</div>
+      <div className="mx-auto w-full max-w-[74rem]">{children}</div>
     </section>
   );
 }

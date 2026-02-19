@@ -8,33 +8,44 @@ export default function ContactCTA() {
   const { brand, hero } = ingeniumCopy;
 
   return (
-    <Section id="contacto" className="pb-20">
-      <div className="rounded-[3rem] border border-[#eadfce] bg-gradient-to-br from-white/95 via-white/85 to-[#f7efe4] p-8 shadow-[0_20px_55px_rgba(184,138,59,0.14)] backdrop-blur sm:p-12 lg:p-14">
-        <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
-          <div className="space-y-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#B88A3B]">
+    <Section id="contacto" className="pb-24 pt-12 sm:pt-16">
+      <div className="section-shell">
+        <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-start">
+          <div className="space-y-6">
+            <p className="inline-flex rounded-full border border-[#d8c2a6] bg-white/80 px-4 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.2em] text-[var(--brand-copper-deep)]">
               {brand.name}
             </p>
-            <h2 className="section-heading sm:text-3xl">{brand.tagline}</h2>
+            <h2 className="section-heading">{brand.tagline}</h2>
             <p className="section-body">
-              Coordinemos una entrevista para conocer la situación de cada
-              estudiante y proponer un plan de acompañamiento a medida.
+              Coordinemos una entrevista inicial para conocer la situacion de
+              cada estudiante y definir un plan de acompanamiento realista,
+              claro y sostenido.
             </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div className="rounded-[1.2rem] border border-[#dcc7ac] bg-white/70 px-4 py-3 text-sm text-[var(--ink-700)] shadow-[0_9px_20px_rgba(84,56,28,0.11)]">
+                Modalidad individual o grupal segun necesidad.
+              </div>
+              <div className="rounded-[1.2rem] border border-[#dcc7ac] bg-white/70 px-4 py-3 text-sm text-[var(--ink-700)] shadow-[0_9px_20px_rgba(84,56,28,0.11)]">
+                Propuesta definida en base a objetivos y contexto.
+              </div>
+            </div>
           </div>
-          <Card className="space-y-4 text-left">
-            <p className="text-sm font-semibold text-[#4a3725]">Contacto</p>
-            <p className="section-secondary">
-              Dejanos tu consulta y nos pondremos en contacto para coordinar
-              disponibilidad, modalidad y objetivos de acompañamiento.
+          <Card className="space-y-5 text-left">
+            <p className="font-display text-[1.4rem] leading-none text-[var(--ink-900)]">
+              Contacto
             </p>
-            <div className="space-y-1 text-sm text-[#6a5743]">
-              <p>📍 {ingeniumContact.addressLine}</p>
+            <p className="section-secondary">
+              Dejanos tu consulta y nos comunicamos para coordinar
+              disponibilidad, modalidad y objetivos de trabajo.
+            </p>
+            <div className="space-y-1 text-sm text-[var(--ink-700)]">
+              <p>{ingeniumContact.addressLine}</p>
               <a
                 href={ingeniumContact.googleMapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Abrir ubicación de Ingenium en Google Maps"
-                className="text-sm font-semibold text-[#B88A3B] hover:text-[#a97c33]"
+                className="font-semibold text-[var(--brand-copper)] transition hover:text-[var(--brand-copper-deep)]"
               >
                 Ver ubicación en Google Maps
               </a>

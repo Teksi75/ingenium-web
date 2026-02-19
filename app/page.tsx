@@ -12,11 +12,20 @@ import ProposalsSection from "@/components/sections/ProposalsSection";
 import StickyNav from "@/components/sections/StickyNav";
 import SupportSection from "@/components/sections/SupportSection";
 import TechnologySection from "@/components/sections/TechnologySection";
+import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-paper text-[#3f2f20]">
-      <main>
+    <div className="site-stage min-h-screen bg-paper text-[var(--ink-800)]">
+      <main className="relative z-10">
+        <section className="px-5 pt-6 sm:px-7 sm:pt-8 lg:px-10">
+          <div className="mx-auto w-full max-w-[74rem]">
+            <div className="flex flex-wrap items-center justify-between gap-3 rounded-full border border-[#d9c3a6] bg-white/70 px-5 py-2.5 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-[var(--ink-600)] shadow-[0_10px_22px_rgba(91,60,30,0.14)]">
+              <p>Ingenium instituto educativo</p>
+              <p>Acompanamiento personalizado y sostenido</p>
+            </div>
+          </div>
+        </section>
         <PaperBackground variant="hero" allowOverflow>
           <FloralDecor variant="leftTop" />
           <Hero />
@@ -55,20 +64,20 @@ export default function Home() {
         <FloralSeparator />
         <ContactCTA />
       </main>
-      <footer className="px-6 pb-16 pt-6">
-        <div className="mx-auto flex max-w-6xl items-center justify-center">
+      <footer className="relative z-10 px-6 pb-16 pt-4">
+        <div className="mx-auto flex max-w-[74rem] items-center justify-center">
           <a
             href="https://www.instagram.com/ingenium_barbaratomba?igsh=ZDhzMWhuNTdzMWp3"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Instagram de Ingenium"
-            className="inline-flex items-center justify-center text-[#6a5743] transition hover:text-[#B88A3B]"
+            className="inline-flex items-center justify-center rounded-full border border-[#d5bc99] bg-white/72 p-3 text-[var(--ink-600)] shadow-[0_10px_22px_rgba(91,60,30,0.14)] transition hover:-translate-y-0.5 hover:border-[#bf8e57] hover:text-[var(--brand-copper)]"
           >
-            <img
+            <Image
               src="/media/ingenium/icons/instagram.svg"
               alt="Instagram"
-              width="24"
-              height="24"
+              width={24}
+              height={24}
               className="h-6 w-6"
             />
           </a>

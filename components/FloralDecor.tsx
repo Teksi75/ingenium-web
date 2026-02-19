@@ -5,13 +5,13 @@ import { cn } from "@/lib/utils";
 
 const decorVariants = {
   leftTop:
-    "-left-6 top-4 w-[160px] opacity-35 sm:-left-10 sm:w-[210px] md:-left-14 md:w-[260px]",
+    "-left-6 top-10 w-[170px] opacity-35 sm:-left-10 sm:w-[220px] md:-left-14 md:w-[270px]",
   leftMid:
-    "-left-10 top-2 w-[190px] opacity-35 sm:-left-14 sm:-top-2 sm:w-[240px] md:-left-20 md:-top-4 md:w-[280px]",
+    "-left-10 top-6 w-[190px] opacity-35 sm:-left-14 sm:top-2 sm:w-[240px] md:-left-20 md:-top-2 md:w-[290px]",
   rightBottom:
-    "-right-6 bottom-0 w-[170px] opacity-30 sm:-right-10 sm:w-[220px] md:-right-14 md:w-[270px]",
+    "-right-6 bottom-2 w-[180px] opacity-30 sm:-right-10 sm:w-[230px] md:-right-14 md:w-[280px]",
   rightTop:
-    "-right-6 top-6 w-[150px] opacity-35 sm:-right-10 sm:w-[200px] md:-right-14 md:w-[240px]",
+    "-right-6 top-10 w-[155px] opacity-35 sm:-right-10 sm:w-[205px] md:-right-14 md:w-[250px]",
 } as const;
 
 type PaperBackgroundProps = {
@@ -50,13 +50,12 @@ export function PaperBackground({
   allowOverflow = false,
   children,
 }: PaperBackgroundProps) {
-  const backgroundClass =
-    variant === "hero" ? "bg-paper" : "bg-paper-section";
+  const backgroundClass = variant === "hero" ? "bg-paper" : "bg-paper-section";
 
   return (
     <section
       className={cn(
-        "relative",
+        "relative isolate",
         allowOverflow ? "overflow-visible" : "overflow-hidden",
         backgroundClass,
         className,
@@ -64,7 +63,11 @@ export function PaperBackground({
     >
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 z-0 bg-grain opacity-45"
+        className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.7),transparent_45%)]"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0 bg-grain opacity-40"
       />
       <div className="relative z-10">{children}</div>
     </section>
@@ -76,7 +79,7 @@ export function FloralDecor({ variant, className }: FloralDecorProps) {
     <div
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute z-[1] select-none blur-[0.4px]",
+        "pointer-events-none absolute z-[1] select-none blur-[0.25px] saturate-90",
         decorVariants[variant],
         className,
       )}
@@ -99,7 +102,7 @@ export function FloralIcon({ icon = "flor", className }: FloralIconProps) {
     <div
       aria-hidden="true"
       className={cn(
-        "flex h-14 w-14 items-center justify-center overflow-hidden rounded-full bg-[#f8ecd7]",
+        "flex h-14 w-14 items-center justify-center overflow-hidden rounded-full border border-[#e1c7a7] bg-[linear-gradient(160deg,#f9efdf,#f4e2c8)] shadow-[0_9px_20px_rgba(129,86,43,0.22)]",
         className,
       )}
     >

@@ -15,7 +15,7 @@ export default function InterviewSection() {
           <ul className="grid gap-3 section-body sm:grid-cols-2">
             {section.items?.map((item) => (
               <li key={item.title} className="flex gap-3">
-                <span className="mt-2 h-2 w-2 rounded-full bg-[#B88A3B]" />
+                <span className="mt-2 h-2 w-2 rounded-full bg-[var(--brand-copper)]" />
                 <span>{item.title}</span>
               </li>
             ))}
