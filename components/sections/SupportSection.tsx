@@ -43,7 +43,12 @@ export default function SupportSection() {
             <div className="flex justify-center">
               <a
                 href={cta.href}
-                className={buttonVariants({ variant: "secondary" })}
+                className={buttonVariants({
+                  variant: "secondary",
+                  fullWidth: true,
+                  className:
+                    "max-w-3xl whitespace-normal text-center leading-relaxed sm:whitespace-nowrap",
+                })}
               >
                 {cta.label}
               </a>
