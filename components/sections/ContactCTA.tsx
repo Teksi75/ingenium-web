@@ -21,14 +21,6 @@ export default function ContactCTA() {
               cada estudiante y definir un plan de acompanamiento realista,
               claro y sostenido.
             </p>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <div className="rounded-[1.2rem] border border-[#dcc7ac] bg-white/70 px-4 py-3 text-sm text-[var(--ink-700)] shadow-[0_9px_20px_rgba(84,56,28,0.11)]">
-                Modalidad individual o grupal segun necesidad.
-              </div>
-              <div className="rounded-[1.2rem] border border-[#dcc7ac] bg-white/70 px-4 py-3 text-sm text-[var(--ink-700)] shadow-[0_9px_20px_rgba(84,56,28,0.11)]">
-                Propuesta definida en base a objetivos y contexto.
-              </div>
-            </div>
           </div>
           <Card className="space-y-5 text-left">
             <p className="font-display text-[1.4rem] leading-none text-[var(--ink-900)]">
@@ -39,7 +31,7 @@ export default function ContactCTA() {
               disponibilidad, modalidad y objetivos de trabajo.
             </p>
             <div className="space-y-1 text-sm text-[var(--ink-700)]">
-              <p>{ingeniumContact.addressLine}</p>
+              <p>📍 {ingeniumContact.addressLine}</p>
               <a
                 href={ingeniumContact.googleMapsUrl}
                 target="_blank"
