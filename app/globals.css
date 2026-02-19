@@ -241,7 +241,7 @@ html {
 
   .section-heading {
     font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
-    font-size: clamp(2rem, 1.54rem + 1.7vw, 3.25rem);
+    font-size: clamp(1.7rem, 1.35rem + 1.2vw, 2.55rem);
     line-height: 1.08;
     color: var(--ink-950);
     text-wrap: balance;
@@ -252,6 +252,14 @@ html {
     font-size: clamp(1.35rem, 1.14rem + 0.9vw, 1.92rem);
     line-height: 1.18;
     color: var(--ink-800);
+    text-wrap: pretty;
+  }
+
+  .card-heading {
+    font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(1.12rem, 1.02rem + 0.55vw, 1.58rem);
+    line-height: 1.22;
+    color: var(--ink-900);
     text-wrap: pretty;
   }
 

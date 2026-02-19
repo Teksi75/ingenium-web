@@ -15,7 +15,7 @@ export default function FaqSection() {
           <div className="grid gap-6 md:grid-cols-2">
             {section.items?.map((item) => (
               <Card key={item.title} className="flex h-full flex-col gap-3 text-left">
-                <h3 className="section-subheading">{item.title}</h3>
+                <h3 className="card-heading">{item.title}</h3>
                 <p className="section-secondary">{item.body}</p>
               </Card>
             ))}
