@@ -46,8 +46,8 @@ export default function SupportSection() {
                 className={buttonVariants({
                   variant: "secondary",
                   fullWidth: true,
-                  className:
-                    "max-w-3xl whitespace-normal text-center leading-relaxed sm:whitespace-nowrap",
+                  wrap: true,
+                  className: "max-w-3xl text-center leading-relaxed",
                 })}
               >
                 {cta.label}
