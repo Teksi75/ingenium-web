@@ -16,7 +16,7 @@ export default function ExamsSection() {
           <div className="grid gap-6 lg:grid-cols-1">
             {section.items?.map((item) => (
               <Card key={item.title} className="flex h-full flex-col gap-4 text-left">
-                <h3 className="section-subheading">{item.title}</h3>
+                <h3 className="card-heading">{item.title}</h3>
                 <div className="space-y-3 section-secondary">
                   {item.list ? (
                     <div className="space-y-2">
