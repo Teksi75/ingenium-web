@@ -14,10 +14,10 @@ export default function Hero() {
         <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="space-y-8">
             <div className="space-y-5">
-              <h1 className="text-3xl font-semibold uppercase tracking-[0.25em] text-[#B88A3B] sm:text-4xl lg:text-5xl">
+              <h1 className="text-4xl font-semibold uppercase tracking-[0.25em] text-[#B88A3B] sm:text-5xl lg:text-6xl">
                 {hero.title}
               </h1>
-              <h2 className="section-heading max-w-2xl">
+              <h2 className="section-subheading max-w-2xl">
                 {hero.subtitle}
               </h2>
               <p className="section-body max-w-2xl">
@@ -33,12 +33,6 @@ export default function Hero() {
                 className={buttonVariants({ variant: "primary", fullWidth: true })}
               >
                 {primaryCta.label}
-              </a>
-              <a
-                href="#contacto"
-                className={buttonVariants({ variant: "secondary", fullWidth: true })}
-              >
-                Coordinar entrevista inicial
               </a>
             </div>
           </div>
