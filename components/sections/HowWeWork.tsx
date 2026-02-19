@@ -26,7 +26,7 @@ export default function HowWeWork() {
                   className={index === 1 ? "bg-[#f5e2c7]" : undefined}
                 />
                 <div className="space-y-3">
-                  <h3 className="section-subheading">
+                  <h3 className="card-heading">
                     {item.title}
                   </h3>
                   <p className="section-secondary">
