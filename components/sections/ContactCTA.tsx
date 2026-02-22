@@ -23,7 +23,7 @@ export default function ContactCTA() {
             </p>
           </div>
           <Card className="space-y-5 text-left">
-            <p className="font-display text-[1.4rem] leading-none text-[var(--ink-900)]">
+            <p className="font-display text-[1.4rem] leading-none text-[var(--ink-950)]">
               Contacto
             </p>
             <p className="section-secondary">
