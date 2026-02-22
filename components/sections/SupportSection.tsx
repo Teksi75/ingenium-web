@@ -26,10 +26,10 @@ export default function SupportSection() {
               <Card key={item.title} className="flex h-full flex-col gap-4 text-left">
                 <FloralIcon
                   icon={iconByIndex[index % iconByIndex.length]}
-                  className={index % 2 === 1 ? "bg-[#f5e2c7]" : undefined}
+                  className={index % 2 === 1 ? "bg-[linear-gradient(160deg,#f6e5cb,#efd6b1)]" : undefined}
                 />
                 <div className="space-y-3">
-                  <h3 className="section-subheading">
+                  <h3 className="card-heading">
                     {item.title}
                   </h3>
                   <p className="section-secondary">
@@ -43,7 +43,12 @@ export default function SupportSection() {
             <div className="flex justify-center">
               <a
                 href={cta.href}
-                className={buttonVariants({ variant: "secondary" })}
+                className={buttonVariants({
+                  variant: "secondary",
+                  fullWidth: true,
+                  wrap: true,
+                  className: "max-w-3xl text-center leading-relaxed",
+                })}
               >
                 {cta.label}
               </a>

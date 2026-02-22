@@ -1,50 +1,39 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import { ingeniumContact } from "@/lib/contact";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://ingenium-web.vercel.app"),
-  title: "Ingenium — Apoyo educativo",
+  title: "INGENIUM - Instituto de Acompañamiento Educativo",
   description:
-    "Apoyo educativo y organización para rendir materias previas con acompañamiento personalizado.",
-  icons: {
-    icon: "/media/ingenium/icons/flor-sola.png",
-  },
+    "Acompañamiento educativo personalizado para primaria y secundaria. Clases individuales y grupales para potenciar el aprendizaje.",
   openGraph: {
-    title: "Ingenium — Apoyo educativo",
+    title: "INGENIUM - Instituto de Acompañamiento Educativo",
     description:
-      "Apoyo educativo y organización para rendir materias previas con acompañamiento personalizado.",
-    url: "https://ingenium-web.vercel.app/",
-    siteName: "Ingenium",
-    locale: "es_AR",
-    type: "website",
+      "Acompañamiento educativo personalizado para primaria y secundaria. Clases individuales y grupales para potenciar el aprendizaje.",
+    url: "https://institutoingenium.com",
+    siteName: "INGENIUM",
     images: [
       {
-        url: "https://ingenium-web.vercel.app/og-image.png",
-        alt: "Ingenium — Apoyo educativo",
+        url: "https://institutoingenium.com/og.jpg",
         width: 1200,
         height: 630,
-        type: "image/png",
+        alt: "INGENIUM - Instituto de Acompañamiento Educativo",
       },
     ],
+    locale: "es_AR",
+    type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Ingenium — Apoyo educativo",
+    title: "INGENIUM - Instituto de Acompañamiento Educativo",
     description:
-      "Apoyo educativo y organización para rendir materias previas con acompañamiento personalizado.",
-    images: ["/media/ingenium/illustrations/flores-corazon.png"],
+      "Acompañamiento educativo personalizado para primaria y secundaria. Clases individuales y grupales para potenciar el aprendizaje.",
+    images: ["https://institutoingenium.com/og.jpg"],
+  },
+  alternates: {
+    canonical: "https://institutoingenium.com",
   },
 };
 
@@ -56,26 +45,21 @@ export default function RootLayout({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
-    name: ingeniumContact.name,
+    name: "INGENIUM",
+    description: "Instituto de Acompañamiento Educativo",
+    url: "https://institutoingenium.com",
+    telephone: ingeniumContact.whatsappNumber,
     address: {
       "@type": "PostalAddress",
-      streetAddress: `${ingeniumContact.addressParts.streetAddress}, ${ingeniumContact.addressParts.neighborhood}, ${ingeniumContact.addressParts.department}`,
-      addressLocality: ingeniumContact.addressParts.addressLocality,
-      addressRegion: ingeniumContact.addressParts.addressRegion,
-      addressCountry: ingeniumContact.addressParts.addressCountry,
+      ...ingeniumContact.addressParts,
     },
-    telephone: ingeniumContact.whatsappNumber.replace(/\s/g, ""),
-    hasMap: ingeniumContact.googleMapsUrl,
   };
 
   return (
-    <html lang="en">
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+    <html lang="es">
+      <body className="antialiased">
         <script
           type="application/ld+json"
-          // eslint-disable-next-line react/no-danger
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(structuredData),
           }}

@@ -20,9 +20,9 @@ export default function PedagogicSection() {
             {section.items?.map((item) => (
               <li
                 key={item.title}
-                className="flex gap-3 rounded-[2rem] border border-[#eadfce] bg-white/90 p-4 section-secondary shadow-[0_12px_28px_rgba(157,121,68,0.1)]"
+                className="flex gap-3 rounded-[1.4rem] border border-[#dcc7ac] bg-white/76 p-4 section-secondary shadow-[0_10px_22px_rgba(89,60,31,0.11)]"
               >
-                <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[#B88A3B]" />
+                <span className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[var(--brand-copper)]" />
                 <span>{item.title}</span>
               </li>
             ))}

@@ -14,13 +14,13 @@ export default function FloralSeparator({
   return (
     <div
       className={cn(
-        "relative flex justify-center -mt-8 -mb-8 py-6 sm:-mt-12 sm:-mb-12 sm:py-8 lg:py-10",
+        "relative flex justify-center -mb-8 -mt-4 py-4 sm:-mb-10 sm:-mt-6 sm:py-6 lg:py-8",
         wrapperClassName,
       )}
     >
       <div
         aria-hidden="true"
-        className={cn("pointer-events-none select-none opacity-30", className)}
+        className={cn("pointer-events-none select-none opacity-35", className)}
       >
         <Image
           src="/media/ingenium/illustrations/flores-corazon.png"
