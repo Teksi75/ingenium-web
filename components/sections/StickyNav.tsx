@@ -16,16 +16,33 @@ export default function StickyNav() {
     <div className="sticky top-3 z-40 px-4 sm:px-6">
       <div className="mx-auto w-full max-w-[74rem] rounded-[1.4rem] border border-[var(--paper-border)] bg-white/72 shadow-[0_14px_30px_rgba(95,66,35,0.18)] backdrop-blur-md">
         <div className="md:hidden">
-          <button
-            type="button"
-            aria-expanded={open}
-            aria-controls="mobile-nav-panel"
-            onClick={() => setOpen((value) => !value)}
-            className="flex w-full items-center justify-between px-4 py-3 text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--ink-700)]"
+          <div className="flex items-center gap-2 px-3 py-2.5">
+            <button
+              type="button"
+              aria-expanded={open}
+              aria-controls="mobile-nav-panel"
+              onClick={() => setOpen((value) => !value)}
+              className="flex min-w-0 flex-1 items-center justify-between rounded-full border border-transparent bg-transparent px-2 py-1.5 text-[0.66rem] font-semibold uppercase tracking-[0.18em] text-[var(--ink-700)]"
             >
               <span>Menú</span>
               <span className="text-xs">{open ? "Cerrar" : "Abrir"}</span>
             </button>
+            <a
+              href={instagramHref}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram de Ingenium"
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-[#d5bc99] bg-white/82 text-[var(--ink-700)] shadow-[0_8px_18px_rgba(91,60,30,0.12)] transition duration-200 hover:border-[#bf8e57] hover:bg-white"
+            >
+              <Image
+                src="/media/ingenium/icons/instagram.svg"
+                alt="Instagram"
+                width={18}
+                height={18}
+                className="h-[18px] w-[18px]"
+              />
+            </a>
+          </div>
           {open ? (
             <nav
               id="mobile-nav-panel"
@@ -42,22 +59,6 @@ export default function StickyNav() {
                   {item.navLabel}
                 </a>
               ))}
-              <a
-                href={instagramHref}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram de Ingenium"
-                className="flex items-center justify-between rounded-xl border border-[#d5bc99] bg-white/80 px-3 py-2 text-[0.68rem] font-semibold uppercase tracking-[0.13em] text-[var(--ink-700)] transition duration-200 hover:border-[#bf8e57] hover:text-[var(--brand-copper-deep)]"
-              >
-                <span>Instagram</span>
-                <Image
-                  src="/media/ingenium/icons/instagram.svg"
-                  alt=""
-                  width={18}
-                  height={18}
-                  className="h-[18px] w-[18px]"
-                />
-              </a>
             </nav>
           ) : null}
         </div>

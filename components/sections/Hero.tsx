@@ -9,7 +9,7 @@ export default function Hero() {
   const primaryCta = hero.ctas[0];
 
   return (
-    <Section className="pt-12 sm:pt-16 lg:pt-20">
+    <Section className="pt-4 sm:pt-10 lg:pt-14">
       <div className="section-shell">
         <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="space-y-8">

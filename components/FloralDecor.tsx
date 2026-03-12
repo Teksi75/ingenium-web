@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 const decorVariants = {
   leftTop:
-    "-left-6 top-10 w-[170px] opacity-35 sm:-left-10 sm:w-[220px] md:-left-14 md:w-[270px]",
+    "-left-6 top-2 w-[170px] opacity-35 sm:-left-10 sm:top-10 sm:w-[220px] md:-left-14 md:w-[270px]",
   leftMid:
     "-left-10 top-6 w-[190px] opacity-35 sm:-left-14 sm:top-2 sm:w-[240px] md:-left-20 md:-top-2 md:w-[290px]",
   rightBottom:
