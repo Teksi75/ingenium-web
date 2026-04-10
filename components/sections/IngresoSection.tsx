@@ -14,6 +14,7 @@ export default function IngresoSection() {
           <div className="space-y-4 text-center">
             <h2 className="section-heading sm:text-3xl">{section.title}</h2>
             <p className="section-body">{section.body}</p>
+            <p className="text-sm font-medium text-[var(--ink-600)]">App exclusiva para alumnos de INGENIUM</p>
           </div>
 
           <div className="grid gap-6 md:grid-cols-2">
