@@ -7,6 +7,7 @@ import Image from "next/image";
 export default function Hero() {
   const { hero } = ingeniumSections;
   const primaryCta = hero.ctas[0];
+  const secondaryCta = hero.ctas[1];
 
   return (
     <Section className="pt-4 sm:pt-10 lg:pt-14">
@@ -14,6 +15,13 @@ export default function Hero() {
         <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
           <div className="space-y-8">
             <div className="space-y-5">
+              <a
+                href="#ingreso-uncuyo"
+                className="inline-flex items-center gap-2 rounded-full border border-[#bf8e57] bg-[linear-gradient(135deg,#fdf8f3,#f9e8d4)] px-4 py-1.5 text-[0.72rem] font-semibold uppercase tracking-[0.14em] text-[var(--brand-copper-deep)] shadow-[0_6px_16px_rgba(139,94,60,0.12)] transition hover:-translate-y-0.5 hover:border-[var(--brand-copper)] hover:shadow-[0_10px_22px_rgba(139,94,60,0.18)]"
+              >
+                <span className="inline-flex items-center justify-center rounded-full bg-[var(--brand-copper)] px-2 py-0.5 text-[0.6rem] font-bold uppercase text-white">NUEVO</span>
+                Preparamos el ingreso a los colegios de la UNCuyo →
+              </a>
               <h1 className="text-4xl font-semibold uppercase tracking-[0.25em] text-[#B88A3B] sm:text-5xl lg:text-6xl">
                 {hero.title}
               </h1>
@@ -34,6 +42,14 @@ export default function Hero() {
               >
                 {primaryCta.label}
               </a>
+              {secondaryCta ? (
+                <a
+                  href={secondaryCta.href}
+                  className={buttonVariants({ variant: "secondary", fullWidth: true })}
+                >
+                  {secondaryCta.label}
+                </a>
+              ) : null}
             </div>
           </div>
           <div>

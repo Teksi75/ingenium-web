@@ -1,4 +1,5 @@
 import { ingeniumContact } from "@/lib/contact";
+import { AUTOEVAL_URLS } from "@/lib/contact";
 
 type SectionCta = {
   label: string;
@@ -41,6 +42,11 @@ const hero = {
       label: "Consultar por WhatsApp",
       href: ingeniumContact.whatsappUrl,
       variant: "primary",
+    },
+    {
+      label: "Prepararme para el ingreso",
+      href: "#ingreso-uncuyo",
+      variant: "secondary",
     },
   ],
 } as const;
@@ -231,6 +237,34 @@ const sections = [
       {
         title: "¿Cómo se define la propuesta?",
         body: "En la entrevista inicial, según la trayectoria y el momento.",
+      },
+    ],
+  },
+  {
+    id: "ingreso-uncuyo",
+    navLabel: "Ingreso UNCuyo",
+    title: "Ingreso a los colegios secundarios de la UNCuyo",
+    body: "Acompañamos la preparación del examen de ingreso con práctica guiada, seguimiento y retroalimentación. Contenidos de Lengua y Matemática pensados para lo que pedís.",
+    items: [
+      {
+        title: "Preparación integral",
+        body: "Lengua y Matemática con actividades y autoevaluaciones diseñadas para el perfil del ingreso.",
+      },
+      {
+        title: "Seguimiento y retroalimentación",
+        body: "El alumno practica y recibe devolución inmediata. La familia y el docente pueden acompañar el proceso.",
+      },
+    ],
+    ctas: [
+      {
+        label: "Quiero prepararme para el ingreso",
+        href: AUTOEVAL_URLS.home,
+        variant: "primary",
+      },
+      {
+        label: "Consultar por WhatsApp",
+        href: ingeniumContact.whatsappUrl,
+        variant: "secondary",
       },
     ],
   },

@@ -1,6 +1,16 @@
 const whatsappPrefillMessage =
   "Hola, quisiera información sobre el acompañamiento educativo en Ingenium.\nQuería saber cómo trabajan y si tienen disponibilidad.";
 
+export const AUTOEVAL_BASE_URL = "https://ingenium-autoevaluaciones.vercel.app" as const;
+
+export const AUTOEVAL_URLS = {
+  home: AUTOEVAL_BASE_URL,
+  alumno: `${AUTOEVAL_BASE_URL}/alumno`,
+  profesor: `${AUTOEVAL_BASE_URL}/profesor`,
+  lengua: `${AUTOEVAL_BASE_URL}/alumno/lengua`,
+  matematica: `${AUTOEVAL_BASE_URL}/alumno/matematica`,
+} as const;
+
 export const ingeniumContact = {
   name: "INGENIUM Apoyo escolar",
   whatsappNumber: "+54 9 2615010488",
