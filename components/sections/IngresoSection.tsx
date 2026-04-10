@@ -11,27 +11,26 @@ export default function IngresoSection() {
     <Section id={section.id}>
       <div className="section-shell">
         <div className="space-y-10">
-          <div className="space-y-4 text-center">
-            <h2 className="section-heading sm:text-3xl">{section.title}</h2>
-            <p className="section-body">{section.body}</p>
-            <div className="flex flex-col items-center gap-2">
+<div className="space-y-4 text-center">
+              <h2 className="section-heading sm:text-3xl">{section.title}</h2>
+              <p className="section-body">{section.body}</p>
               <p className="inline-flex items-center gap-2 rounded-full border border-[#bf8e57] bg-[linear-gradient(135deg,#fdf8f3,#f9e8d4)] px-4 py-1.5 text-sm font-semibold text-[var(--brand-copper-deep)] shadow-[0_4px_12px_rgba(139,94,60,0.1)]">
                 App exclusiva para alumnos de INGENIUM
               </p>
-              <p className="text-sm text-[var(--ink-500)]">Acceso promocional abierto al público</p>
             </div>
-          </div>
 
-          <div className="grid gap-6 md:grid-cols-2">
-            {section.items?.map((item) => (
-              <Card key={item.title} className="flex h-full flex-col gap-3 text-left">
-                <h3 className="card-heading">{item.title}</h3>
-                {item.body ? <p className="section-secondary">{item.body}</p> : null}
-              </Card>
-            ))}
-          </div>
+            <div className="grid gap-6 md:grid-cols-2">
+              {section.items?.map((item) => (
+                <Card key={item.title} className="flex h-full flex-col gap-3 text-left">
+                  <h3 className="card-heading">{item.title}</h3>
+                  {item.body ? <p className="section-secondary">{item.body}</p> : null}
+                </Card>
+              ))}
+            </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
+            <p className="text-center text-sm font-medium text-[var(--ink-500)]">Acceso promocional abierto al público — tocá la materia para empezar</p>
+
+            <div className="grid gap-4 sm:grid-cols-2">
             <a
               href={AUTOEVAL_URLS.home}
               target="_blank"
