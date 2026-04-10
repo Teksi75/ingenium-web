@@ -244,7 +244,7 @@ const sections = [
     id: "ingreso-uncuyo",
     navLabel: "Ingreso UNCuyo",
     title: "Ingreso a los colegios secundarios de la UNCuyo",
-    body: "Acompañamos la preparación del examen de ingreso con práctica guiada, seguimiento y retroalimentación. Contenidos de Lengua y Matemática pensados para lo que pedís.",
+    body: "Preparación integral con práctica guiada y seguimiento personalizado. Lengua y Matemática orientadas al ingreso.",
     items: [
       {
         title: "Preparación integral",
