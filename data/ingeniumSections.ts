@@ -42,11 +42,6 @@ const hero = {
       href: ingeniumContact.whatsappUrl,
       variant: "primary",
     },
-    {
-      label: "Prepararme para el ingreso",
-      href: "#ingreso-uncuyo",
-      variant: "secondary",
-    },
   ],
 } as const;
 

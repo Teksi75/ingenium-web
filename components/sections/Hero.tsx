@@ -7,7 +7,6 @@ import Image from "next/image";
 export default function Hero() {
   const { hero } = ingeniumSections;
   const primaryCta = hero.ctas[0];
-  const secondaryCta = hero.ctas[1];
 
   return (
     <Section className="pt-4 sm:pt-10 lg:pt-14">
@@ -42,14 +41,6 @@ export default function Hero() {
               >
                 {primaryCta.label}
               </a>
-              {secondaryCta ? (
-                <a
-                  href={secondaryCta.href}
-                  className={buttonVariants({ variant: "secondary", fullWidth: true })}
-                >
-                  {secondaryCta.label}
-                </a>
-              ) : null}
             </div>
           </div>
           <div>
