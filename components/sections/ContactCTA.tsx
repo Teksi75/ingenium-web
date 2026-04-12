@@ -1,5 +1,5 @@
 import { ingeniumCopy } from "@/content/ingenium.copy";
-import { ingeniumContact, AUTOEVAL_URLS } from "@/lib/contact";
+import { ingeniumContact } from "@/lib/contact";
 import { Card } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import Section from "@/components/ui/Section";
@@ -47,14 +47,6 @@ export default function ContactCTA() {
               className={buttonVariants({ variant: "primary", fullWidth: true })}
             >
               {hero.ctaPrimary.label}
-            </a>
-            <a
-              href={AUTOEVAL_URLS.home}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={buttonVariants({ variant: "secondary", fullWidth: true })}
-            >
-              Prepararme para el ingreso
             </a>
           </Card>
         </div>

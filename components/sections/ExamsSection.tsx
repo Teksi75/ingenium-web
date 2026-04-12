@@ -1,7 +1,5 @@
 import { ingeniumSectionsById } from "@/data/ingeniumSections";
-import { AUTOEVAL_URLS } from "@/lib/contact";
 import { Card } from "@/components/ui/card";
-import { buttonVariants } from "@/components/ui/button";
 import Section from "@/components/ui/Section";
 
 export default function ExamsSection() {
@@ -39,14 +37,6 @@ export default function ExamsSection() {
                 </div>
               </Card>
             ))}
-          </div>
-          <div className="flex justify-center">
-            <a
-              href={AUTOEVAL_URLS.home}
-              className={buttonVariants({ variant: "primary" })}
-            >
-              Prepararme para el ingreso
-            </a>
           </div>
         </div>
       </div>

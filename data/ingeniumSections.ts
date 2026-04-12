@@ -1,5 +1,4 @@
 import { ingeniumContact } from "@/lib/contact";
-import { AUTOEVAL_URLS } from "@/lib/contact";
 
 type SectionCta = {
   label: string;
@@ -257,14 +256,9 @@ const sections = [
     ],
     ctas: [
       {
-        label: "Quiero prepararme para el ingreso",
-        href: AUTOEVAL_URLS.home,
-        variant: "primary",
-      },
-      {
         label: "Consultar por WhatsApp",
         href: ingeniumContact.whatsappUrl,
-        variant: "secondary",
+        variant: "primary",
       },
     ],
   },
