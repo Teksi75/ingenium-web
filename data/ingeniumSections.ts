@@ -258,6 +258,46 @@ const sections = [
     ],
   },
   {
+    id: "preuniversitarios",
+    navLabel: "Preuniversitarios",
+    title: "Preuniversitarios UTN y UNCuyo — Matemática y Física",
+    body: "Preparación para los ingresos a UTN y UNCuyo en Matemática y Física, con práctica guiada y seguimiento cercano. Grupos reducidos. La propuesta se define en entrevista inicial según el punto de partida.",
+    items: [
+      {
+        title: "Matemática",
+        body: "Explicación y práctica a tu ritmo, con devolución cercana.",
+      },
+      {
+        title: "Física",
+        body: "Comprensión y resolución guiada, paso a paso.",
+      },
+      {
+        title: "Seguimiento",
+        body: "Devolución y planificación según el punto de partida.",
+      },
+    ],
+    ctas: [
+      {
+        label: "Consultar por WhatsApp",
+        href: ingeniumContact.whatsappUrl,
+        variant: "primary",
+      },
+    ],
+  },
+  {
+    id: "ingreso-etec",
+    navLabel: "Ingreso ETEC",
+    title: "Preparación ETEC",
+    body: "Acompañamiento para el ingreso a la ETEC, con organización del estudio y práctica guiada. La propuesta se define en entrevista inicial.",
+    ctas: [
+      {
+        label: "Consultar por WhatsApp",
+        href: ingeniumContact.whatsappUrl,
+        variant: "primary",
+      },
+    ],
+  },
+  {
     id: "contacto",
     navLabel: "Contacto",
     title: "Contacto",

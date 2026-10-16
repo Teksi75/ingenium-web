@@ -7,6 +7,8 @@ import FaqSection from "@/components/sections/FaqSection";
 import GroupsSection from "@/components/sections/GroupsSection";
 import Hero from "@/components/sections/Hero";
 import IngresoSection from "@/components/sections/IngresoSection";
+import PreuniversitariosSection from "@/components/sections/PreuniversitariosSection";
+import EtecSection from "@/components/sections/EtecSection";
 import InterviewSection from "@/components/sections/InterviewSection";
 import PedagogicSection from "@/components/sections/PedagogicSection";
 import ProposalsSection from "@/components/sections/ProposalsSection";
@@ -26,6 +28,12 @@ export default function Home() {
         <StickyNav />
         <PaperBackground variant="section" allowOverflow>
           <IngresoSection />
+        </PaperBackground>
+        <PaperBackground variant="section" allowOverflow>
+          <PreuniversitariosSection />
+        </PaperBackground>
+        <PaperBackground variant="section" allowOverflow>
+          <EtecSection />
         </PaperBackground>
         <PaperBackground variant="section" allowOverflow>
           <FloralDecor variant="leftMid" />

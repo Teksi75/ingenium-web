@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
+import { ingeniumSectionsById } from "@/data/ingeniumSections";
 import { ingeniumContact } from "@/lib/contact";
 import { SITE_ORIGIN } from "@/lib/site";
 import "./globals.css";
 
 const title = "INGENIUM | Apoyo escolar e ingresos en Vistalba, Mendoza";
 const description =
-  "Apoyo escolar para primaria y secundaria y preparación para el ingreso en Vistalba, Mendoza. Acompañamiento educativo personalizado, con clases individuales y grupales.";
+  "Apoyo escolar para primaria y secundaria, preparación ETEC y preuniversitarios UTN y UNCuyo (Matemática y Física) en Vistalba, Mendoza. Acompañamiento educativo personalizado, con clases individuales y grupales.";
 const socialImage = `${SITE_ORIGIN}/og-image.png`;
 
 export const metadata: Metadata = {
@@ -63,6 +64,22 @@ export default function RootLayout({
     ],
   };
 
+  const faqItems = (ingeniumSectionsById["faq"].items ?? []).filter(
+    (item) => item.body,
+  );
+  const faqStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.title,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.body,
+      },
+    })),
+  };
+
   return (
     <html lang="es">
       <body className="antialiased">
@@ -70,6 +87,12 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(faqStructuredData).replace(/</g, "\\u003c"),
           }}
         />
         {children}
