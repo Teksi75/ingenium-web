@@ -1,0 +1,28 @@
+# AEO discoverability and agent model fleet
+
+Technical discoverability for AI answer engines on the Ingenium institutional site, plus the environment prerequisites the user requested. No redesign, no deployment, no ranking/recommendation guarantees.
+
+## Specs
+
+- S1 — User request verbatim: "Ok vamos abrir un nuevo tree o rama, no se cual es término corecto, la idea es hacer visible la web del instituto para las AI, quiero una optimización para que una AI recomiende el instituto, creo que esto se llma AEO Answer Engine Optimization)"
+- S2 — Official URL, user selection verbatim: "ingenium-web.vercel.app". Canonical metadata, social previews, JSON-LD identity, robots and sitemap use exactly `https://ingenium-web.vercel.app`.
+- S3 — User request verbatim: "un detalle el proyecto debería documentar que se usa pnpm, chequea esto" — docs state pnpm as the project package manager; no lockfile migration or dependency-script approvals in this work.
+- S4 — User request verbatim: "corrije el problema", with the reported error: "[Error: Failed to open database Caused by: 0: Loading persistence directory failed 1: La operación de nube no se completó antes de que expirara el período de tiempo de espera. (os error 426)]" — Next.js development must start inside the OneDrive worktree without approving dependency build scripts.
+- S5 — User request verbatim: "necesito que cambies las asignación de modelo de opencode opencode-codex (los que tienes asignados actualmente) por los de opencodex priorizando para los distintos subagentes los modelos de mimo-v2.6-pro y flash tambien puedes asignar el modelo de deepseek-v4.1-flash una vez que lo hagas dime listo para continuar con aeo-discoverability"
+
+## Tasks
+
+- [x] T1 (S3, S4) — OneDrive dev startup fix (`turbopack.root` pinned, dev persistence off) + pnpm docs. Route: inline TDD (RED 2 fail + headers pass, GREEN 3/3) + delegated ESM test migration. Evidence: HTTP startup test pass (Ready 946ms, homepage 200), production build exit 0, independent verifier R1-R4 no blockers. Commit: uncommitted working tree.
+- [x] T2 (S1, S2) — Technical identity slice: `lib/site.ts` single origin, truthful metadata, existing `public/og-image.png`, EducationalOrganization JSON-LD, robots wildcard allow preserved, sitemap without synthetic lastmod. Route: delegated bounded writer. Evidence: public tests GREEN 4/4, `git diff --check` clean. Commit: uncommitted working tree.
+- [x] T3 (S1) — Verification finished: superseded `tests/next-config.test.cjs` deleted (ESM replacement 3/3), full lint exit 0, final production build exit 0 (TypeScript + 6/6 static pages). Discoverability scope continues after this checkpoint.
+- [x] T4 (S5) — Subagent model fleet reassigned from openai-codex (gpt-6.1-sol/gpt-6-luna) to opencode-go models: mimo-v2.6-pro for heavy work (worker, verify, research/design/verify sdd, review-risk, review-reliability), mimo-v2.6-flash for lighter work (explore, fix-agent, readability/resilience reviews, most sdd tasks), deepseek-v4.1-flash for jd-judge-a, sdd-apply and sdd-sync (exact ID confirmed in models-store.json). Applied to both `C:/Users/pablo/.gentle-shell/agent` and `C:/Users/pablo/.pi/agent`: subagents.json model_profiles AND agents/*.md frontmatter (line 4), cross-validated 33 profiles against models-store.json. Backups: `backups/manual-model-reassign-20261016/` in each dir (subagents.json + agents/*.md). All effort/thinking fields preserved.
+- [ ] T5 (S1) — Continue AEO/discoverability after T4 checkpoint.
+
+## Log
+
+- L1 (2026-10-16): S1 request verbatim above; user corrected terminology to AEO and authorized new branch/worktree. Branch `feat/aeo-discoverability` created.
+- L2: S2 decision — official URL "ingenium-web.vercel.app" (not institutoingenium.com). S3 pnpm clarification applied to README/docs; pnpm 12.11.2 present, repo tracks package-lock.json and a user-created pnpm-lock.yaml/pnpm-workspace.yaml with unreviewed allowBuilds placeholders.
+- L3: S4 diagnosis — os error 426 from Turbopack persistent dev database on OneDrive plus wrong workspace root inference (ancestor lockfile at C:/Users/pablo). Fix verified: config tests 3/3, config lint pass, one user-authorized prolonged HTTP check (120s budget) exit 0, production build exit 0, independent verification R1-R4 no blockers. Native assess unavailable (package-local-binary-missing).
+- L4 (2026-10-16): T2 implemented by bounded writer; RED 3 fail + robots pass observed before, GREEN 4/4 after. Full lint found 6 CommonJS require() errors in our own `tests/next-config.test.cjs`; delegated ESM migration partial (worker cannot delete); deletion parent-owned.
+- L5 (2026-10-16): S5 model reassignment requested; user reported the os error 426 again, but that run lacked the `turbopackFileSystemCacheForDev` banner our fix prints — the fix was not active in that run (other worktree or stale output). Engram mem_save failing ("unable to open database file"); this file is the persistence fallback.
+- L6 (2026-10-16): S5 done with explicit user authorization for out-of-project config paths. Deepseek model ID resolved as `deepseek-v4.1-flash` (user said "deepseek-v4.1-flast" and was unsure). Superseded `tests/next-config.test.cjs` deleted (worker rules forbid deletion; parent-owned); full lint green after removal; config suite 3/3 re-confirmed; final production build exit 0 (TypeScript + 6/6 static pages) after lint green.

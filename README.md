@@ -2,17 +2,34 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+Use **pnpm** for this project.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
+
+Other project commands:
+
+```bash
+pnpm lint
+pnpm build
+pnpm start
+```
+
+Run `pnpm start` after a successful build.
+
+Dependency metadata is still being aligned with this convention: Git currently tracks `package-lock.json`, while running pnpm has created a local `pnpm-lock.yaml` and `pnpm-workspace.yaml`. `package.json` does not yet pin a package-manager version. This change does not migrate lockfiles or approve dependency build scripts.
+
+### Development inside OneDrive
+
+`next.config.ts` pins `turbopack.root` to this project directory so a lockfile in a parent folder cannot make Next.js watch the wrong workspace. Development filesystem caching is disabled to avoid opening Turbopack's persistent database on OneDrive, which can fail with `Failed to open database` and Windows cloud timeout `os error 426`.
+
+This only disables the persistent development compilation cache: Next.js still writes normal `.next` output, and other cloud-file failures remain possible. Restarting development may compile more slowly; production build caching is unchanged. No cache deletion, dependency upgrade, security-header change or parent-directory modification is needed.
+
+Run `pnpm exec node --test tests/next-config.test.mjs` to check the configuration and preservation of the existing response headers. A configuration test does not replace checking that `pnpm dev` reaches `Ready` and serves the homepage.
+
+If pnpm reports `ERR_PNPM_IGNORED_BUILDS`, inspect the dependency scripts before making an explicit decision with `pnpm approve-builds`. Do not disable dependency verification or approve all scripts to hide the error. The current local `pnpm-workspace.yaml` contains placeholder values for `sharp` and `unrs-resolver`; these are not reviewed approvals, and this fix leaves them unchanged.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
