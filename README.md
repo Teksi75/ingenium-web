@@ -21,6 +21,10 @@ Run `pnpm start` after a successful build.
 
 The project is pnpm-managed: Git tracks `pnpm-lock.yaml` and `pnpm-workspace.yaml`; `package-lock.json` was removed so every environment resolves the same dependency tree. Do not recreate a second lockfile.
 
+## Pending work
+
+Open [`PENDIENTES.md`](PENDIENTES.md) for the live checklist of what is left to do — owner-side external registrations (Search Console, Bing, Business Profile, Vercel crawl settings) and items waiting for owner input. If someone asks "what is left to do?" or "which pending tasks are there?", that file is the answer.
+
 ### Development inside OneDrive
 
 `next.config.ts` pins `turbopack.root` to this project directory so a lockfile in a parent folder cannot make Next.js watch the wrong workspace. Development filesystem caching is disabled to avoid opening Turbopack's persistent database on OneDrive, which can fail with `Failed to open database` and Windows cloud timeout `os error 426`.
