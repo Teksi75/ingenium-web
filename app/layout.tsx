@@ -4,9 +4,9 @@ import { ingeniumContact } from "@/lib/contact";
 import { SITE_ORIGIN } from "@/lib/site";
 import "./globals.css";
 
-const title = "INGENIUM | Apoyo escolar e ingresos en Vistalba, Mendoza";
+const title = "INGENIUM | Apoyo escolar e ingresos en Luján de Cuyo, Mendoza";
 const description =
-  "Apoyo escolar para primaria y secundaria, preparación ETEC y preuniversitarios UTN y UNCuyo (Matemática y Física) en Vistalba, Mendoza. Acompañamiento educativo personalizado, con clases individuales y grupales.";
+  "Apoyo escolar para primaria y secundaria, preparación ETEC y preuniversitarios UTN y UNCuyo (Matemática y Física) en Luján de Cuyo, cerca de Chacras de Coria, Mendoza. Acompañamiento educativo personalizado, con clases individuales y grupales.";
 const socialImage = `${SITE_ORIGIN}/og-image.png`;
 
 export const metadata: Metadata = {

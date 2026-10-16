@@ -232,6 +232,26 @@ const sections = [
         title: "¿Cómo se define la propuesta?",
         body: "En la entrevista inicial, según la trayectoria y el momento.",
       },
+      {
+        title: "¿Dónde queda el instituto?",
+        body:
+          "Estamos en el Barrio Valle Cordón del Plata, en Luján de Cuyo (Mendoza), cerca de Chacras de Coria. La ubicación exacta, con link a Google Maps, está en la sección Contacto.",
+      },
+      {
+        title: "¿Acompañan a estudiantes de todos los niveles?",
+        body:
+          "Acompañamos a estudiantes de todos los niveles: primaria, secundaria y universidad.",
+      },
+      {
+        title: "¿Se pueden preparar materias adeudadas, previas o libres?",
+        body:
+          "Sí: ayudamos a preparar materias adeudadas, previas o libres en cualquier momento del año (febrero/junio).",
+      },
+      {
+        title: "¿Preparan el ingreso a la ETEC, a los colegios de la UNCuyo o a las carreras de ingeniería?",
+        body:
+          "Sí: preparamos el ingreso a la ETEC, a los colegios de la UNCuyo y el preuniversitario de Ingeniería para UTN y UNCuyo.",
+      },
     ],
   },
   {
