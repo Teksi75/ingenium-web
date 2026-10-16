@@ -19,7 +19,7 @@ pnpm start
 
 Run `pnpm start` after a successful build.
 
-Dependency metadata is still being aligned with this convention: Git currently tracks `package-lock.json`, while running pnpm has created a local `pnpm-lock.yaml` and `pnpm-workspace.yaml`. `package.json` does not yet pin a package-manager version. This change does not migrate lockfiles or approve dependency build scripts.
+The project is pnpm-managed: Git tracks `pnpm-lock.yaml` and `pnpm-workspace.yaml`; `package-lock.json` was removed so every environment resolves the same dependency tree. Do not recreate a second lockfile.
 
 ### Development inside OneDrive
 
@@ -29,7 +29,7 @@ This only disables the persistent development compilation cache: Next.js still w
 
 Run `pnpm exec node --test tests/next-config.test.mjs` to check the configuration and preservation of the existing response headers. A configuration test does not replace checking that `pnpm dev` reaches `Ready` and serves the homepage.
 
-If pnpm reports `ERR_PNPM_IGNORED_BUILDS`, inspect the dependency scripts before making an explicit decision with `pnpm approve-builds`. Do not disable dependency verification or approve all scripts to hide the error. The current local `pnpm-workspace.yaml` contains placeholder values for `sharp` and `unrs-resolver`; these are not reviewed approvals, and this fix leaves them unchanged.
+If pnpm reports `ERR_PNPM_IGNORED_BUILDS`, inspect the dependency scripts before making an explicit decision with `pnpm approve-builds`. Do not disable dependency verification or approve all scripts to hide the error. `pnpm-workspace.yaml` approves exactly two reviewed build scripts: `sharp` (`node install/check.js`, prebuilt binary check for Next.js image optimization) and `unrs-resolver` (`napi-postinstall check`, native binding check used by the Next.js ESLint toolchain). Any new ignored build gets inspected the same way before approval.
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
