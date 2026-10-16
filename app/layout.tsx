@@ -1,24 +1,25 @@
 import type { Metadata } from "next";
 import { ingeniumContact } from "@/lib/contact";
+import { SITE_ORIGIN } from "@/lib/site";
 import "./globals.css";
 
-
+const title = "INGENIUM | Apoyo escolar e ingresos en Vistalba, Mendoza";
+const description =
+  "Apoyo escolar para primaria y secundaria y preparación para el ingreso en Vistalba, Mendoza. Acompañamiento educativo personalizado, con clases individuales y grupales.";
+const socialImage = `${SITE_ORIGIN}/og-image.png`;
 
 export const metadata: Metadata = {
-  title: "INGENIUM - Instituto de Acompañamiento Educativo",
-  description:
-    "Acompañamiento educativo personalizado para primaria y secundaria. Clases individuales y grupales para potenciar el aprendizaje.",
+  metadataBase: new URL(SITE_ORIGIN),
+  title,
+  description,
   openGraph: {
-    title: "INGENIUM - Instituto de Acompañamiento Educativo",
-    description:
-      "Acompañamiento educativo personalizado para primaria y secundaria. Clases individuales y grupales para potenciar el aprendizaje.",
-    url: "https://institutoingenium.com",
+    title,
+    description,
+    url: SITE_ORIGIN,
     siteName: "INGENIUM",
     images: [
       {
-        url: "https://institutoingenium.com/og.jpg",
-        width: 1200,
-        height: 630,
+        url: socialImage,
         alt: "INGENIUM - Instituto de Acompañamiento Educativo",
       },
     ],
@@ -27,13 +28,12 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "INGENIUM - Instituto de Acompañamiento Educativo",
-    description:
-      "Acompañamiento educativo personalizado para primaria y secundaria. Clases individuales y grupales para potenciar el aprendizaje.",
-    images: ["https://institutoingenium.com/og.jpg"],
+    title,
+    description,
+    images: [socialImage],
   },
   alternates: {
-    canonical: "https://institutoingenium.com",
+    canonical: "/",
   },
 };
 
@@ -45,14 +45,22 @@ export default function RootLayout({
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "EducationalOrganization",
+    "@id": `${SITE_ORIGIN}/#organization`,
     name: "INGENIUM",
-    description: "Instituto de Acompañamiento Educativo",
-    url: "https://institutoingenium.com",
+    description,
+    url: SITE_ORIGIN,
     telephone: ingeniumContact.whatsappNumber,
     address: {
       "@type": "PostalAddress",
-      ...ingeniumContact.addressParts,
+      streetAddress: ingeniumContact.addressParts.streetAddress,
+      addressLocality: ingeniumContact.addressParts.addressLocality,
+      addressRegion: ingeniumContact.addressParts.addressRegion,
+      addressCountry: "AR",
     },
+    hasMap: ingeniumContact.googleMapsUrl,
+    sameAs: [
+      "https://www.instagram.com/ingenium_barbaratomba?igsh=ZDhzMWhuNTdzMWp3",
+    ],
   };
 
   return (
@@ -61,7 +69,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(structuredData),
+            __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
           }}
         />
         {children}

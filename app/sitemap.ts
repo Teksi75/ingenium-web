@@ -1,10 +1,10 @@
 import type { MetadataRoute } from "next";
+import { SITE_ORIGIN } from "@/lib/site";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
-      url: "https://ingenium-web.vercel.app/",
-      lastModified: new Date(),
+      url: `${SITE_ORIGIN}/`,
     },
   ];
 }
