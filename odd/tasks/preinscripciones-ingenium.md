@@ -17,11 +17,12 @@ S11 — Verification: "pnpm lint"; "pnpm build"; "Pruebas existentes."; "Nuevas 
 S12 — Permission boundaries: "No realizar sin autorización:"; "Migraciones sobre bases remotas."; "Creación de proyectos externos."; "Modificaciones de producción."; "Publicación en Vercel."; "Push o merge a GitHub."; "Cambios en secretos y credenciales."; "Si se requieren valores de conexión con Supabase y todavía no están disponibles, prepará la integración e indicá exactamente qué datos faltan y cómo configurarlos de forma segura."
 
 ## Tasks
-T1 | S1,S2,S4,S5,S6,S8 | worker: shared configuration, payload contract and validation tests | in_progress | commit pending; RED/GREEN pending
-T2 | S2-S6,S9 | worker: responsive four-step public page and form tests | pending | commit pending
-T3 | S2,S7-S9,S12 | worker: server API, private SQL migration, capacity/idempotency/abuse controls and tests/docs | pending | commit pending | Risk: item 2 (private minors' information), item 4 (concurrent confirmations)
-T4 | S3,S10,S12 | worker: homepage links, metadata/sitemap, operational documentation and regression tests | pending | commit pending
-T5 | S1-S12 | parent + independent verifier: final functional checks, security review and report | pending | commit pending; remote integration requires nonproduction Supabase access and explicit migration authorization
+T1 | S1,S2,S4,S5,S6,S8 | worker: shared configuration, payload contract and validation tests | done | commit 8c223d9 (slice 1: 513 authored code/test lines + 543 tracking lines); RED exit 1 missing config; GREEN 27/27 exit 0; typecheck exit 0; parent spot-check 27/27; native medium/not due under_budget (base c848bc13165ba3d6b1f1ed92ceb01a2959828676). Risk: none (new unconnected pure contract).
+T2 | S2-S6,S9 | worker: responsive four-step public page and form tests | done | commit pending; RED missing form-state exit 1; GREEN form 24/24 + contract 27/27; typecheck exit 0; parent joint spot-check passed
+T3 | S2,S7-S9,S12 | worker: implement server API, private SQL migration and tests/docs | done (local implementation only; engine proof T6) | commit pending; RED missing implementation exit 1; GREEN 34/34; typecheck exit 0; parent joint check total 85/85; denied .env.example not retried, ignore restored, variables documented | Risk: item 2 (private minors' information), item 4 (concurrent confirmations)
+T4 | S3,S10,S12 | worker: homepage links, metadata/sitemap, operational documentation and regression tests | done | commit pending; RED 3 integration assertions failed; GREEN 13/13; typecheck exit 0; existing WhatsApp and FAQ content preserved
+T5 | S1-S12 | parent + independent verifier: final local functional checks, security review and report | in_progress | lint/full suite running; build/browser/independent verification pending; commits and candidate assessment pending
+T6 | S7,S8,S11,S12 | authorized operator: real PostgreSQL/Supabase privilege, persistence and concurrency proof | blocked | requires authorized disposable nonproduction Supabase/PostgreSQL, connection credentials configured by human and explicit migration authorization; no remote operations performed
 
 ## Log
 L1 — Original request (verbatim):

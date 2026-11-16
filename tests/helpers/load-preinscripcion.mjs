@@ -27,14 +27,14 @@ function loadModule(filename) {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
     fileName: filename,
   });
-  const module = { exports: {} };
-  cache.set(filename, module);
+  const loadedModule = { exports: {} };
+  cache.set(filename, loadedModule);
   const localRequire = (specifier) => {
     if (!specifier.startsWith("./")) throw new Error(`Unsupported import: ${specifier}`);
     const resolved = path.resolve(path.dirname(filename), specifier);
     return loadModule(resolved.endsWith(".ts") ? resolved : `${resolved}.ts`);
   };
   const execute = new vm.Script(`(function(exports, require, module) {\n${outputText}\n})`, { filename });
-  execute.runInThisContext()(module.exports, localRequire, module);
-  return module.exports;
+  execute.runInThisContext()(loadedModule.exports, localRequire, loadedModule);
+  return loadedModule.exports;
 }
