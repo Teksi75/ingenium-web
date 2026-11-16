@@ -16,10 +16,33 @@ import StickyNav from "@/components/sections/StickyNav";
 import SupportSection from "@/components/sections/SupportSection";
 import TechnologySection from "@/components/sections/TechnologySection";
 import Image from "next/image";
+import { ingeniumSectionsById } from "@/data/ingeniumSections";
 
 export default function Home() {
+  const faqItems = (ingeniumSectionsById["faq"].items ?? []).filter(
+    (item) => item.body,
+  );
+  const faqStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.title,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.body,
+      },
+    })),
+  };
+
   return (
     <div className="site-stage min-h-screen bg-paper text-[var(--ink-800)]">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(faqStructuredData).replace(/</g, "\\u003c"),
+        }}
+      />
       <main className="relative z-10">
         <PaperBackground variant="hero" allowOverflow>
           <FloralDecor variant="leftTop" />

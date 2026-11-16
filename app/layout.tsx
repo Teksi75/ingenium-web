@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ingeniumSectionsById } from "@/data/ingeniumSections";
 import { ingeniumContact } from "@/lib/contact";
 import { SITE_ORIGIN } from "@/lib/site";
 import "./globals.css";
@@ -64,21 +63,8 @@ export default function RootLayout({
     ],
   };
 
-  const faqItems = (ingeniumSectionsById["faq"].items ?? []).filter(
-    (item) => item.body,
-  );
-  const faqStructuredData = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faqItems.map((item) => ({
-      "@type": "Question",
-      name: item.title,
-      acceptedAnswer: {
-        "@type": "Answer",
-        text: item.body,
-      },
-    })),
-  };
+  // Homepage-only FAQPage JSON-LD lives in app/page.tsx, beside its visible FAQ.
+  // Keep organization identity global without attributing those answers to every route.
 
   return (
     <html lang="es">
@@ -87,12 +73,6 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(structuredData).replace(/</g, "\\u003c"),
-          }}
-        />
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify(faqStructuredData).replace(/</g, "\\u003c"),
           }}
         />
         {children}
