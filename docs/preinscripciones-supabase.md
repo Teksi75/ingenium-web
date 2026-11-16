@@ -2,7 +2,9 @@
 
 ## Estado y límites
 
-Implementación preparada para `/api/preinscripcion`, ciclo de cursado **2027**, ingreso **2028**. No se aplicaron migraciones ni se usaron proyectos remotos, credenciales o datos reales. Las pruebas Node del SQL son **estructurales**, no ejecutan PostgreSQL. Falta la prueba real de migración, privilegios, escritura/lectura autorizada y concurrencia en un entorno desechable autorizado. No habilitar producción sin esa evidencia y revisión independiente de permisos/capacidad.
+Implementación de `/api/preinscripcion`, ciclo de cursado **2027**, ingreso **2028**. La migración se aplicó **una sola vez** en el proyecto autorizado `ingenium-preinscripciones-test` (Free, São Paulo), nunca en producción. Pasaron las aserciones SQL reales con rollback, escritura/lectura administrativa, catorce denegaciones bajo roles reales y las carreras concurrentes de cupos, replay, duplicado y conflicto. Sólo se usaron datos ficticios. Las pruebas Node del SQL siguen siendo **estructurales** y se distinguen de esa ejecución PostgreSQL.
+
+La concurrencia se observó mediante `pg_stat_activity`: A mantenía su transacción y B esperaba un bloqueo en otro backend. Quedaron ocho confirmaciones únicas; la novena siguió recibida sin slot. Replay conservó el comprobante y los rechazos no incrementaron contadores. El esquema privado está excluido de la Data API. Pasaron cinco comprobaciones HTTP con una clave pública válida: control positivo Auth 200; lectura privada, cambio de estado y función administrativa rechazados con 406/PGRST106; tabla pública inexistente con 404/PGRST205; RPC de envío directo denegado con 401/42501. Una consulta administrativa nueva confirmó que esos intentos no alteraron las doce solicitudes ni el contador total de doce. El endpoint raíz REST exige una clave secreta: su 401 previo no invalidaba la clave pública ni probaba aislamiento. Siguen pendientes la autenticación HTTP con clave de servidor, su compatibilidad con las claves actuales y la recepción integrada en Vercel. El proyecto contiene doce fixtures sintéticos: no reaplicar la migración ni repetir allí preparaciones que exigen una base vacía. No se borraron datos. No habilitar producción sin resolver además lector de pantalla, privacidad y acceso del equipo.
 
 Una solicitud recibida **no confirma una vacante**. El servidor toma ciclo, ingreso y versiones del contrato de `lib/preinscripcion/config.ts`, nunca del navegador. No hay consulta pública de recibos, vistas públicas ni API administrativa.
 
@@ -108,7 +110,7 @@ PGSERVICE=ingenium_prereg_test psql -X -v ON_ERROR_STOP=1 -f supabase/migrations
 PGSERVICE=ingenium_prereg_test psql -X -v ON_ERROR_STOP=1 -f supabase/tests/preinscripciones.sql
 ```
 
-No se ejecutaron aquí: no están disponibles psql, Docker, CLI ni MCP Supabase. `supabase/tests/preinscripciones.sql` incluye privilegios/RLS, replay/conflicto/dedupe, contador transaccional, expiración, consentimiento, longitudes, octava/novena confirmación, INSERT/UPDATE directos, compatibilidad/ciclo, cancelación, transferencia y timestamps, con rollback integral. Debe pasar antes de considerar probada la migración.
+`supabase/tests/preinscripciones.sql` se ejecutó íntegro mediante SQL Editor en el proyecto de pruebas autorizado y pasó. Un SELECT final independiente confirmó el resultado nuevo y el rollback: cero solicitudes/ventanas de límite remanentes y cuatro grupos. Incluye privilegios/RLS, replay/conflicto/dedupe, contador transaccional, expiración, consentimiento, longitudes, octava/novena confirmación, INSERT/UPDATE directos, compatibilidad/ciclo, cancelación, transferencia y timestamps. Los comandos psql de arriba son sólo una alternativa documentada: no se usaron ni se instalaron psql, Docker o CLI/MCP Supabase.
 
 ### Procedimiento concurrente (dos sesiones PostgreSQL)
 
