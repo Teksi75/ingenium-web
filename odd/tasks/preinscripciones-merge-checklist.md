@@ -13,6 +13,8 @@
 - [ ] **3. Lector de pantalla real.** Teclado, foco y etiquetas ya están probados; no sustituyen una prueba con tecnología asistiva real.
 - [ ] **4. Privacidad y administración aprobadas por el instituto.** Responsables, cuentas individuales/MFA, mínimo privilegio, plazo y procedimiento de retención/supresión, respaldo, rectificación y atención de derechos. Sin panel: el acceso restringido está documentado en `docs/preinscripciones-supabase.md`.
 
+- [ ] **5. Revisión nativa del candidato acumulado.** Todo el sistema (30 rutas desde `c848bc1`) sigue **sin revisión nativa**; es el paso previo obligatorio antes de entregar bajo RDD. Se inicia con una decisión de consentimiento tuya. El 16/11 elegiste explícitamente **dejarlo sin revisar hasta mañana** (target `sha256:8ac7cdc7…`), así que no hay transacción abierta ni autoridad consumida.
+
 Además, el merge y la publicación en producción requieren **tu autorización explícita**: no está dada.
 
 ## B. Después del merge — comprobaciones de ~10 minutos
