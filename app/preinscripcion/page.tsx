@@ -59,7 +59,6 @@ export default function PreinscripcionPage() {
               <ul className="space-y-4 text-sm leading-relaxed">
                 {config.program.features.map((feature) => <li key={feature} className="flex gap-3"><span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--brand-sage)]" /><span>{feature}</span></li>)}
               </ul>
-              <p className="border-t border-[var(--paper-border)] pt-5 text-sm leading-relaxed text-[var(--ink-600)]">{config.terms.fees} {config.terms.agreement}</p>
             </aside>
             <section id="formulario" aria-label="Formulario de preinscripción" className="min-w-0 scroll-mt-6">
               <Card className="p-5 sm:p-8 md:hover:translate-y-0">
