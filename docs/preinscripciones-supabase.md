@@ -8,13 +8,13 @@ La concurrencia se observó mediante `pg_stat_activity`: A mantenía su transacc
 
 **Recepción integrada local comprobada:** el build real de Next, con variables sólo en su proceso, creó una solicitud ficticia (201); el reintento idéntico devolvió 200 con el mismo comprobante; cambiar contenido bajo la misma clave y repetir estudiante con otra clave devolvieron 409 con el mismo mensaje privado, sin comprobante. La lectura administrativa verificó todos los campos, ciclo 2027/2028, consentimientos y estado `recibida`, sin grupo/slot confirmado. Tras cada reintento/rechazo quedaron idénticos la fila completa y los contadores: **13 solicitudes / límite total 13 / 8 confirmadas / 5 recibidas**. Sólo se agregó un fixture; no se descontó una vacante. Se comprobaron `no-store`, `noindex, nofollow` y ausencia de CORS público. El servidor local propio quedó detenido. Los desajustes de las herramientas auxiliares se corrigieron sin modificar la aplicación: nombres de columnas SQL únicos y `updated_at` según `clock_timestamp()`, no igualdad con la creación transaccional.
 
-**Pendiente:** publicar la rama y verificar una nueva Preview protegida con variables limitadas a esa rama; todavía no se guardaron en Vercel. El proyecto contiene trece fixtures sintéticos: no reaplicar la migración ni repetir preparaciones que exigen una base vacía. No se borraron datos. No habilitar producción sin resolver además lector de pantalla, privacidad y acceso del equipo.
+**Preview protegida, aún no verificada de extremo a extremo:** la rama `feat/preinscripciones-ingenium` está publicada y tiene exactamente dos variables Secret exclusivas de esa rama. La Preview `cb1ac0e` está Ready y bloquea el acceso anónimo, pero su primer POST de formulario devolvió 401 porque el cliente omitía las cookies de autenticación. La corrección usa `same-origin`; requiere un nuevo despliegue y recepción sintética comprobada antes de dar la Preview por funcional. La lectura administrativa posterior al 401 confirmó **13 solicitudes / límite total 13 / 8 confirmadas / 5 recibidas**, sin el nuevo fixture. No reaplicar la migración, repetir preparaciones ni borrar datos. Producción y main no se modificaron; lector de pantalla, privacidad y acceso del equipo siguen siendo requisitos previos a producción.
 
 Una solicitud recibida **no confirma una vacante**. El servidor toma ciclo, ingreso y versiones del contrato de `lib/preinscripcion/config.ts`, nunca del navegador. No hay consulta pública de recibos, vistas públicas ni API administrativa.
 
 ## Configuración del servidor
 
-La URL y la clave del proyecto **no productivo** autorizado ya se comprobaron en el proceso del servidor local, sin archivos de credenciales. Falta guardarlas en Vercel únicamente para `feat/preinscripciones-ingenium`, entorno **Preview** protegido, no Production ni todas las ramas:
+La URL y la clave del proyecto **no productivo** autorizado se comprobaron en el servidor local, sin archivos de credenciales. Ya están guardadas en Vercel como Secrets únicamente para `feat/preinscripciones-ingenium`, entorno **Preview** protegido, no Production ni todas las ramas. No volver a copiar, revelar o rotar esos valores para comprobar su alcance:
 
 | Variable (sólo servidor) | Valor que debe configurar el operador |
 | --- | --- |
@@ -26,7 +26,7 @@ No usar nombres `NEXT_PUBLIC_*`, pegar claves en documentación/chat, commitearl
 
 Las variables nuevas sólo se aplican a despliegues nuevos. Primero publicar la rama no productiva, seleccionar esa rama al guardar las variables y redesplegar; una Preview anterior no toma los cambios retroactivamente. Conservar Vercel Authentication / Standard Protection y comprobar el nuevo commit, entorno y recepción sintética antes de dar la Preview por verificada. Referencia: [variables de Vercel](https://vercel.com/docs/environment-variables).
 
-No se requieren cookies ni Supabase en el frontend. La dependencia `server-only` separa el código privilegiado del cliente. La ruta usa `fetch` REST RPC, timeout de **8 segundos**, sin redirecciones ni reintentos automáticos. Oculta errores internos y no registra PII, claves ni hashes.
+El frontend no utiliza el SDK ni claves de Supabase. Su POST relativo a `/api/preinscripcion` usa `credentials: "same-origin"` para conservar la autenticación de Vercel en una Preview protegida, nunca `include` para otros orígenes; mantiene `cache: "no-store"` y `redirect: "error"`. La API conserva la validación estricta de Origin y no requiere una cuenta de Supabase de las familias. No desactivar Deployment Protection para resolver un 401. La dependencia `server-only` separa el código privilegiado del cliente. La ruta usa `fetch` REST RPC, timeout de **8 segundos**, sin redirecciones ni reintentos automáticos. Oculta errores internos y no registra PII, claves ni hashes.
 
 ## Migración y preproducción (requiere autorización)
 

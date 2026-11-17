@@ -123,29 +123,31 @@ test("synchronous submission lock rejects double clicks and allows a retry after
   assert.equal(lock.tryAcquire(), true);
 });
 
-test("POST uses exact normalized contract and header only, no credentials; 201 and replay 200 accept UUID receipts", async () => {
+test("POST uses exact normalized contract and same-origin credentials only; 201 and replay 200 accept UUID receipts", async () => {
   const attempt = state.prepareAttempt(valid(), null, () => uuid);
   for (const status of [201, 200]) {
     let calls = 0;
+    let credentialMode;
     const result = await state.sendAttempt(attempt, async (url, options) => {
       calls++;
+      credentialMode = options.credentials;
       assert.equal(url, "/api/preinscripcion");
       assert.equal(options.method, "POST");
       assert.equal(options.headers["Idempotency-Key"], uuid);
       assert.equal(options.headers["Content-Type"], "application/json");
-      assert.equal(options.credentials, "omit");
       assert.equal(options.cache, "no-store");
       assert.equal(options.redirect, "error");
       assert.ok(options.signal instanceof AbortSignal);
       assert.deepEqual(JSON.parse(options.body), validateSubmission(valid()).data);
       return response(status, { publicCode: secondUuid });
     });
+    assert.equal(credentialMode, "same-origin");
     assert.deepEqual(result, { ok: true, publicCode: secondUuid });
     assert.equal(calls, 1);
   }
 });
 
-for (const status of [400, 403, 409, 413, 415, 429, 503]) {
+for (const status of [400, 401, 403, 409, 413, 415, 429, 503]) {
   test(`HTTP ${status} preserves draft/attempt and exposes recoverable errors, never a receipt`, async () => {
     const draft = { data: valid(), attempt: state.prepareAttempt(valid(), null, () => uuid) };
     const before = structuredClone(draft);
@@ -154,6 +156,18 @@ for (const status of [400, 403, 409, 413, 415, 429, 503]) {
     assert.deepEqual(draft, before);
   });
 }
+
+test("non-JSON 401 from protected deployment preserves draft/attempt and never becomes a receipt", async () => {
+  // Characterization of the actual protected-Preview failure: Vercel answered 401
+  // with an HTML authentication page, so json() must fail honestly, not succeed.
+  const draft = { data: valid(), attempt: state.prepareAttempt(valid(), null, () => uuid) };
+  const before = structuredClone(draft);
+  const result = await state.sendAttempt(draft.attempt, async () => new Response("<html>Unauthorized</html>", { status: 401 }));
+  assert.equal(result.ok, false);
+  assert.equal(Object.hasOwn(result, "publicCode"), false);
+  assert.match(result.message, /reintentar/);
+  assert.deepEqual(draft, before);
+});
 
 test("missing, predictable, non-v4 and malformed receipts, unexpected status and invalid JSON never succeed", async () => {
   const attempt = state.prepareAttempt(valid(), null, () => uuid);

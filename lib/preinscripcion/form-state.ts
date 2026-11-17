@@ -82,7 +82,8 @@ export async function sendAttempt(attempt: SendAttempt, fetcher: typeof fetch = 
   try {
     const response = await fetcher("/api/preinscripcion", {
       method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": attempt.key },
-      body: JSON.stringify(attempt.payload), credentials: "omit", cache: "no-store", redirect: "error",
+      // Preserve protected Preview authentication on this origin only.
+      body: JSON.stringify(attempt.payload), credentials: "same-origin", cache: "no-store", redirect: "error",
       signal: controller.signal,
     });
     const body: unknown = await response.json();
