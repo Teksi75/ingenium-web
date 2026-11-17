@@ -57,8 +57,8 @@ export const preinscripcionConfig = {
     acceptanceLabel: "Leí y acepto la información del programa y las condiciones informativas de esta preinscripción.",
   },
   privacy: {
-    version: "1",
-    notice: "El Instituto Ingenium utilizará los datos del estudiante y su responsable para gestionar la preinscripción, el contacto y la organización de horarios. Supabase actuará como encargado del tratamiento para el almacenamiento de la solicitud. No se divulgarán los datos públicamente ni se utilizarán para comunicaciones promocionales. Podés ejercer tus derechos de acceso, rectificación y supresión de datos mediante los canales de contacto existentes del instituto.",
+    version: "2",
+    notice: "El Instituto Ingenium usará los datos del estudiante y de su responsable para gestionar la preinscripción, contactarte y organizar los horarios. La solicitud se guarda mediante un proveedor de alojamiento de datos que presta el servicio por cuenta de Ingenium. No se divulgarán los datos públicamente ni se usarán para promociones. Podés contactar al instituto para solicitar el acceso, la rectificación o la supresión de tus datos.",
     sensitiveDataNotice: "No incluyas diagnósticos médicos, certificados ni información sensible en las observaciones. No solicitamos DNI, domicilio completo ni documentación en esta etapa.",
     contactHref: "/#contacto",
     acceptanceLabel: "Leí el aviso de privacidad y doy mi consentimiento informado para gestionar esta solicitud.",

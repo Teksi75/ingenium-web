@@ -69,11 +69,12 @@ test("public program, terms and versioned privacy copy state the limits of prere
   assert.equal(terms.version, "1");
   assert.match(terms.fees, /mensuales.*comienzo de cada mes/);
   assert.match(terms.agreement, /posteriormente.*detalles del curso.*condiciones económicas/);
-  assert.equal(privacy.version, "1");
-  assert.match(privacy.notice, /Instituto Ingenium.*preinscripción.*contacto.*horarios/);
-  assert.match(privacy.notice, /Supabase.*encargado/);
-  assert.match(privacy.notice, /No.*públicamente.*promocionales/);
-  assert.match(privacy.notice, /acceso, rectificación.*supresión/);
+  assert.equal(privacy.version, "2");
+  assert.match(privacy.notice, /Instituto Ingenium.*preinscripción.*contactarte.*horarios/);
+  assert.match(privacy.notice, /proveedor de alojamiento de datos.*por cuenta de Ingenium/);
+  assert.doesNotMatch(privacy.notice, /Supabase/i);
+  assert.match(privacy.notice, /No.*públicamente.*promociones/);
+  assert.match(privacy.notice, /acceso, la rectificación.*supresión/);
   assert.equal(privacy.contactHref, "/#contacto");
   assert.match(privacy.sensitiveDataNotice, /diagnósticos médicos.*certificados.*información sensible/);
 });

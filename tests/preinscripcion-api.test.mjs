@@ -100,7 +100,7 @@ test("confirmed persistence returns only unpredictable receipt; server owns year
   assert.equal(call.payload.p_course_year, 2027);
   assert.equal(call.payload.p_entry_year, 2028);
   assert.equal(call.payload.p_program_version, "1");
-  assert.equal(call.payload.p_privacy_version, "1");
+  assert.equal(call.payload.p_privacy_version, "2");
   assert.equal(call.payload.p_key, KEY);
   assert.equal(call.payload.p_data.email, "familia@example.test");
   assert.equal(call.payload.p_data.whatsapp, "5492615550101");
