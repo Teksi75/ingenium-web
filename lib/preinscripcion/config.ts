@@ -29,10 +29,10 @@ export const preinscripcionConfig = {
   maxStudentsPerGroup,
   grade: "séptimo grado",
   groups: [
-    { id: "grupo-1", label: "Grupo 1", schedule: "Lunes y miércoles, 17:30 a 19:00." },
-    { id: "grupo-2", label: "Grupo 2", schedule: "Martes y jueves, 17:30 a 19:00." },
-    { id: "grupo-3", label: "Grupo 3", schedule: "Lunes y miércoles, 16:00 a 17:30." },
-    { id: "grupo-4", label: "Grupo 4", schedule: "Martes y jueves, 16:00 a 17:30." },
+    { id: "grupo-1", label: "Grupo 1", schedule: "Lunes y miércoles, 17:30 a 19:00.", etecOnly: false },
+    { id: "grupo-2", label: "Grupo 2", schedule: "Martes y jueves, 17:30 a 19:00.", etecOnly: true },
+    { id: "grupo-3", label: "Grupo 3", schedule: "Lunes y miércoles, 16:00 a 17:30.", etecOnly: false },
+    { id: "grupo-4", label: "Grupo 4", schedule: "Martes y jueves, 16:00 a 17:30.", etecOnly: false },
   ],
   noPreferenceLabel: "Sin preferencia",
   program: {
@@ -54,6 +54,7 @@ export const preinscripcionConfig = {
     version: "1",
     fees: "Las cuotas son mensuales y se abonan al comienzo de cada mes.",
     agreement: "El convenio educativo se entregará posteriormente y contendrá los detalles del curso y las condiciones económicas.",
+    etecScheduleNote: "El horario del martes está destinado a los alumnos que aspiran a rendir el ingreso al ETec.",
     acceptanceLabel: "Leí y acepto la información del programa y las condiciones informativas de esta preinscripción.",
   },
   privacy: {

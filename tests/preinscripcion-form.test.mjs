@@ -98,6 +98,22 @@ test("a no-op group update preserves an existing retry key", () => {
   assert.equal(state.toggleGroup(draft, "grupo-1", true), draft);
 });
 
+test("choosing ETec pre-selects the Tuesday group; switching to UNCuyo drops it and its stale preference", () => {
+  let draft = { data: valid(), attempt: null };
+  draft = state.applyTargetSchool(draft, "etec");
+  assert.deepEqual(draft.data.groups, ["grupo-1", "grupo-3", "grupo-2"]);
+  assert.equal(draft.data.firstPreference, "grupo-3");
+
+  draft = state.applyTargetSchool(draft, "uncuyo");
+  assert.deepEqual(draft.data.groups, ["grupo-1", "grupo-3"]);
+  assert.equal(draft.data.firstPreference, "grupo-3");
+
+  const tuesdayOnly = { data: { ...valid(), groups: ["grupo-2"], firstPreference: "grupo-2" }, attempt: null };
+  assert.equal(state.applyTargetSchool(tuesdayOnly, "uncuyo").data.firstPreference, null);
+  assert.deepEqual(state.applyTargetSchool(tuesdayOnly, "uncuyo").data.groups, []);
+  assert.deepEqual(state.applyTargetSchool(tuesdayOnly, "ambos").data.groups, ["grupo-2"]);
+});
+
 test("unchanged retries keep UUID, real edits after an attempt invalidate it even when reverted", () => {
   let calls = 0;
   const key = () => (++calls === 1 ? uuid : secondUuid);

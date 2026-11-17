@@ -79,7 +79,7 @@ export function Receipt({ publicCode }: { publicCode: string }) {
     <div className="rounded-xl border border-[var(--paper-border)] bg-[var(--paper-soft)] p-5">
       <p className="text-sm font-semibold">Número público de solicitud</p>
       <p className="mt-2 break-all font-mono text-base">{publicCode}</p>
-      <p className="mt-3 text-sm">Guardá este número. El comprobante permanece en esta pantalla y no tiene un enlace público.</p>
+      <p className="mt-3 text-sm">Podés guardar este número. El comprobante permanece en esta pantalla y no tiene un enlace público.</p>
     </div>
     <p className="text-sm leading-relaxed text-[var(--ink-600)]">{config.program.vacancyNotice}</p>
   </section>;

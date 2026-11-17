@@ -34,10 +34,10 @@ test("config owns the permanent cycle, month precision, capacity and four stable
   assert.equal(preinscripcionConfig.grade, "séptimo grado");
   assert.equal(preinscripcionConfig.noPreferenceLabel, "Sin preferencia");
   assert.deepEqual(preinscripcionConfig.groups, [
-    { id: "grupo-1", label: "Grupo 1", schedule: "Lunes y miércoles, 17:30 a 19:00." },
-    { id: "grupo-2", label: "Grupo 2", schedule: "Martes y jueves, 17:30 a 19:00." },
-    { id: "grupo-3", label: "Grupo 3", schedule: "Lunes y miércoles, 16:00 a 17:30." },
-    { id: "grupo-4", label: "Grupo 4", schedule: "Martes y jueves, 16:00 a 17:30." },
+    { id: "grupo-1", label: "Grupo 1", schedule: "Lunes y miércoles, 17:30 a 19:00.", etecOnly: false },
+    { id: "grupo-2", label: "Grupo 2", schedule: "Martes y jueves, 17:30 a 19:00.", etecOnly: true },
+    { id: "grupo-3", label: "Grupo 3", schedule: "Lunes y miércoles, 16:00 a 17:30.", etecOnly: false },
+    { id: "grupo-4", label: "Grupo 4", schedule: "Martes y jueves, 16:00 a 17:30.", etecOnly: false },
   ]);
 });
 
@@ -174,11 +174,22 @@ test("optional text is trimmed or defaults to empty, but never coerces non-text 
 test("groups allow every valid combination, require at least one and reject duplicates or unknown IDs", () => {
   for (let mask = 1; mask < 16; mask++) {
     const groups = preinscripcionConfig.groups.filter((_, i) => mask & (1 << i)).map(({ id }) => id);
-    assert.equal(validateSubmission(valid({ groups, firstPreference: groups[0] })).ok, true);
+    // "ambos" also targets ETec, so every combination stays reachable for that family.
+    assert.equal(validateSubmission(valid({ groups, firstPreference: groups[0], targetSchool: "ambos" })).ok, true);
   }
   rejected({ groups: [], firstPreference: null }, { groups: "Seleccioná al menos un grupo." });
   for (const groups of [undefined, null, "grupo-1", ["grupo-5"], ["grupo-1", "grupo-1"], [1], [null], Array(1)]) {
     rejected({ groups, firstPreference: null }, { groups: "Seleccioná grupos válidos sin repetir." });
+  }
+});
+
+test("the Tuesday group is reserved for families aiming at ETec", () => {
+  const message = "El grupo de martes es sólo para quienes aspiran a ingresar al ETec.";
+  rejected({ targetSchool: "uncuyo", groups: ["grupo-2"], firstPreference: null }, { groups: message });
+  rejected({ targetSchool: "uncuyo", groups: ["grupo-1", "grupo-2"], firstPreference: "grupo-1" }, { groups: message });
+  for (const targetSchool of ["etec", "ambos"]) {
+    assert.equal(validateSubmission(valid({ targetSchool, groups: ["grupo-2"], firstPreference: "grupo-2" })).ok, true);
+    assert.equal(validateSubmission(valid({ targetSchool, groups: ["grupo-1", "grupo-2"], firstPreference: "grupo-1" })).ok, true);
   }
 });
 
