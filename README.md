@@ -1,5 +1,21 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Preinscripciones
+
+La ruta pública permanente es [`/preinscripcion`](https://ingenium-web.vercel.app/preinscripcion). Su implementación local no implica que esté habilitada en producción. La portada la enlaza desde ingreso al secundario sin reemplazar WhatsApp ni ampliar los grupos habituales de apoyo.
+
+- [Integración, verificación y publicación con autorización](docs/preinscripciones.md).
+- [Supabase: variables sólo de servidor, administración privada y pruebas SQL/concurrentes](docs/preinscripciones-supabase.md).
+- [Pendientes y evidencia faltante antes de producción](PENDIENTES.md).
+
+Runner de pruebas: **Node Test Runner**, sin credenciales ni datos reales. La suite completa abre servidores locales; ejecutarla en serie y sin otro `next dev`/build activo:
+
+```sh
+pnpm exec node --test --test-concurrency=1 tests/*.test.mjs
+```
+
+La guía de integración distingue los checks ejecutados de los pendientes y detalla las puertas `pnpm lint` y `pnpm build`. No aplicar migraciones, configurar secretos ni publicar sin aprobación explícita para el entorno correspondiente.
+
 ## Getting Started
 
 Use **pnpm** for this project.

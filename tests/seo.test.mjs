@@ -117,11 +117,28 @@ test("robots keeps public crawling open and points at the official sitemap", asy
   assert.match(body, /Sitemap: https:\/\/ingenium-web\.vercel\.app\/sitemap.xml/);
 });
 
-test("sitemap retains the homepage without claiming a synthetic update date", async () => {
+test("sitemap retains the homepage and public form without claiming a synthetic update date", async () => {
   const response = await fetch(`${base}/sitemap.xml`);
   assert.equal(response.status, 200);
   const body = await response.text();
   assert.match(body, /<loc>https:\/\/ingenium-web\.vercel\.app\/<\/loc>/);
-  assert.equal((body.match(/<url>/g) ?? []).length, 1);
+  assert.match(body, /<loc>https:\/\/ingenium-web\.vercel\.app\/preinscripcion<\/loc>/);
+  assert.equal((body.match(/<url>/g) ?? []).length, 2);
   assert.doesNotMatch(body, /<lastmod>/);
+});
+
+test("public form has dedicated metadata and does not inherit homepage FAQ answers", async () => {
+  const response = await fetch(`${base}/preinscripcion`, { signal: AbortSignal.timeout(90000) });
+  assert.equal(response.status, 200);
+  const body = await response.text();
+  assert.match(body, /<link rel="canonical" href="https:\/\/ingenium-web\.vercel\.app\/preinscripcion"/);
+  const heading = body.match(/<h1\b[^>]*>([^<]*)<\/h1>/)?.[1];
+  assert.match(heading, /^Preinscripción \d{4} — Ingreso al Secundario \d{4}$/);
+  assert.equal(body.match(/<title>([^<]*)<\/title>/)?.[1], heading);
+  assert.match(body, /property="og:url" content="https:\/\/ingenium-web\.vercel\.app\/preinscripcion"/);
+  const scripts = [...body.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map((match) => JSON.parse(match[1]));
+  assert.deepEqual(scripts.map((script) => script["@type"]), ["EducationalOrganization"]);
+  const homepageIdentity = JSON.parse(html.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+  assert.deepEqual(scripts[0], homepageIdentity);
+  assert.match(body, /href="\/"[^>]*>← Volver a la portada/);
 });

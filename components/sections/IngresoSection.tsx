@@ -1,4 +1,6 @@
+import Link from "next/link";
 import { ingeniumSectionsById } from "@/data/ingeniumSections";
+import { preinscripcionConfig as config } from "@/lib/preinscripcion/config";
 import { buttonVariants } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import Section from "@/components/ui/Section";
@@ -55,6 +57,21 @@ export default function IngresoSection() {
               </p>
             </div>
           </div>
+
+          <Card className="space-y-4 border-[var(--brand-sage)] text-center">
+            <h3 className="card-heading">Grupos especiales de preparación para el ingreso</h3>
+            <p className="section-secondary">
+              Grupos especiales de hasta {config.maxStudentsPerGroup} estudiantes, destinados a la preparación para el ingreso.
+              El apoyo escolar habitual mantiene sus grupos más pequeños: primaria hasta 3 y secundaria hasta 4.
+            </p>
+            <p className="section-secondary">{config.program.vacancyNotice}</p>
+            <Link
+              href={config.path}
+              className={buttonVariants({ variant: "secondary", fullWidth: true, wrap: true })}
+            >
+              {config.program.title}
+            </Link>
+          </Card>
 
           {section.ctas ? (
             <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
