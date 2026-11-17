@@ -4,7 +4,7 @@
 > Estado verificado al 16/11/2026. Detalle y evidencia completa: `odd/tasks/preinscripciones-ingenium.md` (T9 y logs L41–L55).
 > Para reanudar: basta con decir **«continuemos con el formulario de preinscripción»**.
 
-## A. Bloqueantes — no mergear sin resolver estos cuatro
+## A. Bloqueantes — no mergear sin resolver estos
 
 - [ ] **1. Variables de Production en Vercel.** Hoy `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` existen **sólo** como Secrets del entorno Preview limitados a esta rama. Production no tiene ninguna. Si se mergea así, la API en producción responde **503** (falla cerrada y honesta, sin recibo falso) y ninguna familia puede preinscribirse.
       *Comprobación:* Settings → Environment Variables → filtro Production: deben aparecer las dos, con alcance Production. Después de mergear, un envío real en producción debe dar **201** con recibo.
@@ -13,7 +13,7 @@
 - [ ] **3. Lector de pantalla real.** Teclado, foco y etiquetas ya están probados; no sustituyen una prueba con tecnología asistiva real.
 - [ ] **4. Privacidad y administración aprobadas por el instituto.** Responsables, cuentas individuales/MFA, mínimo privilegio, plazo y procedimiento de retención/supresión, respaldo, rectificación y atención de derechos. Sin panel: el acceso restringido está documentado en `docs/preinscripciones-supabase.md`.
 
-- [ ] **5. Revisión nativa del candidato acumulado.** Todo el sistema (30 rutas desde `c848bc1`) sigue **sin revisión nativa**; es el paso previo obligatorio antes de entregar bajo RDD. Se inicia con una decisión de consentimiento tuya. El 16/11 elegiste explícitamente **dejarlo sin revisar hasta mañana** (target `sha256:8ac7cdc7…`), así que no hay transacción abierta ni autoridad consumida.
+- [x] **5. Revisión nativa del candidato acumulado.** El candidato completo (30 rutas desde `c848bc1`) **no se puede revisar en una sola transacción**: el proveedor lo rechaza con `lens_context_budget_exceeded` y no crea autoridad, así que reintentarlo no sirve. Se revisó el 17/11 como **cuatro slices por commit**, cada uno con su propio worktree, consentimiento y autoridad: `5d58c4e` (API/SQL), `8c223d9` (contrato), `7e426c9` (formulario) y `ea99f8f..dd354a5` (integración, fix same-origin y docs). **Los cuatro aprobados y su autoridad quemada.** Cinco hallazgos advisory, ninguno bloqueante; los dos de documentación se corrigieron en `2a2fba1` y los tres de código quedan como trabajo posterior. Evidencia: `odd/tasks/preinscripciones-ingenium.md`, T11 y L57.
 
 Además, el merge y la publicación en producción requieren **tu autorización explícita**: no está dada.
 
