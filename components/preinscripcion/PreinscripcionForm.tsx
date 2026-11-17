@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { preinscripcionConfig as config } from "@/lib/preinscripcion/config";
-import { advanceStep, availabilityNotice, createDraft, createSubmissionLock, editDraft, prepareAttempt, sendAttempt, stepForErrors, toggleGroup } from "@/lib/preinscripcion/form-state";
+import { advanceStep, applyTargetSchool, availabilityNotice, createDraft, createSubmissionLock, editDraft, prepareAttempt, sendAttempt, stepForErrors, toggleGroup } from "@/lib/preinscripcion/form-state";
 import type { FormStep, ValidationErrors } from "@/lib/preinscripcion/types";
 import { validateSubmission } from "@/lib/preinscripcion/validation";
 import { FormFields, type ChangeField } from "./FormFields";
@@ -36,19 +36,9 @@ export default function PreinscripcionForm() {
   }, [focusRequest]);
 
   const change: ChangeField = (field, value) => {
-    setDraft((current) => {
-      if (field !== "targetSchool") return editDraft(current, field, value);
-      // Choosing ETec (alone or alongside UNCuyo) pre-selects the Tuesday group,
-      // which is reserved for ETec admission; UNCuyo alone cannot take it.
-      const school = value as "uncuyo" | "etec" | "ambos" | "";
-      const keepsEtec = school === "etec" || school === "ambos";
-      const withoutEtec = current.data.groups.filter((id) => id !== "grupo-2");
-      const next = editDraft(current, "groups", keepsEtec ? [...withoutEtec, "grupo-2"] : withoutEtec);
-      const withSchool = editDraft(next, "targetSchool", school);
-      return !keepsEtec && withSchool.data.firstPreference === "grupo-2"
-        ? editDraft(withSchool, "firstPreference", null)
-        : withSchool;
-    });
+    setDraft((current) => field === "targetSchool"
+      ? applyTargetSchool(current, value as "uncuyo" | "etec" | "ambos" | "")
+      : editDraft(current, field, value));
     setErrors((current) => {
       const next = { ...current };
       delete next[field];

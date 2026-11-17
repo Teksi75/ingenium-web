@@ -33,6 +33,26 @@ export function toggleGroup(draft: Draft, group: GroupId, checked: boolean): Dra
     ? editDraft(updated, "firstPreference", null) : updated;
 }
 
+const etecOnlyGroupIds: GroupId[] = preinscripcionConfig.groups
+  .filter((group) => group.etecOnly)
+  .map((group) => group.id);
+
+/**
+ * School and schedule are coupled: the ETec-only groups are pre-selected for
+ * families aiming at ETec (alone or alongside UNCuyo) and dropped for UNCuyo.
+ * Derived from configuration so the restriction has a single source of truth.
+ */
+export function applyTargetSchool(draft: Draft, school: PreinscripcionFormData["targetSchool"]): Draft {
+  const keepsEtec = school === "etec" || school === "ambos";
+  const withoutRestricted = draft.data.groups.filter((id) => !etecOnlyGroupIds.includes(id));
+  const groups = keepsEtec ? [...withoutRestricted, ...etecOnlyGroupIds] : withoutRestricted;
+  const withSchool = editDraft(editDraft(draft, "groups", groups), "targetSchool", school);
+  const preference = withSchool.data.firstPreference;
+  return !keepsEtec && preference && etecOnlyGroupIds.includes(preference)
+    ? editDraft(withSchool, "firstPreference", null)
+    : withSchool;
+}
+
 export function advanceStep(step: FormStep, data: PreinscripcionFormData): { step: FormStep; errors: ValidationErrors } {
   const errors = validateStep(step, data);
   return { step: Object.keys(errors).length ? step : Math.min(step + 1, 4) as FormStep, errors };
