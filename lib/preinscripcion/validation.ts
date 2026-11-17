@@ -19,6 +19,9 @@ export const initialFormData: PreinscripcionFormData = {
 
 const allowedFields = new Set(Object.keys(initialFormData));
 const groupIds = new Set<string>(preinscripcionConfig.groups.map(({ id }) => id));
+const etecOnlyGroupIds = new Set<string>(
+  preinscripcionConfig.groups.filter((group) => group.etecOnly).map(({ id }) => id),
+);
 const schoolValues = new Set<string>(targetSchoolOptions.map(({ value }) => value));
 const relationshipValues = new Set<string>(relationshipOptions.map(({ value }) => value));
 const stepFields: Record<FormStep, readonly (keyof SubmissionData)[]> = {
@@ -106,6 +109,10 @@ export function validateSubmission(input: unknown): ValidationResult {
     errors.groups = "Seleccioná al menos un grupo.";
   } else {
     groups = selected;
+  }
+  // The Tuesday group is reserved for families aiming at ETec admission.
+  if (!errors.groups && raw.targetSchool === "uncuyo" && groups.some((id) => etecOnlyGroupIds.has(id))) {
+    errors.groups = "El grupo de martes es sólo para quienes aspiran a ingresar al ETec.";
   }
   const preference = raw.firstPreference ?? null;
   let firstPreference: GroupId | null = null;

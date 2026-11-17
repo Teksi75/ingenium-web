@@ -62,8 +62,9 @@ export function FormFields({ step, data, errors, onChange, onToggleGroup }: Fiel
     <fieldset aria-describedby={errors.groups ? "groups-error" : "groups-hint"}>
       <legend className="font-semibold">Grupos compatibles (al menos uno)</legend>
       <p id="groups-hint" className="mt-2 text-sm text-[var(--ink-600)]">Podés marcar varios. Hasta {config.maxStudentsPerGroup} estudiantes por grupo; la disponibilidad se informa posteriormente.</p>
+      {(data.targetSchool === "etec" || data.targetSchool === "ambos") && <p className="mt-2 text-sm text-[var(--ink-600)]">{config.terms.etecScheduleNote}</p>}
       <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        {config.groups.map((group, index) => <label key={group.id} className="flex min-h-11 cursor-pointer items-start gap-3 rounded-xl border border-[var(--paper-border)] bg-white/70 p-4 has-[:checked]:border-[var(--brand-sage)] has-[:checked]:bg-[var(--paper-soft)]">
+        {config.groups.filter((group) => !group.etecOnly || data.targetSchool === "etec" || data.targetSchool === "ambos").map((group, index) => <label key={group.id} className="flex min-h-11 cursor-pointer items-start gap-3 rounded-xl border border-[var(--paper-border)] bg-white/70 p-4 has-[:checked]:border-[var(--brand-sage)] has-[:checked]:bg-[var(--paper-soft)]">
           <input {...fieldA11y("groups", errors)} id={index === 0 ? "groups" : `groups-${group.id}`} className={`${checkboxClass} mt-1`} type="checkbox" value={group.id} checked={data.groups.includes(group.id)} onChange={(event) => onToggleGroup(group.id, event.target.checked)} />
           <span><span className="block font-semibold">{group.label}</span><span className="mt-1 block text-sm leading-relaxed">{group.schedule}</span></span>
         </label>)}

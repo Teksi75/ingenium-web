@@ -36,7 +36,19 @@ export default function PreinscripcionForm() {
   }, [focusRequest]);
 
   const change: ChangeField = (field, value) => {
-    setDraft((current) => editDraft(current, field, value));
+    setDraft((current) => {
+      if (field !== "targetSchool") return editDraft(current, field, value);
+      // Choosing ETec (alone or alongside UNCuyo) pre-selects the Tuesday group,
+      // which is reserved for ETec admission; UNCuyo alone cannot take it.
+      const school = value as "uncuyo" | "etec" | "ambos" | "";
+      const keepsEtec = school === "etec" || school === "ambos";
+      const withoutEtec = current.data.groups.filter((id) => id !== "grupo-2");
+      const next = editDraft(current, "groups", keepsEtec ? [...withoutEtec, "grupo-2"] : withoutEtec);
+      const withSchool = editDraft(next, "targetSchool", school);
+      return !keepsEtec && withSchool.data.firstPreference === "grupo-2"
+        ? editDraft(withSchool, "firstPreference", null)
+        : withSchool;
+    });
     setErrors((current) => {
       const next = { ...current };
       delete next[field];
