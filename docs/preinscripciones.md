@@ -1,6 +1,6 @@
 # Preinscripciones: integración y habilitación segura
 
-La ruta pública permanente es **`/preinscripcion`**, sin año ni datos personales en la URL. La implementación local conecta la portada con el programa de preparación; **no significa que el servicio esté habilitado en producción**. No se usaron credenciales ni datos reales, no se aplicaron migraciones remotas y no se publicó nada como parte de este trabajo.
+La ruta pública permanente es **`/preinscripcion`**, sin año ni datos personales en la URL. La implementación conecta la portada con el programa de preparación y fue verificada de extremo a extremo en una Preview protegida de la rama de trabajo; **no significa que el servicio esté habilitado en producción**. Sólo se usaron datos ficticios. La migración se aplicó **una sola vez** en el proyecto de prueba autorizado `ingenium-preinscripciones-test` y la rama `feat/preinscripciones-ingenium` se publicó; producción y `main` no se modificaron.
 
 ## Recorrido de las familias
 
@@ -10,14 +10,14 @@ La ruta pública permanente es **`/preinscripcion`**, sin año ni datos personal
 - La configuración inicial es cursado **2027**, ingreso **2028**, de marzo a octubre. El programa no publica importes ni promete resultados o vacantes garantizadas; el taller mensual no tiene un horario inventado.
 - Una respuesta exitosa muestra sólo el código público y el mensaje de recepción, no una vacante confirmada. Ante un fallo se conservan los datos y la clave de reintento en memoria; recargar/cerrar la página no conserva el formulario.
 
-## Qué está implementado y qué falta probar
+## Qué está verificado y qué falta antes de producción
 
-| Área | Implementado localmente | Evidencia pendiente antes de producción |
+| Área | Verificado | Falta antes de producción |
 | --- | --- | --- |
-| Página/formulario | Programa, validación, revisión, consentimientos y resultado honesto; recorrido Chromium móvil, teclado/foco y error/reintento comprobados | Lector de pantalla real y recepción exitosa contra Supabase autorizado |
-| Integración institucional | Enlace con `next/link`, ciclo/título/capacidad desde configuración, WhatsApp intacto; comprobaciones HTTP/componentes aprobadas | Revalidar en el despliegue autorizado |
-| SEO | Canonical propio, sitemap de dos rutas, FAQ sólo en portada y organización intacta; suite SEO HTTP aprobada | Revalidar en el despliegue autorizado |
-| API/SQL | API de servidor, esquema privado, RPC, idempotencia y confirmación transaccional | Migración real autorizada, permisos, escritura/lectura administrativa y carreras concurrentes |
+| Página/formulario | Programa, validación, revisión, consentimientos y resultado honesto; recorrido Chromium móvil, teclado/foco y error/reintento; envío real con recibo en la Preview protegida | Lector de pantalla real |
+| Integración institucional | Enlace con `next/link`, ciclo/título/capacidad desde configuración, WhatsApp intacto; comprobaciones HTTP/componentes aprobadas y humo institucional en la Preview | Revalidar en producción tras el merge |
+| SEO | Canonical propio, sitemap de dos rutas, FAQ sólo en portada y organización intacta; suite SEO HTTP aprobada y canónica a producción comprobada en la Preview | Revalidar en producción tras el merge |
+| API/SQL | API de servidor, esquema privado, RPC, idempotencia y confirmación transaccional; migración real, permisos, escritura/lectura administrativa y carreras concurrentes en el proyecto de prueba | Variables de Production en Vercel y la base definitiva que recibirá datos reales |
 | Operación | Procedimiento documentado sin panel | Responsables, accesos, política de retención/supresión y autorizaciones |
 
 Las respuestas personales no tienen una ruta de recibo indexable: el resultado vive sólo en el cliente. La API devuelve `no-store` y `noindex, nofollow`, sin endpoints públicos de consulta. El código público no es una credencial administrativa; no agregarlo al sitemap, canonical, enlaces ni parámetros de URL.
@@ -53,7 +53,7 @@ La suite Node completa incluye formulario, contrato, API con transporte simulado
 
 Sobre el build servido localmente se comprobaron cuatro pasos, foco/errores, avance por teclado, grupos múltiples y limpieza de preferencia incompatible, revisión, consentimientos inicialmente desmarcados y rechazo si faltan. A 390 y 320 px no hubo desborde horizontal del formulario. Dos envíos sintéticos sin configuración devolvieron **503**, sin recibo falso; el reintento conservó la misma clave y el resumen. GET/HEAD/OPTIONS reales devolvieron **405**, `no-store` y `noindex, nofollow`. Se detectó y corrigió el origen loopback normalizado por Next con prueba RED y GREEN; el servidor compilado devolvió después el 503 esperado. No se simuló éxito en el recorrido real.
 
-**Verificación independiente parcial:** la inspección estática no identificó un defecto concreto de código, pero su ejecutor aislado agotó 60 segundos antes de iniciar pruebas. Cero pruebas independientes ejecutadas; no se reintentó ni reparó ese entorno. Hace falta autorización humana para un nuevo intento acotado. Esta limitación y la falta de evidencia real PostgreSQL impiden declarar la funcionalidad lista para producción. La suite local y un test de texto SQL no sustituyen esa evidencia.
+**Verificación independiente:** la primera inspección estática no identificó un defecto concreto de código, pero su ejecutor aislado agotó 60 segundos antes de iniciar pruebas, con cero pruebas ejecutadas y sin reintento. Una continuación acotada autorizada después sí ejecutó Node directo sobre API y formulario (54/54) y TypeScript sin emisión (exit 0). La evidencia real de PostgreSQL, permisos y concurrencia no provino de esa verificación sino del proyecto de prueba autorizado. La suite local y un test de texto SQL por sí solos no sustituyen esa evidencia.
 
 ### Recorrido manual mínimo
 
@@ -74,7 +74,7 @@ Sobre el build servido localmente se comprobaron cuatro pasos, foco/errores, ava
 4. **Puerta de producción.** Con toda la evidencia, política de retención y responsables aprobados, solicitar una autorización **nueva y específica** para migración productiva y configuración de secretos productivos. Revisar respaldo/recuperación y compatibilidad del código con la base antes de aplicarla. No reutilizar fixtures ni credenciales de pruebas.
 5. **Despliegue separado.** Sólo después, pedir autorización explícita para el despliegue en Vercel; push/merge también requieren permiso propio. Verificar servicio/configuración y smoke checks sin datos de menores antes de anunciar apertura. Ante fallos, detener la habilitación y solicitar la corrección o reversión revisada; nunca borrar registros para volver atrás.
 
-No se ha ejecutado ninguna de las etapas remotas. El estado operativo pendiente se mantiene en [`PENDIENTES.md`](../PENDIENTES.md).
+Las etapas remotas se ejecutaron únicamente contra el proyecto de prueba autorizado y la Preview protegida de la rama; ninguna etapa de producción se ejecutó. El estado operativo pendiente se mantiene en [`PENDIENTES.md`](../PENDIENTES.md).
 
 ## Cambio de ciclo sin perder registros
 
