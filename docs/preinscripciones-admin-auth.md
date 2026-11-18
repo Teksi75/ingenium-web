@@ -12,6 +12,9 @@ production databases or deployment. Live email delivery remains unverified.
 | `ADMIN_SESSION_SECRET` | Dedicated secret of at least 32 characters, no surrounding whitespace, different from the service key. Rotation invalidates sessions and pending links. |
 | `ADMIN_APP_ORIGIN` | Bare HTTPS origin, e.g. `https://panel.example.invalid`; no path/trailing slash. Falls back to `SITE_ORIGIN` only when absent. Local development also allows a bare loopback HTTP origin. |
 | Supabase | Existing `storageConfig()` validates `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` and its rate-secret prerequisite. No new SDK or browser credential. |
+| `SUPABASE_EMAIL_HOOK_SECRET` | Supabase-provided `v1,whsec_` secret for the signed Send Email HTTP hook. Verifies HMAC, timestamp and exact raw body. |
+| `ADMIN_MAIL_URL` | HTTPS endpoint accepting a Resend-compatible `POST` email payload; no credentials, query or fragment in the URL. |
+| `ADMIN_MAIL_TOKEN` / `ADMIN_MAIL_FROM` | Bearer secret of at least 32 characters, distinct from session/service/hook secrets; and a valid sender address authorized by the service. Both are supplied only by environment. |
 
 Roles come from the **current complete allowlist on every request**. Removal or a
 role change takes effect without waiting for cookie expiry. Auth user metadata,
@@ -28,7 +31,7 @@ and HTTP protocol. Forwarded headers are ignored. No CORS is offered.
 | Action | Fields | Result |
 |---|---|---|
 | `POST /admin/login` | `email` | Same empty `303 /admin?sent=1` and ten-minute signed state-cookie shape for allowed, unknown, or upstream-refused accounts. Only allowed emails trigger OTP, always `create_user:false`. |
-| `POST /admin/verify` | `token_hash`, `state` | Browser state must match signed HttpOnly cookie before network. Confirmed Auth email must match requested email and a valid UUID; login audit must succeed before issuing session. Success: empty `303 /admin`. |
+| `POST /admin/verify` | `token_hash`, `state` | Before network, signed browser state and its HMAC must bind this exact token, account and attempt. Confirmed Auth identity and current role are rechecked; login audit must succeed before the eight-hour session. Success: empty `303 /admin`. The same login route receives signed JSON hook requests, not browser login forms. |
 | `POST /admin/logout` | `csrf` | Requires valid current session, Origin and session nonce. Reader is allowed. Success: empty `303 /admin`; audit outage: generic `503` **with cookies still cleared**. |
 
 Other methods return `405` with `Allow: POST`. Errors use only
@@ -41,17 +44,15 @@ All responses have `Cache-Control: no-store`, `X-Robots-Tag: noindex, nofollow` 
 ## Later operator setup — not executed by T3
 
 1. Pre-create the two individual email Auth accounts; login cannot create users.
-2. Configure SMTP and allow the fixed app `/admin/confirm` redirect in Supabase.
-3. Set the custom Magic Link email template link to:
-   `{{ .RedirectTo }}&token_hash={{ .TokenHash }}&type=email`
+2. Allow the fixed app `/admin/confirm` redirect in Supabase. Configure the Send Email HTTP hook for `<configured origin>/admin/login`, using its supplied `v1,whsec_` secret; this replaces native Auth email delivery, including when SMTP is configured.
+3. Use a separately approved mail provider compatible with the JSON payload above. Other Auth email event types are rejected rather than silently delivered by another channel. This branch does not configure the hook or send live email; verify all existing Auth flows before activating it.
 4. T4's `/admin/confirm` GET must only render a confirmation form: **never consume
    a token on GET**. Carry `token_hash` and `state` as hidden fields to explicit
    POST `/admin/verify`; ignore/validate the template's `type=email`, never forward
    it as an extra POST field. Avoid leaking query tokens through logs or assets.
 
-The OTP request puts `redirect_to` in the URL query, with the server-configured
-`/admin/confirm?state=<random nonce>`, not in the JSON body. Verify sends
-`{token_hash,type:'email'}`. The token hash is exactly 56 lowercase hexadecimal
+OTP's `redirect_to` carries the random state. The authenticated hook adds an HMAC over the exact returned token hash, normalized account and that state before mailing the link. OTP success alone never suffices.
+Verify then sends `{token_hash,type:'email'}` only after that binding is checked. The token hash is exactly 56 lowercase hexadecimal
 characters: Supabase's `GenerateTokenHash` uses SHA-224 of email + OTP. This is
 separate from session HMACs and state nonces. Supabase owns atomic single-use token consumption;
 there is no local replay database. The state cookie binds proof to the initiating

@@ -55,14 +55,29 @@ function mockAuth({ user = { id: ID, email: EMAIL, email_confirmed_at: "2026-01-
     return Response.json({});
   });
 }
-async function begin(email = EMAIL) {
+function hook(payload) {
+  const raw = JSON.stringify(payload), timestamp = Math.floor(Date.now() / 1000), id = "synthetic-event-id";
+  const secret = Buffer.from(process.env.SUPABASE_EMAIL_HOOK_SECRET.slice(9), "base64");
+  const signature = createHmac("sha256", secret).update(`${id}.${timestamp}.${raw}`).digest("base64");
+  return request("login", raw, { origin: null, "content-type": "application/json", "webhook-id": id,
+    "webhook-timestamp": String(timestamp), "webhook-signature": `v1,${signature}` });
+}
+async function deliver(email, state, tokenHash = TOKEN) {
+  return login.POST(hook({ user: { id: ID, email }, email_data: { token_hash: tokenHash,
+    email_action_type: "magiclink", redirect_to: `${ORIGIN}/admin/confirm?state=${state}` } }));
+}
+async function begin(email = EMAIL, deliverEmail = true) {
   const response = await check(await login.POST(request("login", { email })), 303, { location: "/admin?sent=1" });
-  const cookie = cookieValue(response, session.ADMIN_LOGIN_COOKIE);
-  assert.ok(cookie);
-  return { response, cookie, state: decode(cookie).nonce };
+  const cookie = cookieValue(response, session.ADMIN_LOGIN_COOKIE), state = decode(cookie).nonce;
+  if (email.includes("unknown") || !deliverEmail) return { response, cookie, state };
+  await check(await deliver(email.trim().toLowerCase(), state), 200, { body: "" });
+  const link = f.calls.at(-1)?.url === "https://mail.example.invalid/emails"
+    ? f.calls.at(-1).payload.html.match(/href="([^"]+)"/)[1].replaceAll("&amp;", "&") : null;
+  const params = link ? new URL(link).searchParams : null;
+  return { response, cookie, state: params?.get("state") ?? state, tokenHash: params?.get("token_hash") ?? TOKEN };
 }
 async function complete(state, body = {}, headers = {}) {
-  return verify.POST(request("verify", { state: state.state, token_hash: TOKEN, ...body }, { cookie: state.cookie, ...headers }));
+  return verify.POST(request("verify", { state: state.state, token_hash: state.tokenHash ?? TOKEN, ...body }, { cookie: state.cookie, ...headers }));
 }
 function actor(now = Math.floor(Date.now() / 1000), email = EMAIL) {
   return session.createAdminSession({ id: ID, email }, now);
@@ -136,9 +151,9 @@ test("session rejects signature/schema/UUID/email/duration/nonce/cookie ambiguit
 test("login is enumeration-generic; only allowlisted account triggers OTP with fixed redirect and no signup", async () => {
   mockAuth();
   const allowed = await begin(" READER@EXAMPLE.INVALID ");
-  assert.equal(f.calls.length, 1);
+  assert.equal(f.calls.length, 2);
   const call = f.calls[0];
-  assert.equal(call.url, `https://supabase.example.invalid/auth/v1/otp?redirect_to=${encodeURIComponent(`${ORIGIN}/admin/confirm?state=${allowed.state}`)}`);
+  assert.equal(call.url, `https://supabase.example.invalid/auth/v1/otp?redirect_to=${encodeURIComponent(`${ORIGIN}/admin/confirm?state=${allowed.state.split(".")[0]}`)}`);
   assert.deepEqual(call.payload, { email: EMAIL, create_user: false });
   assert.equal(call.method, "POST");
   assert.equal(call.cache, "no-store");
@@ -148,14 +163,14 @@ test("login is enumeration-generic; only allowlisted account triggers OTP with f
   assert.match(allowed.response.headers.get("set-cookie"), /HttpOnly; SameSite=Lax; Path=\//);
   assert.match(allowed.response.headers.get("set-cookie"), /Max-Age=600/);
   const denied = await begin("unknown@example.invalid");
-  assert.equal(f.calls.length, 1);
+  assert.equal(f.calls.length, 2);
   assert.equal(denied.response.status, allowed.response.status);
   assert.deepEqual(Object.keys(decode(denied.cookie)), Object.keys(decode(allowed.cookie)));
   assert.equal(decode(denied.cookie).exp - decode(denied.cookie).iat, 600);
   assert.notEqual(denied.state, allowed.state);
   for (const handler of [() => new Response(null, { status: 503 }), () => { throw new Error("private failure"); }]) {
     f.fetchMock(handler);
-    await begin();
+    await begin(EMAIL, false);
   }
 });
 
@@ -205,19 +220,18 @@ test("bounded strict URL-encoded forms reject duplicates, unknown authority, enc
 });
 
 test("Supabase SHA-224 token hash verifies with signed browser state and audit before issuing session", async () => {
-  const tokenHash = createHash("sha224").update(EMAIL + "123456").digest("hex");
+  const tokenHash = TOKEN;
   assert.equal(tokenHash.length, 56);
-  const state = session.createAdminLoginState(EMAIL);
-  assert.ok(state);
   mockAuth();
+  const state = await begin();
   const response = await check(await verify.POST(request("verify", {
     token_hash: tokenHash, state: state.state,
   }, { cookie: state.cookie })), 303, { location: "/admin" });
-  assert.equal(f.calls.length, 2);
-  assert.equal(f.calls[0].url, "https://supabase.example.invalid/auth/v1/verify");
-  assert.deepEqual(f.calls[0].payload, { token_hash: tokenHash, type: "email" });
-  assert.equal(f.calls[1].url, "https://supabase.example.invalid/rest/v1/rpc/admin_log_event");
-  assert.deepEqual(f.calls[1].payload, {
+  assert.equal(f.calls.length, 4);
+  assert.equal(f.calls[2].url, "https://supabase.example.invalid/auth/v1/verify");
+  assert.deepEqual(f.calls[2].payload, { token_hash: tokenHash, type: "email" });
+  assert.equal(f.calls[3].url, "https://supabase.example.invalid/rest/v1/rpc/admin_log_event");
+  assert.deepEqual(f.calls[3].payload, {
     p_actor_id: ID, p_actor_email: EMAIL, p_actor_role: "reader", p_action: "login",
   });
   const cookie = cookieValue(response, session.ADMIN_SESSION_COOKIE);
@@ -246,21 +260,44 @@ test("verify requires explicit POST, matching signed browser state, confirmed al
   mockAuth();
   const state = await begin();
   const response = await check(await complete(state), 303, { location: "/admin" });
-  assert.equal(f.calls.length, 3);
-  assert.equal(f.calls[1].url, "https://supabase.example.invalid/auth/v1/verify");
-  assert.deepEqual(f.calls[1].payload, { token_hash: TOKEN, type: "email" });
-  assert.equal(f.calls[2].url, "https://supabase.example.invalid/rest/v1/rpc/admin_log_event");
-  assert.deepEqual(f.calls[2].payload, { p_actor_id: ID, p_actor_email: EMAIL, p_actor_role: "reader", p_action: "login" });
+  assert.equal(f.calls.length, 4);
+  assert.equal(f.calls[2].url, "https://supabase.example.invalid/auth/v1/verify");
+  assert.equal(f.calls[3].url, "https://supabase.example.invalid/rest/v1/rpc/admin_log_event");
+  assert.deepEqual(f.calls[3].payload, { p_actor_id: ID, p_actor_email: EMAIL, p_actor_role: "reader", p_action: "login" });
   const cookie = cookieValue(response, session.ADMIN_SESSION_COOKIE);
   assert.ok(cookie);
   assert.equal(session.readAdminSession(cookie).role, "reader");
   assert.doesNotMatch(response.headers.get("set-cookie"), /never-store|access_token|refresh_token/);
   assert.ok(response.headers.getSetCookie().some(c => c.startsWith(`${session.ADMIN_LOGIN_COOKIE}=`) && c.includes("Max-Age=0")));
-  assert.equal(f.calls[1].redirect, "error");
-  assert.equal(f.calls[2].cache, "no-store");
+  assert.equal(f.calls[2].redirect, "error");
+  assert.equal(f.calls[3].cache, "no-store");
   // Browser has discarded state, so replay is rejected before even calling verify.
   await check(await complete({ ...state, cookie: "" }), 403);
-  assert.equal(f.calls.length, 3);
+  assert.equal(f.calls.length, 4);
+});
+
+test("copied token cannot be rebound to a fresh browser attempt", async () => {
+  mockAuth();
+  const issued = await begin();
+  const other = session.createAdminLoginState(EMAIL);
+  await check(await complete({ ...other, state: issued.state, tokenHash: issued.tokenHash }), 403);
+  assert.equal(f.calls.length, 2, "no provider consumption of a token issued to another attempt");
+});
+
+test("email hook rejects unsigned, unrelated and other-event payloads before delivery", async () => {
+  mockAuth();
+  const state = session.createAdminLoginState(EMAIL);
+  const payload = { user: { id: ID, email: EMAIL }, email_data: { token_hash: TOKEN,
+    email_action_type: "magiclink", redirect_to: `${ORIGIN}/admin/confirm?state=${state.state}` } };
+  const unsigned = hook(payload);
+  unsigned.headers.set("webhook-signature", "v1,invalid");
+  await check(await login.POST(unsigned), 403);
+  for (const patch of [{ email_action_type: "recovery" }, { token_hash: "a".repeat(55) },
+    { redirect_to: `https://evil.example.invalid/?state=${state.state}` }]) {
+    await check(await login.POST(hook({ ...payload, email_data: { ...payload.email_data, ...patch } })), 403);
+  }
+  assert.equal(f.calls.length, 0);
+  f.fetchMock(() => new Response(null, { status: 503 })); await check(await deliver(EMAIL, state.state), 503);
 });
 
 test("copied state cannot replay consumed upstream proof, and verify requires Origin before consuming", async () => {
@@ -269,10 +306,10 @@ test("copied state cannot replay consumed upstream proof, and verify requires Or
   for (const origin of [null, "https://other.example.invalid"]) {
     const rejected = await check(await complete(state, {}, { origin }), 403);
     assert.equal(rejected.headers.get("set-cookie"), null);
-    assert.equal(f.calls.length, 1);
+    assert.equal(f.calls.length, 2);
   }
   await check(await complete(state), 303, { location: "/admin" });
-  assert.equal(f.calls.length, 3);
+  assert.equal(f.calls.length, 4);
   f.fetchMock(call => {
     assert.equal(call.url, "https://supabase.example.invalid/auth/v1/verify");
     assert.deepEqual(call.payload, { token_hash: TOKEN, type: "email" });
@@ -280,7 +317,7 @@ test("copied state cannot replay consumed upstream proof, and verify requires Or
   });
   const replay = await check(await complete(state), 503);
   assert.equal(replay.headers.get("set-cookie"), null);
-  assert.equal(f.calls.length, 4, "no second login audit after rejected replay");
+  assert.equal(f.calls.length, 5, "no second login audit after rejected replay");
 });
 
 test("admin login ignores metadata/request role and records the current env role", async () => {
@@ -305,7 +342,7 @@ test("bad, absent, expired or duplicate state and malformed hashes never consume
     assert.ok([400, 403].includes(response.status));
     await check(response, response.status);
     assert.equal(response.headers.get("set-cookie"), null);
-    assert.equal(f.calls.length, 1);
+    assert.equal(f.calls.length, 2);
   }
 });
 
@@ -319,14 +356,14 @@ test("mismatched/unconfirmed/invalid users, removed access, JSON/refusal/replay/
     const response = await complete(state);
     await check(response, 403);
     assert.equal(cookieValue(response, session.ADMIN_SESSION_COOKIE), null);
-    assert.equal(f.calls.length, 2);
+    assert.equal(f.calls.length, 3);
   }
   f.calls.length = 0;
   mockAuth();
   const removed = await begin();
   f.env({ ADMIN_ALLOWLIST: "someone@example.invalid:admin" });
   await check(await complete(removed), 403);
-  assert.equal(f.calls.length, 1);
+  assert.equal(f.calls.length, 2);
   f.env();
   for (const failure of [() => new Response("bad JSON"), () => Response.json(null),
     () => new Response(null, { status: 403 }), () => { throw new Error("internal private error"); }]) {

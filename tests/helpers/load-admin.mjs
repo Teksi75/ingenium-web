@@ -8,7 +8,8 @@ import ts from "typescript";
 const require = createRequire(import.meta.url);
 const root = path.resolve(".");
 const envKeys = ["ADMIN_ALLOWLIST", "ADMIN_SESSION_SECRET", "ADMIN_APP_ORIGIN", "SITE_ORIGIN",
-  "SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "PREINSCRIPCION_RATE_SECRET", "NODE_ENV"];
+  "SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY", "PREINSCRIPCION_RATE_SECRET", "NODE_ENV",
+  "SUPABASE_EMAIL_HOOK_SECRET", "ADMIN_MAIL_URL", "ADMIN_MAIL_TOKEN", "ADMIN_MAIL_FROM"];
 
 /** Fresh module cache and explicit, reversible environment/fetch fixtures; no disk output. */
 export function loadAdmin() {
@@ -53,7 +54,9 @@ export function loadAdmin() {
       ADMIN_APP_ORIGIN: "https://panel.example.invalid",
       SUPABASE_URL: "https://supabase.example.invalid",
       SUPABASE_SERVICE_ROLE_KEY: "synthetic-service-key-with-at-least-32-characters",
-      NODE_ENV: "test",
+      NODE_ENV: "test", SUPABASE_EMAIL_HOOK_SECRET: "v1,whsec_" + Buffer.alloc(32, 7).toString("base64"),
+      ADMIN_MAIL_URL: "https://mail.example.invalid/emails", ADMIN_MAIL_TOKEN: "synthetic-mail-secret-with-at-least-32-characters",
+      ADMIN_MAIL_FROM: "ingenium@example.invalid",
     });
     for (const [key, value] of Object.entries(overrides)) {
       if (value === undefined) delete process.env[key]; else process.env[key] = value;

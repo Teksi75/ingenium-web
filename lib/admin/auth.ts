@@ -1,4 +1,5 @@
 import "server-only";
+import { createHmac, timingSafeEqual } from "node:crypto";
 import { storageConfig, UUID_PATTERN, type StorageConfig } from "@/lib/preinscripcion/storage";
 import { normalizeAdminEmail, readAdminAllowlist, resolveAdminRole } from "./allowlist";
 import { ADMIN_LOGIN_COOKIE, ADMIN_SESSION_COOKIE, adminSessionSecret, clearAdminCookie,
@@ -22,6 +23,75 @@ async function adminFetch(config: StorageConfig, endpoint: string, payload: obje
   return response;
 }
 
+function mailSettings() {
+  const url = process.env.ADMIN_MAIL_URL, token = process.env.ADMIN_MAIL_TOKEN;
+  const raw = process.env.SUPABASE_EMAIL_HOOK_SECRET, from = normalizeAdminEmail(process.env.ADMIN_MAIL_FROM);
+  if (!url || !token || token.length < 32 || !raw?.startsWith("v1,whsec_") || !from) return null;
+  const key = Buffer.from(raw.slice(9), "base64");
+  try {
+    const parsed = new URL(url);
+    if (key.length !== 32 || key.toString("base64") !== raw.slice(9) || parsed.protocol !== "https:"
+      || parsed.username || parsed.password || parsed.search || parsed.hash || token === adminSessionSecret()
+      || token === process.env.SUPABASE_SERVICE_ROLE_KEY || token === raw) return null;
+    return { url, token, key, from };
+  } catch { return null; }
+}
+
+function proofSignature(email: string, nonce: string, tokenHash: string): string {
+  return createHmac("sha256", adminSessionSecret()!).update(`proof.${email}.${nonce}.${tokenHash}`).digest("base64url");
+}
+
+async function hookBody(request: Request): Promise<string> {
+  if (!/^application\/json(?:\s*;\s*charset=utf-8)?$/i.test(request.headers.get("content-type") ?? "") || !request.body) throw new AdminHttpError(415);
+  const reader = request.body.getReader(), decoder = new TextDecoder("utf-8", { fatal: true });
+  let bytes = 0, raw = "";
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      bytes += value.byteLength;
+      if (bytes > 16384) throw new AdminHttpError(413);
+      raw += decoder.decode(value, { stream: true });
+    }
+    return raw + decoder.decode();
+  } catch (error) { void reader.cancel().catch(() => {}); throw error; }
+  finally { reader.releaseLock(); }
+}
+
+/** Supabase authenticates the exact proof; only the recipient receives its attempt-bound link. */
+export async function receiveAdminEmail(request: Request): Promise<Response> {
+  try {
+    const settings = mailSettings();
+    if (!settings || !adminAppOrigin() || !adminSessionSecret()) return adminResponse(503);
+    const raw = await hookBody(request);
+    const id = request.headers.get("webhook-id") ?? "", timestamp = request.headers.get("webhook-timestamp") ?? "";
+    const expected = createHmac("sha256", settings.key).update(`${id}.${timestamp}.${raw}`).digest();
+    const signatures = (request.headers.get("webhook-signature") ?? "").split(" ");
+    if (!/^[A-Za-z0-9_-]{8,128}$/.test(id) || !/^\d+$/.test(timestamp)
+      || Math.abs(Math.floor(Date.now() / 1000) - Number(timestamp)) > 300
+      || !signatures.some(value => value.startsWith("v1,") && (() => {
+        const provided = Buffer.from(value.slice(3), "base64");
+        return provided.length === expected.length && provided.toString("base64") === value.slice(3) && timingSafeEqual(provided, expected);
+      })())) return adminResponse(403);
+    const data: unknown = JSON.parse(raw);
+    if (!data || typeof data !== "object" || Array.isArray(data)) return adminResponse(403);
+    const { user, email_data: event } = data as Record<string, { id?: unknown; email?: unknown } | Record<string, unknown> | undefined>;
+    if (!user || !event || Array.isArray(user) || Array.isArray(event) || !UUID_PATTERN.test(String(user.id))) return adminResponse(403);
+    const fields = event as Record<string, unknown>, email = normalizeAdminEmail(user.email), hash = fields.token_hash;
+    const redirect = typeof fields.redirect_to === "string" ? new URL(fields.redirect_to) : null, nonce = redirect?.searchParams.get("state") ?? "";
+    if (!email || !resolveAdminRole(email)
+      || fields.email_action_type !== "magiclink" || typeof hash !== "string" || !/^[a-f0-9]{56}$/.test(hash)
+      || redirect?.origin !== adminAppOrigin() || redirect.pathname !== "/admin/confirm" || redirect.search !== `?state=${nonce}`
+      || !/^[A-Za-z0-9_-]{43}$/.test(nonce)) return adminResponse(403);
+    const state = `${nonce}.${proofSignature(email, nonce, hash)}`, query = new URLSearchParams({ state, token_hash: hash });
+    const link = `${adminAppOrigin()}/admin/confirm?${query}`;
+    const mail = await fetch(settings.url, { method: "POST", cache: "no-store", redirect: "error", signal: AbortSignal.timeout(8000), headers: { "Content-Type": "application/json", Authorization: `Bearer ${settings.token}` },
+      body: JSON.stringify({ from: settings.from, to: [email], subject: "Acceso al panel de Ingenium",
+        html: `<p><a href="${link.replaceAll("&", "&amp;")}">Ingresar al panel</a></p><p>El enlace vence en 10 minutos y sólo funciona en el navegador donde lo solicitaste.</p>` }) });
+    return mail.ok ? adminResponse(200, null) : adminResponse(503);
+  } catch (error) { return adminFailure(error); }
+}
+
 /** T2 gateway; void return means a successful HTTP response, NOT JSON data. */
 export async function logAdminEvent(actor: AdminActor, action: "login" | "logout" | "access_denied"): Promise<void> {
   const config = storageConfig();
@@ -34,10 +104,11 @@ export async function logAdminEvent(actor: AdminActor, action: "login" | "logout
 function loginConfig(): { storage: StorageConfig; origin: string } | null {
   const storage = storageConfig();
   const origin = adminAppOrigin();
-  return storage && origin && adminSessionSecret() && readAdminAllowlist() ? { storage, origin } : null;
+  return storage && origin && adminSessionSecret() && readAdminAllowlist() && mailSettings() ? { storage, origin } : null;
 }
 
 export async function startAdminLogin(request: Request): Promise<Response> {
+  if (request.headers.has("webhook-signature")) return receiveAdminEmail(request);
   try {
     const config = loginConfig();
     if (!config) return adminResponse(503);
@@ -69,8 +140,10 @@ export async function verifyAdminLogin(request: Request): Promise<Response> {
     const form = await readAdminForm(request, ["token_hash", "state"]);
     const tokenHash = form.get("token_hash")!;
     if (!/^[a-f0-9]{56}$/.test(tokenHash)) return adminResponse(400);
-    const state = readAdminLoginState(request.headers.get("cookie"), form.get("state")!);
-    if (!state || !resolveAdminRole(state.email)) return adminResponse(403);
+    const [nonce, proof, extra] = form.get("state")!.split(".");
+    const state = !extra && readAdminLoginState(request.headers.get("cookie"), nonce);
+    if (!state || !resolveAdminRole(state.email) || !proof || !/^[A-Za-z0-9_-]{43}$/.test(proof)
+      || !timingSafeEqual(Buffer.from(proof), Buffer.from(proofSignature(state.email, state.nonce, tokenHash)))) return adminResponse(403);
     // Consumed only by an explicit, browser-bound POST, never a GET/mail scanner.
     const response = await adminFetch(config.storage, "/auth/v1/verify", { token_hash: tokenHash, type: "email" });
     const result: unknown = await response.json();
