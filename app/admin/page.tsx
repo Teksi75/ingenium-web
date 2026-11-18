@@ -19,15 +19,11 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
     <div>
       <p className="text-sm text-[var(--brand-copper-deep)]">Panel de preinscripciones</p>
       <h1 id="login-title" className="mt-2 text-3xl font-semibold text-[var(--ink-950)]">Ingresar</h1>
-      <p className="mt-3 text-sm leading-relaxed">Usá tu correo autorizado. El enlace de acceso se confirma desde este mismo navegador.</p>
+      <p className="mt-3 text-sm leading-relaxed">Ingresá con tu Gmail autorizado y confirmá el acceso en este navegador. El panel no envía correos.</p>
     </div>
-    {query.sent === "1" && <p role="status" className="rounded-lg border border-[var(--paper-border)] bg-[var(--paper-glow)] p-4 text-sm">Si el correo está autorizado, recibirás un enlace para ingresar.</p>}
     <Card className="md:hover:translate-y-0">
       <form action="/admin/login" method="post" className="space-y-5">
-        <label className="block text-sm font-semibold">Correo electrónico
-          <input type="email" name="email" required maxLength={254} autoComplete="email" className={control} />
-        </label>
-        <Button type="submit" size="sm" wrap className="min-h-11">Enviar enlace de acceso</Button>
+        <Button type="submit" size="sm" wrap className="min-h-11">Ingresar con Google</Button>
       </form>
     </Card>
     <p className="text-sm text-[var(--ink-600)]">La sesión dura 8 horas desde el ingreso; visitar el panel no la extiende.</p>
