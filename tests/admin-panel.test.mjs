@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
 import { createRequire } from "node:module";
+import { createHmac } from "node:crypto";
 import { test, beforeEach, afterEach } from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
@@ -106,27 +107,65 @@ test("detail checks its own session before any backend call; expired and malform
   }
 });
 
-test("confirmation GET is inert, browser-bound and posts exactly token_hash/state without type", async () => {
-  const state = session.createAdminLoginState(EMAIL);
-  cookie = state.cookie.split(";")[0];
-  const html = await confirm({ token_hash: TOKEN, state: state.state, type: "email", redirect: "https://other.example.invalid" });
+test("issued email link renders an inert confirmation and signs in only on explicit POST", async () => {
+  const origin = process.env.ADMIN_APP_ORIGIN;
+  const { POST: login } = f.load("app/admin/login/route.ts");
+  const { POST: verify } = f.load("app/admin/verify/route.ts");
+  function form(path, fields) {
+    return new Request(`${origin}${path}`, { method: "POST", headers: { origin, ...(cookie ? { cookie } : {}) },
+      body: new URLSearchParams(fields) });
+  }
+  f.fetchMock(call => {
+    if (call.url.endsWith("/auth/v1/verify")) return Response.json({ user: { id: ID, email: EMAIL, email_confirmed_at: DATE } });
+    return new Response(null, { status: 204 });
+  });
+  const started = await login(form("/admin/login", { email: EMAIL }));
+  assert.equal(started.status, 303);
+  cookie = started.headers.get("set-cookie").split(";")[0];
+  const redirect = new URL(f.calls[0].url).searchParams.get("redirect_to");
+  const body = JSON.stringify({ user: { id: ID, email: EMAIL }, email_data: { token_hash: TOKEN,
+    email_action_type: "magiclink", redirect_to: redirect } });
+  const event = "synthetic-confirmation", timestamp = String(Math.floor(Date.now() / 1000));
+  const key = Buffer.from(process.env.SUPABASE_EMAIL_HOOK_SECRET.slice("v1,whsec_".length), "base64");
+  const signature = createHmac("sha256", key).update(`${event}.${timestamp}.${body}`).digest("base64");
+  const mailed = await login(new Request(`${origin}/admin/login`, { method: "POST", body, headers: {
+    "content-type": "application/json", "webhook-id": event, "webhook-timestamp": timestamp, "webhook-signature": `v1,${signature}`,
+  } }));
+  assert.equal(mailed.status, 200);
+  assert.equal(f.calls.length, 2);
+  assert.equal(f.calls[1].url, process.env.ADMIN_MAIL_URL);
+  const link = new URL(f.calls[1].payload.html.match(/href="([^"]+)"/)[1].replaceAll("&amp;", "&"));
+  assert.equal(link.origin, origin);
+  assert.equal(link.pathname, "/admin/confirm");
+  const query = Object.fromEntries(link.searchParams);
+  const html = await confirm(query);
   assert.match(html, /action="\/admin\/verify" method="post"/);
-  assert.deepEqual([...html.matchAll(/name="([^"]+)"/g)].map(m => m[1]).sort(), ["state", "token_hash"]);
-  assert.ok(html.includes(`value="${TOKEN}"`));
-  assert.ok(html.includes(`value="${state.state}"`));
+  const fields = Object.fromEntries([...html.matchAll(/<input type="hidden" name="([^"]+)" value="([^"]*)"/g)]
+    .map(([, name, value]) => [name, value]));
+  assert.deepEqual(fields, query);
+  assert.deepEqual(Object.keys(fields).sort(), ["state", "token_hash"]);
+  assert.equal(f.calls.length, 2, "GET did not consume the proof");
   noSecrets(html);
-  assert.equal(f.calls.length, 0);
-  assert.match(await confirm({ token_hash: TOKEN, state: state.state }), /action="\/admin\/verify"/);
+  const completed = await verify(form("/admin/verify", fields));
+  assert.equal(completed.status, 303);
+  assert.equal(completed.headers.get("location"), "/admin");
+  assert.equal(session.readAdminSession(completed.headers.getSetCookie()[0].split(";")[0]).role, "reader");
+  assert.equal(f.calls.length, 4);
+  assert.ok(f.calls[2].url.endsWith("/auth/v1/verify"));
+  assert.ok(f.calls[3].url.endsWith("/rest/v1/rpc/admin_log_event"));
 });
 
 test("invalid confirmation never renders proof or consumes it, including hash boundaries and wrong browser", async () => {
   const state = session.createAdminLoginState(EMAIL);
-  const good = { token_hash: TOKEN, state: state.state };
+  const signature = "a".repeat(43);
+  const good = { token_hash: TOKEN, state: `${state.state}.${signature}` };
   cookie = state.cookie.split(";")[0];
   const expired = session.createAdminLoginState(EMAIL, 1);
   for (const [value, query] of [
-    [null, good], [cookie, {}], [cookie, { ...good, state: "x".repeat(43) }],
-    [expired.cookie, { token_hash: TOKEN, state: expired.state }],
+    [null, good], [cookie, {}], [cookie, { ...good, state: `${"x".repeat(43)}.${signature}` }],
+    ...[state.state, `${state.state}.`, `${good.state}.x`, `${state.state}.invalid`]
+      .map(malformed => [cookie, { ...good, state: malformed }]),
+    [expired.cookie, { token_hash: TOKEN, state: `${expired.state}.${signature}` }],
     ...["", "a".repeat(55), "a".repeat(57), "a".repeat(64), "A".repeat(56), "g".repeat(56), [TOKEN, TOKEN]]
       .map(token_hash => [cookie, { ...good, token_hash }]),
     [cookie, { ...good, state: [state.state, state.state] }], [cookie, { ...good, type: "signup" }],

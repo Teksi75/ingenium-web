@@ -12,9 +12,11 @@ export default async function AdminConfirmPage({ searchParams }: { searchParams:
   const cookie = (await headers()).get("cookie");
   const token = query.token_hash;
   const state = query.state;
+  // Check the browser nonce here; preserve the complete signed state for POST.
+  const signedState = typeof state === "string" ? /^([A-Za-z0-9_-]{43})\.[A-Za-z0-9_-]{43}$/.exec(state) : null;
   const proof = typeof token === "string" && /^[a-f0-9]{56}$/.test(token)
-    && typeof state === "string" && (query.type === undefined || query.type === "email")
-    ? readAdminLoginState(cookie, state) : null;
+    && signedState && (query.type === undefined || query.type === "email")
+    ? readAdminLoginState(cookie, signedState[1]) : null;
   if (!proof || !resolveAdminRole(proof.email)) return <section className="mx-auto max-w-md space-y-4">
     <h1 className="text-2xl font-semibold text-[var(--ink-950)]">El enlace no es válido o venció</h1>
     <p className="text-sm leading-relaxed">Solicitá un nuevo enlace y abrilo en el mismo navegador donde lo pediste. Si recibiste varios, usá el más reciente.</p>
