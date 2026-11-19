@@ -28,6 +28,32 @@ Las variables nuevas sólo se aplican a despliegues nuevos. Primero publicar la 
 
 El frontend no utiliza el SDK ni claves de Supabase. Su POST relativo a `/api/preinscripcion` usa `credentials: "same-origin"` para conservar la autenticación de Vercel en una Preview protegida, nunca `include` para otros orígenes; mantiene `cache: "no-store"` y `redirect: "error"`. La API conserva la validación estricta de Origin y no requiere una cuenta de Supabase de las familias. No desactivar Deployment Protection para resolver un 401. La dependencia `server-only` separa el código privilegiado del cliente. La ruta usa `fetch` REST RPC, timeout de **8 segundos**, sin redirecciones ni reintentos automáticos. Oculta errores internos y no registra PII, claves ni hashes.
 
+## Ingreso administrativo con Google — T7/S7 local
+
+El panel confirma identidad directamente con Google OIDC (código, S256 PKCE,
+state firmado y nonce), sin enviar correos ni crear otra cuenta. Sólo los Gmail
+exactos de la allowlist vigente obtienen los roles existentes y una sesión de
+aplicación de ocho horas, después de auditoría obligatoria. La confirmación GET
+es inerte; únicamente el POST explícito del navegador iniciador consume el código.
+
+La preparación posterior usa Google Auth Platform **External / Testing**, las
+cuentas autorizadas como test users y un cliente **Web application** con redirect
+HTTPS exacto `<origen aprobado>/admin/confirm`. `ADMIN_GOOGLE_CLIENT_ID` y
+`ADMIN_GOOGLE_CLIENT_SECRET` van sólo en el runtime privado de Preview/rama
+autorizada; nunca en cliente, chat, comandos, `.env` o repositorio. Mantener la
+Preview protegida; no publicar consentimiento ni cambiar producción.
+
+No habilitar proveedores Google de Supabase Auth, hooks, SMTP, buzones ni sender.
+El proyecto y las variables Supabase existentes sirven exclusivamente a datos y
+auditoría. El actor Google deriva del sub verificado como UUIDv8 estable; el SQL
+existente no tiene FK a `auth.users`, por lo que no requiere migración. No cambia
+el formulario público, su gateway, claves, datos, límites ni permisos SQL.
+
+Las pruebas locales usan jose `6.2.13`, JWTs firmados y fetch token/JWKS/auditoría
+mockeados, sin cuentas reales ni red de proveedor. La configuración y el ingreso
+real de ambas personas en Preview aún requieren comprobación separada. Pasos,
+contratos y comandos: [guía de autenticación](preinscripciones-admin-auth.md).
+
 ## Migración y preproducción (requiere autorización)
 
 1. Crear/elegir manualmente un proyecto de pruebas desechable, con autorización explícita. No vincular producción. Confirmar región, responsables autorizados y restricciones de tratamiento de datos de menores.
@@ -59,6 +85,8 @@ El hash SHA-256 canónico incorpora datos normalizados, grupos ordenados, ciclo,
 Límite de **5 altas por contacto email y día UTC**. La base conserva sólo HMAC-SHA256 del contacto y contador diario, no IPs. Las solicitudes inválidas, duplicadas, claves conflictivas y fallos no incrementan contadores; los reintentos confirmados tampoco. Contador e inserción están en la misma transacción/subtransacción. Cada alta limpia hasta 100 ventanas con más de dos días de antigüedad usando índice y `SKIP LOCKED`; sin tráfico pueden quedar ventanas antiguas pendientes, nunca un historial de IPs. No sustituye protección DDoS del proveedor ni evita abuso distribuido con muchos emails.
 
 ## Administración segura sin panel
+
+**La consulta del listado en Supabase no depende del panel privado.** Hasta que la app esté disponible, la persona ya autorizada del instituto puede consultar las solicitudes en el SQL Editor con su cuenta individual. Si usa Ego Lite, los resultados se revisan en Supabase, no se copian al chat. Para este circuito se usan sólo consultas `SELECT` con los campos necesarios; no hace falta cambiar datos, permisos ni volver a desplegar el formulario público.
 
 Sólo personal explícitamente autorizado, cuentas individuales del proyecto Supabase, **MFA obligatoria**, permisos mínimos, revisión periódica y baja inmediata de accesos. No compartir cuenta `postgres`, claves de servicio ni enlaces con resultados. Mientras no haya un rol administrativo restringido revisado, el SQL Editor con rol `postgres` queda limitado a responsables técnicos de confianza; no otorgar SQL Editor a todo el equipo. No confundir `authenticated` (usuarios de la app) con autorización administrativa.
 
