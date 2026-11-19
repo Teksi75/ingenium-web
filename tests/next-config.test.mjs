@@ -28,7 +28,7 @@ test("development does not open the persistent Turbopack database on OneDrive", 
 
 test("existing response security headers remain unchanged", async () => {
   const rules = await config.headers();
-  assert.equal(rules.length, 1);
+  assert.equal(rules.length, 2);
   assert.equal(rules[0].source, "/:path*");
   const headers = JSON.parse(JSON.stringify(rules[0].headers));
   assert.deepEqual(headers, [
@@ -37,4 +37,13 @@ test("existing response security headers remain unchanged", async () => {
     { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
     { key: "Permissions-Policy", value: "geolocation=(), microphone=(), camera=()" },
   ]);
+});
+
+test("admin headers override only the private subtree after the original public headers", async () => {
+  const rules = JSON.parse(JSON.stringify(await config.headers()));
+  assert.deepEqual(rules[1], { source: "/admin/:path*", headers: [
+    { key: "X-Robots-Tag", value: "noindex, nofollow" },
+    { key: "Cache-Control", value: "private, no-store" },
+    { key: "Referrer-Policy", value: "no-referrer" },
+  ] });
 });
