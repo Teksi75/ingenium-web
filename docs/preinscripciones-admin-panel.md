@@ -73,13 +73,16 @@ respuestas malformadas nunca se muestran al usuario.
 El layout fuerza renderizado dinámico y metadata `noindex, nofollow` en el
 subárbol. `next.config.ts` agrega `/admin/:path*` **después** de las cabeceras
 públicas: `X-Robots-Tag: noindex, nofollow`, `Cache-Control: private, no-store` y
-`Referrer-Policy: no-referrer`. Las cabeceras públicas originales se conservan.
+`Referrer-Policy: same-origin`. Las cabeceras públicas originales se conservan.
+`no-referrer` quedó descartado a propósito: con esa política Chrome serializa el
+`Origin` como `null` en el POST de navegación del formulario de ingreso, y
+`isAdminSameOrigin` —correctamente— lo rechaza con 403.
 Sitemap y robots no cambian: bloquear rastreo impediría leer el noindex.
 
 Next puede normalizar Cache-Control al servir páginas dinámicas. Las pruebas de
 configuración comprueban las reglas, **no las cabeceras HTTP efectivas**. Sigue
 pendiente un smoke de servidor real sobre loopback que confirme no-store/private,
-noindex y no-referrer en `/admin`, confirmación y detalle, sin datos ni secretos
+noindex y `same-origin` en `/admin`, confirmación y detalle, sin datos ni secretos
 productivos. No se arrancó Next: los comandos delegados sólo autorizan pruebas en
 memoria, tipos, lint y diff; un arranque generaría salida fuera de las superficies
 editables. Tampoco se realizó inspección visual/browser en desktop o móvil.
