@@ -22,9 +22,11 @@ type GoogleConfig = NonNullable<ReturnType<typeof adminGoogleConfig>>;
 
 /** Callback metadata is inert. Errors, unknown fields and repeated values fail closed. */
 export function googleCallback(query: Record<string, string | string[] | undefined>): { code: string; state: string } | null {
-  if (Object.entries(query).some(([key, value]) => !["code", "state", "scope", "authuser", "prompt", "hd"].includes(key)
+  // Google appends `iss` to the redirect; it is validated below, never ignored.
+  if (Object.entries(query).some(([key, value]) => !["code", "state", "scope", "authuser", "prompt", "hd", "iss"].includes(key)
     || typeof value !== "string" || value.length > 2048)) return null;
-  const { code, state } = query;
+  const { code, state, iss } = query;
+  if (iss !== undefined && iss !== "https://accounts.google.com") return null;
   return typeof code === "string" && CODE.test(code) && typeof state === "string" && STATE.test(state) ? { code, state } : null;
 }
 
