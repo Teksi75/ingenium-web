@@ -1,120 +1,66 @@
-# Admin: browser-bound magic link and eight-hour session
+# Admin: ingresar con Google y confirmar en el navegador
 
-T3 implements server-only authentication handlers, not a usable panel yet. T4 must
-provide `/admin` and `/admin/confirm`. Nothing here configures accounts, SMTP,
-production databases or deployment. Live email delivery remains unverified.
+T7/S7 reemplaza el ingreso por correo: cada operador usa su Gmail existente y sólo la allowlist vigente concede permisos. No se envían correos, crean buzones ni utilizan Supabase Auth, hooks o SMTP. La configuración alojada y las pruebas reales de Preview quedan pendientes; este cambio sólo tiene comprobación local sintética.
 
-## Configuration (environment only)
+## Preparación posterior del operador
 
-| Variable | Required value |
+1. Mantener la Preview protegida con Vercel Authentication / Standard Protection y la base aislada ya autorizada. Verificar un origen HTTPS estable y el acceso de ambos operadores antes de configurar Google. No quitar protección para solucionar un error.
+2. En **Google Auth Platform**, elegir audiencia **External**, estado **Testing**, y agregar únicamente las cuentas individuales autorizadas como test users. No publicar la pantalla de consentimiento ni crear otra cuenta Gmail. Usar sólo scopes de identidad `openid email`, sin acceso a Gmail ni datos adicionales.
+3. Crear un cliente OAuth de tipo **Web application**. Registrar exactamente `https://panel.example.invalid/admin/confirm`, sustituyendo únicamente el origen por el HTTPS estable aprobado: mismo esquema, host y puerto, sin query, fragmento ni barra final. No comodines, callbacks alternativos ni redirect recibido del navegador.
+4. El operador configura las variables privadas abajo directamente en el runtime cifrado de **Preview y la rama autorizada**. Nunca en chat, comandos, tickets, archivos `.env`, repositorio o variables `NEXT_PUBLIC_*`. No leer ni compartir credenciales para verificar el cambio. Un despliegue nuevo toma las variables; uno anterior no se actualiza automáticamente.
+5. Posteriormente comprobar el ingreso real de ambas cuentas, confirmación explícita, consulta `reader`, mutaciones `admin` y auditoría con solicitudes sintéticas. La prueba local no confirma acceso Google/Vercel, consentimiento, credenciales, conectividad ni aptitud productiva. Producción requiere su autorización y comprobaciones separadas.
+
+| Variable de servidor | Contrato |
 |---|---|
-| `ADMIN_ALLOWLIST` | Comma-separated `email:reader` / `email:admin`; e.g. `reader@example.invalid:reader,admin@example.invalid:admin`. Any invalid/duplicate entry denies everyone. |
-| `ADMIN_SESSION_SECRET` | Dedicated secret of at least 32 characters, no surrounding whitespace, different from the service key. Rotation invalidates sessions and pending links. |
-| `ADMIN_APP_ORIGIN` | Bare HTTPS origin, e.g. `https://panel.example.invalid`; no path/trailing slash. Falls back to `SITE_ORIGIN` only when absent. Local development also allows a bare loopback HTTP origin. |
-| Supabase | Existing `storageConfig()` validates `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` and its rate-secret prerequisite. No new SDK or browser credential. |
-| `SUPABASE_EMAIL_HOOK_SECRET` | Supabase-provided `v1,whsec_` secret for the signed Send Email HTTP hook. Verifies HMAC, timestamp and exact raw body. |
-| `ADMIN_MAIL_URL` | HTTPS endpoint accepting a Resend-compatible `POST` email payload; no credentials, query or fragment in the URL. |
-| `ADMIN_MAIL_TOKEN` / `ADMIN_MAIL_FROM` | Bearer secret of at least 32 characters, distinct from session/service/hook secrets; and a valid sender address authorized by the service. Both are supplied only by environment. |
+| `ADMIN_GOOGLE_CLIENT_ID` | ID del cliente web, terminado en `.apps.googleusercontent.com`. |
+| `ADMIN_GOOGLE_CLIENT_SECRET` | Secreto de ese cliente confidencial; sólo servidor. |
+| `ADMIN_APP_ORIGIN` | Origen HTTPS exacto sin ruta/barra final; fallback a `SITE_ORIGIN` sólo si falta. Google no acepta el modo loopback HTTP del helper compartido. |
+| `ADMIN_ALLOWLIST` | Lista completa `email:reader,email:admin`; una entrada inválida o duplicada cierra toda la configuración. Ejemplo **sintético**: `ingenium.reader.fixture.000000@gmail.com:reader`. |
+| `ADMIN_SESSION_SECRET` | Secreto independiente de al menos 32 caracteres, sin espacios exteriores ni igualdad con la clave de servicio. Rotarlo invalida sesiones e intentos pendientes. |
+| Supabase existente | `storageConfig()` y sus variables actuales se usan **sólo para la base/auditoría**, nunca para autenticar ante Google. No cambiar proyecto, Auth, webhook, correo, SQL ni formulario público. |
 
-Roles come from the **current complete allowlist on every request**. Removal or a
-role change takes effect without waiting for cookie expiry. Auth user metadata,
-request role fields and cookie payloads never grant a role.
+Las antiguas variables `ADMIN_MAIL_*` y `SUPABASE_EMAIL_HOOK_SECRET` no participan del ingreso. No habilitar ni modificar un hook de Supabase para este flujo.
 
-## Flow and form contract
+## Contrato de rutas
 
-All forms POST `application/x-www-form-urlencoded` (optional UTF-8 charset), at
-most 4096 bytes within eight seconds. Fields are required, exact and unique.
-Origin is mandatory and must equal the configured origin; nonproduction loopback
-requests may instead use an exact loopback browser Host with matching URL port
-and HTTP protocol. Forwarded headers are ignored. No CORS is offered.
+Los POST conservan el parser estricto `application/x-www-form-urlencoded` (charset UTF-8 opcional), 4096 bytes y ocho segundos de lectura. Campos exactos, únicos y obligatorios; Origin obligatorio, sin CORS ni autoridad de cabeceras reenviadas. El helper compartido conserva la excepción local no productiva de Host loopback exacto, mismo puerto y HTTP; el **callback configurado** sigue siendo HTTPS.
 
-| Action | Fields | Result |
-|---|---|---|
-| `POST /admin/login` | `email` | Same empty `303 /admin?sent=1` and ten-minute signed state-cookie shape for allowed, unknown, or upstream-refused accounts. Only allowed emails trigger OTP, always `create_user:false`. |
-| `POST /admin/verify` | `token_hash`, `state` | Before network, signed browser state and its HMAC must bind this exact token, account and attempt. Confirmed Auth identity and current role are rechecked; login audit must succeed before the eight-hour session. Success: empty `303 /admin`. The same login route receives signed JSON hook requests, not browser login forms. |
-| `POST /admin/logout` | `csrf` | Requires valid current session, Origin and session nonce. Reader is allowed. Success: empty `303 /admin`; audit outage: generic `503` **with cookies still cleared**. |
+| Acción | Campos y efecto |
+|---|---|
+| `POST /admin/login` | Formulario vacío. Respuesta vacía `303` exclusivamente al endpoint fijo de autorización Google; cookie de intento firmado por diez minutos. No llama a Google, Supabase ni correo. |
+| `GET /admin/confirm` | Inerte: no intercambia código, consume estado, redirige ni hace fetch. Sólo un `code` y `state` válidos con cookie del navegador vigente renderizan los dos campos ocultos y el botón de confirmación. |
+| `POST /admin/verify` | Exactamente `code,state`. Valida origen, forma y cookie **antes** de contactar Google. Verifica identidad y allowlist actual; auditoría `login` obligatoria antes de emitir sesión. Éxito: `303 /admin`. |
+| `POST /admin/logout` | `csrf`, sesión y origen válidos. Auditoría y `303 /admin`; un fallo de auditoría devuelve `503` **pero igualmente borra las cookies**. |
 
-Other methods return `405` with `Allow: POST`. Errors use only
-`No se pudo completar la solicitud.` with `400` (malformed), `403` (unauthorized),
-`413` (oversize), `415` (format), or `503` (configuration/upstream/audit failure).
-Rejected malformed/unauthorized requests do not call audit or registration RPCs.
-All responses have `Cache-Control: no-store`, `X-Robots-Tag: noindex, nofollow` and
-`Referrer-Policy: no-referrer`. There are no external or browser-selected redirects.
+Código: ASCII visible sin espacios, de 1 a 2048 caracteres. State: 43 caracteres base64url. GET rechaza errores del proveedor, campos desconocidos, valores repetidos, código/estado ausentes o malformados y cookie inválida/expirada. Puede recibir los metadatos inertes conocidos `scope,authuser,prompt,hd` (strings únicos acotados); nunca se usan como identidad ni se reenvían al POST. No refleja errores ni otros valores del proveedor.
 
-## Later operator setup — not executed by T3
+Los otros métodos de las rutas POST son `405`, `Allow: POST`. Errores privados: `No se pudo completar la solicitud.` con `400`, `403`, `413`, `415` o `503`; jamás secretos, tokens o respuesta del proveedor. Se mantienen `Cache-Control: no-store`, `X-Robots-Tag: noindex, nofollow` y `Referrer-Policy: no-referrer` y las cabeceras privadas del layout/rutas. No registrar callbacks, códigos, cookies o respuestas en analítica/logs ni agregar recursos externos.
 
-1. Pre-create the two individual email Auth accounts; login cannot create users.
-2. Allow the fixed app `/admin/confirm` redirect in Supabase. Configure the Send Email HTTP hook for `<configured origin>/admin/login`, using its supplied `v1,whsec_` secret; this replaces native Auth email delivery, including when SMTP is configured.
-3. Use a separately approved mail provider compatible with the JSON payload above. Other Auth email event types are rejected rather than silently delivered by another channel. This branch does not configure the hook or send live email; verify all existing Auth flows before activating it.
-4. T4's `/admin/confirm` GET must only render a confirmation form: **never consume
-   a token on GET**. Carry `token_hash` and `state` as hidden fields to explicit
-   POST `/admin/verify`; ignore/validate the template's `type=email`, never forward
-   it as an extra POST field. Avoid leaking query tokens through logs or assets.
+## Verificación de identidad y sesión
 
-OTP's `redirect_to` carries the random state. The authenticated hook adds an HMAC over the exact returned token hash, normalized account and that state before mailing the link. OTP success alone never suffices.
-Verify then sends `{token_hash,type:'email'}` only after that binding is checked. The token hash is exactly 56 lowercase hexadecimal
-characters: Supabase's `GenerateTokenHash` uses SHA-224 of email + OTP. This is
-separate from session HMACs and state nonces. Supabase owns atomic single-use token consumption;
-there is no local replay database. The state cookie binds proof to the initiating
-browser and is cleared on success. An old copied cookie cannot make Supabase
-accept an already-consumed token. Concurrent/new login attempts replace state.
+- Estado del intento v2 exacto: `v,state,verifier,nonce,iat,exp`. Tres valores independientes de 32 bytes aleatorios; firma HMAC con propósito `login`, comparación state constante, ventana absoluta de **600 segundos**. Cookie existente `admin_login_state`, HttpOnly, SameSite=Lax, Path=/, Secure en producción. El verifier sólo sale hacia el token endpoint; el nonce sólo hacia autorización Google, nunca en campos HTML.
+- Autorización fija: `https://accounts.google.com/o/oauth2/v2/auth`, código + **S256 PKCE**, `openid email`, callback fijo. Token fijo: `https://oauth2.googleapis.com/token`, un POST URL-encoded con cliente confidencial, código, verifier y el mismo redirect; plazo **8000 ms**, sin redirecciones ni reintentos.
+- **`jose@6.2.13` exacto**, sin otras dependencias nuevas. `jwtVerify` exige firma **RS256**, issuer `https://accounts.google.com` o `accounts.google.com`, audiencia del cliente y claims `exp,iat,sub,nonce,email,email_verified`, con `maxTokenAge:600`. Sólo una audiencia exacta; si hay `azp` debe coincidir exactamente con el cliente. No se confía en `jku`, `x5u`, rol, perfil ni metadata del proveedor/navegador.
+- `createRemoteJWKSet` usa exclusivamente `https://www.googleapis.com/oauth2/v3/certs`, validación criptográfica y selección única de clave pública. Resolver nuevo por verificación, timeout **5000 ms**, cooldown estándar **30000 ms** (sin reintento por kid desconocido dentro del intento), fetch sin caché HTTP ni redirects. No descubrimiento configurable ni clave local de fallback.
+- Nonce verificado exactamente, `email_verified === true`, sub ASCII estable de 1–255 caracteres alfanuméricos/guion/guion bajo. Gmail normalizado a minúsculas con sintaxis conservadora y dominio exacto `gmail.com`, allowlist exacta: no colapsar puntos, no resolver aliases `+`, no confiar en `hd` o claims de rol. Cambios/bajas de permisos rigen tras la frontera de red y en cada lectura de sesión.
+- Actor durable: primeros 16 bytes de SHA-256 de `ingenium.admin.google.sub.v1` + byte NUL + sub, bits de versión UUID **8** y variante RFC. No se basa en email, tokens ni issuer alternativo. La migración existente `202611170002_prereg_admin_gateway.sql` no tiene FK de actor a `auth.users`; no necesita cambios.
+- Google consume el código una sola vez; no hay tabla local de replay. El POST exitoso borra la cookie de intento; un navegador nuevo/otra cookie no puede rebindear el código por state/PKCE/nonce. Reutilizar una cookie copiada no obliga a Google a aceptar un código consumido. No reintentar automáticamente si el resultado es incierto.
+- La sesión de aplicación sigue v1, HMAC, **28800 segundos** absolutos (ocho horas), sin renovación al leer, con CSRF y rol tomado de la allowlist vigente. Sólo contiene id/email/CSRF/fechas, nunca ID/access/refresh tokens. Se mantiene la auditoría previa a emisión; su fallo no permite sesión nueva. Logout, RPCs de registros, controles de estado y formulario público no cambian.
 
-Evidence: [official OTP implementation](https://raw.githubusercontent.com/supabase/auth/master/internal/api/otp.go),
-[official token hash implementation](https://raw.githubusercontent.com/supabase/auth/master/internal/crypto/crypto.go),
-and [official passwordless guide](https://supabase.com/docs/guides/auth/auth-email-passwordless).
+## API y comprobaciones locales
 
-## Server integration API (T4/T5)
+Módulos sólo servidor: `session.ts` conserva `readAdminSession`, `createAdminSession`, `validAdminCsrf`, `adminCookie` y `clearAdminCookie`; `createAdminLoginState(now?)` y `readAdminLoginState(cookie,state,now?)` manejan el intento v2. `auth.ts` conserva `logAdminEvent` y `logoutAdminSession`; login/verificación usan `google.ts`. Ningún componente cliente importa estos módulos.
 
-All modules import `server-only`; never import them from a client component.
+```sh
+pnpm exec node --test --test-concurrency=1 tests/admin-auth.test.mjs tests/admin-panel.test.mjs tests/admin-status.test.mjs
+pnpm exec node --test --test-concurrency=1 tests/*.test.mjs
+pnpm exec tsc --noEmit --incremental false
+pnpm exec eslint lib/admin/auth.ts lib/admin/session.ts lib/admin/google.ts app/admin/page.tsx app/admin/confirm/page.tsx tests/admin-auth.test.mjs tests/admin-panel.test.mjs tests/helpers/load-admin.mjs
+git diff --check
+```
 
-- `lib/admin/session.ts`: `ADMIN_SESSION_COOKIE = 'admin_session'`,
-  `ADMIN_LOGIN_COOKIE = 'admin_login_state'`, `SESSION_SECONDS = 28800`,
-  `LOGIN_SECONDS = 600`.
-- `readAdminSession(cookieHeader: string | null, now?: number): AdminActor | null`.
-  Pass `(await headers()).get('cookie')` from server-rendered code. **Do not set a
-  cookie while reading**; there is no refresh/rolling extension.
-- `AdminActor`: `{ id: string; email: string; role: 'reader' | 'admin'; csrf: string;
-  issuedAt: number; expiresAt: number }`. Never render actor/CSRF to untrusted pages.
-- `createAdminSession(identity: { id: string; email: string }, now?: number):
-  { cookie: string; actor: AdminActor } | null`: verified identities only.
-- `createAdminLoginState(email: string, now?: number):
-  { cookie: string; state: string } | null`;
-  `readAdminLoginState(cookieHeader: string | null, state: string, now?: number)`
-  returns validated state or null. `clearAdminCookie(name)` returns a deletion header.
-- `validAdminCsrf(actor: AdminActor, value: string): boolean`: call before status or
-  logout mutations, in addition to current-role and Origin checks.
-- `lib/admin/http.ts`: `adminAppOrigin(): string | null`,
-  `isAdminSameOrigin(request: Request): boolean`,
-  `readAdminForm(request: Request, fields: readonly string[]): Promise<URLSearchParams>`,
-  `AdminHttpError(status: number)`, `adminFailure(error: unknown): Response`,
-  `adminResponse(status: number, body?: string | null, headers?: HeadersInit): Response`,
-  `adminRedirect(destination: '/admin' | '/admin?sent=1', cookies?: string[]): Response`,
-  `adminMethodNotAllowed(request: Request): Response`.
-- `lib/admin/auth.ts`: `logAdminEvent(actor: AdminActor,
-  action: 'login' | 'logout' | 'access_denied'): Promise<void>` calls T2's void RPC.
-  `startAdminLogin`, `verifyAdminLogin`, `logoutAdminSession` each accept `Request`
-  and return `Promise<Response>`. T5 owns known role-denial logging and mutations.
-- `lib/admin/allowlist.ts`: `normalizeAdminEmail(value: unknown): string | null`,
-  `readAdminAllowlist(): ReadonlyMap<string, AdminRole> | null`,
-  `resolveAdminRole(email: string): AdminRole | null`.
+Request/Response y tokens firmados con jose son reales, pero todos los fetch de token/JWKS/auditoría están interceptados. Fixtures `.invalid`, excepto Gmail completamente sintéticos necesarios para probar la política estricta. Sin proveedores, credenciales, envío, migraciones ni despliegue. El arranque dev del suite usa su scratch temporal existente; no es una Preview.
 
-Session HMAC verifies in constant time before identity/role checks. Cookie schema,
-UUID, normalized email, nonce and exact signed lifetime are validated. At exactly
-login + 28800 seconds it expires. Cookies are HttpOnly, SameSite=Lax, Path=/ and
-Secure in production. Cookies never contain Supabase access/refresh tokens.
-Each REST operation is one attempt with an eight-second timeout, `no-store`, and
-redirect refusal. No PII, secrets or token logging is added.
+Revisar como unidad login, confirmación, estado v2, helper Google, manifest/lock, pruebas y esta guía. No restaurar automáticamente el canal de correo anterior: fue sustituido por S7. Un rollback de identidad necesita revisión coordinada con los consumidores de sesión; esta guía no autoriza rollback, rotación, deploy ni publicación.
 
-## Verification and rollback
-
-Run the delegated focused test, TypeScript and ESLint commands; tests use real
-Request/Response and synthetic `.invalid` hosts/accounts with mocked fetch only.
-This local evidence is not SMTP, live single-use Auth, browser, database migration,
-or production readiness proof. Existing public-form availability is a separate
-parent-owned readiness report; no production POST was made here (S6/S7).
-
-**Risk: item 2 (authentication).** Roll back this coherent T3 boundary: the four
-`lib/admin/*.ts` files, the three `/admin/{login,verify,logout}/route.ts` files,
-`tests/helpers/load-admin.mjs`, `tests/admin-auth.test.mjs`, and this document.
-Leave T1/T2 SQL and public form code untouched. Once T4/T5 depend on these exports,
-coordinate their rollback too; this is not a production rollback command.
+Referencias: [Google OIDC](https://developers.google.com/identity/openid-connect/openid-connect), [Google Auth Platform](https://developers.google.com/identity/protocols/oauth2/production-readiness/policy-compliance), [jose JWKS remoto](https://github.com/panva/jose/blob/main/docs/jwks/remote/functions/createRemoteJWKSet.md), [jose opciones verificadas vía Context7 `/panva/jose`](https://github.com/panva/jose/blob/main/src/types.d.ts).

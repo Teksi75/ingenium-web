@@ -6,12 +6,12 @@ import { createRequire } from "node:module";
 import { test, beforeEach, afterEach } from "node:test";
 import { renderToStaticMarkup } from "react-dom/server";
 import ts from "typescript";
-import { loadAdmin } from "./helpers/load-admin.mjs";
+import { loadAdmin, mockGoogle, GOOGLE_EMAIL } from "./helpers/load-admin.mjs";
 
 const require = createRequire(import.meta.url);
 const ID = "eb4dd9f7-672b-40eb-9f8f-0f31e4ec1e50";
 const EMAIL = "reader@example.invalid";
-const TOKEN = "a".repeat(56);
+const CODE = "synthetic-code/one";
 const DATE = "2026-11-17T12:00:00+00:00";
 const item = { id: ID, public_code: ID, student_name: "Estudiante Ejemplo", target_school: "ambos",
   status: "recibida", groups: ["grupo-1", "grupo-3"], confirmed_group: null,
@@ -87,8 +87,8 @@ test("home authorizes before data; anonymous and revoked sessions only get gener
     const html = await home(query);
     assert.match(html, /action="\/admin\/login"/);
     assert.match(html, /method="post"/);
-    assert.match(html, /type="email"[^>]*name="email"/);
-    assert.equal(html.includes("Si el correo está autorizado, recibirás un enlace para ingresar."), query.sent === "1");
+    assert.match(html, /Ingresar con Google/);
+    assert.doesNotMatch(html, /type="email"|name="email"|recibirás un enlace/);
     noSecrets(html);
   }
   signIn();
@@ -106,36 +106,47 @@ test("detail checks its own session before any backend call; expired and malform
   }
 });
 
-test("confirmation GET is inert, browser-bound and posts exactly token_hash/state without type", async () => {
-  const state = session.createAdminLoginState(EMAIL);
-  cookie = state.cookie.split(";")[0];
-  const html = await confirm({ token_hash: TOKEN, state: state.state, type: "email", redirect: "https://other.example.invalid" });
+test("Google callback GET is inert, exposes only code/state, and requires explicit browser POST", async () => {
+  f.env({ ADMIN_ALLOWLIST: `${GOOGLE_EMAIL}:reader` });
+  const origin = process.env.ADMIN_APP_ORIGIN;
+  const { POST: login } = f.load("app/admin/login/route.ts");
+  const { POST: verify } = f.load("app/admin/verify/route.ts");
+  function form(path, fields = {}) {
+    return new Request(`${origin}${path}`, { method: "POST", headers: { origin, ...(cookie ? { cookie } : {}) }, body: new URLSearchParams(fields) });
+  }
+  const started = await login(form("/admin/login"));
+  assert.equal(started.status, 303);
+  cookie = started.headers.get("set-cookie").split(";")[0];
+  const state = new URL(started.headers.get("location")).searchParams.get("state");
+  const query = { code: CODE, state };
+  await mockGoogle(f, cookie);
+  const html = await confirm({ ...query, scope: "openid email", authuser: "0", prompt: "none" });
   assert.match(html, /action="\/admin\/verify" method="post"/);
-  assert.deepEqual([...html.matchAll(/name="([^"]+)"/g)].map(m => m[1]).sort(), ["state", "token_hash"]);
-  assert.ok(html.includes(`value="${TOKEN}"`));
-  assert.ok(html.includes(`value="${state.state}"`));
-  noSecrets(html);
+  const fields = Object.fromEntries([...html.matchAll(/<input type="hidden" name="([^"]+)" value="([^"]*)"/g)].map(([, name, value]) => [name, value]));
+  assert.deepEqual(fields, query);
+  const loginData = JSON.parse(Buffer.from(cookie.split("=")[1].split(".")[0], "base64url"));
+  for (const secret of [loginData.nonce, loginData.verifier, process.env.ADMIN_GOOGLE_CLIENT_SECRET]) assert.ok(!html.includes(secret));
   assert.equal(f.calls.length, 0);
-  assert.match(await confirm({ token_hash: TOKEN, state: state.state }), /action="\/admin\/verify"/);
+  assert.equal(await confirm(query), html, "GET neither consumes nor redirects");
+  const completed = await verify(form("/admin/verify", fields));
+  assert.equal(completed.status, 303); assert.equal(completed.headers.get("location"), "/admin");
+  assert.equal(session.readAdminSession(completed.headers.getSetCookie()[0].split(";")[0]).role, "reader");
+  assert.equal(f.calls.length, 3);
 });
 
-test("invalid confirmation never renders proof or consumes it, including hash boundaries and wrong browser", async () => {
-  const state = session.createAdminLoginState(EMAIL);
-  const good = { token_hash: TOKEN, state: state.state };
-  cookie = state.cookie.split(";")[0];
-  const expired = session.createAdminLoginState(EMAIL, 1);
-  for (const [value, query] of [
-    [null, good], [cookie, {}], [cookie, { ...good, state: "x".repeat(43) }],
-    [expired.cookie, { token_hash: TOKEN, state: expired.state }],
-    ...["", "a".repeat(55), "a".repeat(57), "a".repeat(64), "A".repeat(56), "g".repeat(56), [TOKEN, TOKEN]]
-      .map(token_hash => [cookie, { ...good, token_hash }]),
-    [cookie, { ...good, state: [state.state, state.state] }], [cookie, { ...good, type: "signup" }],
-  ]) {
+test("invalid callback errors, missing/repeated/malformed code/state or wrong browser never render proof or fetch", async () => {
+  const attempt = session.createAdminLoginState();
+  const good = { code: CODE, state: attempt.state };
+  const browser = attempt.cookie.split(";")[0];
+  for (const [value, query] of [[null, good], [browser, {}], [browser, { ...good, state: "x".repeat(43) }],
+    [session.createAdminLoginState(1).cookie, good], [browser, { ...good, error: "private-provider-error" }],
+    [browser, { ...good, other: "unknown" }],
+    ...["", "a".repeat(2049), "a\nb", [CODE, CODE]].map(code => [browser, { ...good, code }]),
+    ...["", "x".repeat(42), [attempt.state, attempt.state]].map(state => [browser, { ...good, state }])]) {
     cookie = value;
     const html = await confirm(query);
     assert.match(html, /El enlace no es válido o venció/);
-    assert.doesNotMatch(html, /action="\/admin\/verify"|name="token_hash"|name="state"/);
-    assert.ok(!html.includes(TOKEN));
+    assert.doesNotMatch(html, /action="\/admin\/verify"|name="code"|name="state"|private-provider-error/);
     assert.equal(f.calls.length, 0);
   }
 });

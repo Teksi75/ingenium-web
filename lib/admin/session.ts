@@ -18,8 +18,9 @@ export interface AdminActor {
   expiresAt: number;
 }
 interface LoginState {
-  v: 1;
-  email: string;
+  v: 2;
+  state: string;
+  verifier: string;
   nonce: string;
   iat: number;
   exp: number;
@@ -107,19 +108,22 @@ export function createAdminSession(identity: { id: string; email: string }, now:
     actor: { ...identity, role, csrf, issuedAt: now, expiresAt: payload.exp } };
 }
 
-export function createAdminLoginState(email: string, now: number = nowSeconds()): { cookie: string; state: string } | null {
-  if (!verifiedEmail(email) || !Number.isSafeInteger(now) || now < 0) return null;
+export function createAdminLoginState(now: number = nowSeconds()): { cookie: string; state: string } | null {
+  if (!Number.isSafeInteger(now) || now < 0) return null;
+  const state = randomBytes(32).toString("base64url");
+  const verifier = randomBytes(32).toString("base64url");
   const nonce = randomBytes(32).toString("base64url");
-  const value = sign({ v: 1, email, nonce, iat: now, exp: now + LOGIN_SECONDS }, "login");
-  return value ? { cookie: adminCookie(ADMIN_LOGIN_COOKIE, value, LOGIN_SECONDS), state: nonce } : null;
+  const value = sign({ v: 2, state, verifier, nonce, iat: now, exp: now + LOGIN_SECONDS }, "login");
+  return value ? { cookie: adminCookie(ADMIN_LOGIN_COOKIE, value, LOGIN_SECONDS), state } : null;
 }
 
 export function readAdminLoginState(cookieHeader: string | null, state: string, now: number = nowSeconds()): LoginState | null {
   const data = readSigned(cookieHeader, ADMIN_LOGIN_COOKIE, "login");
-  if (!data || !exactKeys(data, ["v", "email", "nonce", "iat", "exp"]) || data.v !== 1
-    || !validWindow(data, LOGIN_SECONDS, now) || !verifiedEmail(data.email)
-    || typeof data.nonce !== "string" || !NONCE_PATTERN.test(data.nonce) || !NONCE_PATTERN.test(state)
-    || !timingSafeEqual(Buffer.from(data.nonce), Buffer.from(state))) return null;
+  if (!data || !exactKeys(data, ["v", "state", "verifier", "nonce", "iat", "exp"]) || data.v !== 2
+    || !validWindow(data, LOGIN_SECONDS, now)
+    || ![data.state, data.verifier, data.nonce].every(value => typeof value === "string" && NONCE_PATTERN.test(value))
+    || !NONCE_PATTERN.test(state)
+    || !timingSafeEqual(Buffer.from(data.state as string), Buffer.from(state))) return null;
   return data as unknown as LoginState;
 }
 
