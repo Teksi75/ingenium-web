@@ -44,6 +44,18 @@ test("admin headers override only the private subtree after the original public 
   assert.deepEqual(rules[1], { source: "/admin/:path*", headers: [
     { key: "X-Robots-Tag", value: "noindex, nofollow" },
     { key: "Cache-Control", value: "private, no-store" },
-    { key: "Referrer-Policy", value: "no-referrer" },
+    { key: "Referrer-Policy", value: "same-origin" },
   ] });
+});
+
+// Chrome serialises the Origin header as "null" on a navigation POST whose document
+// carries Referrer-Policy: no-referrer. The admin sign-in is exactly such a form, and
+// isAdminSameOrigin correctly rejects "null" with 403, so that policy breaks login.
+test("admin subtree never sends a null form origin", async () => {
+  const rules = JSON.parse(JSON.stringify(await config.headers()));
+  const admin = rules.find((rule) => rule.source === "/admin/:path*");
+  assert.ok(admin, "admin header rule must exist");
+  const policy = admin.headers.find((header) => header.key === "Referrer-Policy");
+  assert.notEqual(policy?.value, "no-referrer");
+  assert.equal(policy?.value, "same-origin");
 });

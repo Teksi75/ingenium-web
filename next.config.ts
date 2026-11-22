@@ -30,7 +30,10 @@ const nextConfig: NextConfig = {
         headers: [
           { key: "X-Robots-Tag", value: "noindex, nofollow" },
           { key: "Cache-Control", value: "private, no-store" },
-          { key: "Referrer-Policy", value: "no-referrer" },
+          // same-origin already withholds the referrer from other origins, while
+          // no-referrer makes Chrome send `Origin: null` on the sign-in form POST,
+          // which the same-origin guard rejects with 403.
+          { key: "Referrer-Policy", value: "same-origin" },
         ],
       },
     ];
