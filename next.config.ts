@@ -25,6 +25,14 @@ const nextConfig: NextConfig = {
           // TODO: Add a strict Content-Security-Policy once asset requirements are audited.
         ],
       },
+      {
+        source: "/admin/:path*",
+        headers: [
+          { key: "X-Robots-Tag", value: "noindex, nofollow" },
+          { key: "Cache-Control", value: "private, no-store" },
+          { key: "Referrer-Policy", value: "no-referrer" },
+        ],
+      },
     ];
   },
 };

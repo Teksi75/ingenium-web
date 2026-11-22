@@ -60,6 +60,8 @@ Límite de **5 altas por contacto email y día UTC**. La base conserva sólo HMA
 
 ## Administración segura sin panel
 
+**La consulta del listado en Supabase no depende de la app privada de Bárbara.** Hasta que la app esté disponible, la persona ya autorizada del instituto puede consultar las solicitudes en el SQL Editor con su cuenta individual. Si usa Ego Lite, los resultados se revisan en Supabase, no se copian al chat. Para este circuito se usan sólo consultas `SELECT` con los campos necesarios; no hace falta cambiar datos, permisos ni volver a desplegar el formulario público.
+
 Sólo personal explícitamente autorizado, cuentas individuales del proyecto Supabase, **MFA obligatoria**, permisos mínimos, revisión periódica y baja inmediata de accesos. No compartir cuenta `postgres`, claves de servicio ni enlaces con resultados. Mientras no haya un rol administrativo restringido revisado, el SQL Editor con rol `postgres` queda limitado a responsables técnicos de confianza; no otorgar SQL Editor a todo el equipo. No confundir `authenticated` (usuarios de la app) con autorización administrativa.
 
 Ejemplos con marcadores que el operador reemplaza localmente; nunca pegar datos reales en tickets o historial público:
