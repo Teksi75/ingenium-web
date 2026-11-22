@@ -2,7 +2,22 @@
 
 ## Estado y límites
 
-Implementación de `/api/preinscripcion`, ciclo de cursado **2027**, ingreso **2028**. La migración se aplicó **una sola vez** en el proyecto autorizado `ingenium-preinscripciones-test` (Free, São Paulo), nunca en producción. Pasaron las aserciones SQL reales con rollback, escritura/lectura administrativa, catorce denegaciones bajo roles reales y las carreras concurrentes de cupos, replay, duplicado y conflicto. Sólo se usaron datos ficticios. Las pruebas Node del SQL siguen siendo **estructurales** y se distinguen de esa ejecución PostgreSQL.
+Implementación de `/api/preinscripcion`, ciclo de cursado **2027**, ingreso **2028**. La migración base se aplicó en el proyecto autorizado `ingenium-preinscripciones-test` (Free, São Paulo) y también, sin que este documento lo registrara, en el proyecto **`ingenium-preinscripciones`** (Free, São Paulo), que es el que recibe el tráfico real desde el 17/11/2026.
+
+> **Corrección verificada el 2026-11-21** (lectura directa del dashboard, sólo `SELECT` de conteo y agregación; sin PII y sin escrituras). La afirmación previa «nunca en producción» era falsa.
+>
+> | Proyecto | Ref | Registros | Estados | Fechas |
+> | --- | --- | --- | --- | --- |
+> | `ingenium-preinscripciones` (producción) | `rhybcnywzynayvgsxwva` | **12** | 12 `recibida`, 0 confirmadas, 0 con grupo | 17/11 14:31 → 20/11 10:47 |
+> | `ingenium-preinscripciones-test` | `akyvvrjkvrrgfphaledd` | 14 (fixtures) | 8 `confirmada`, 6 `recibida` | 16/11 y 17/11 |
+>
+> Producción por día: 17/11 = 1, 18/11 = 5, 19/11 = 5, 20/11 = 1; 11 filas en `rate_windows` (18–20/11, señal de tráfico real sostenido); los 4 grupos de 2027 intactos con capacidad 8. Las 12 filas son ciclo 2027/2028 y **ninguna** consumió vacante.
+>
+> **Migraciones: una aplicada, una pendiente.** El 2026-11-21 se aplicó `202611170002_prereg_admin_gateway` con autorización explícita del responsable, en una sola transacción. Quedaron 4 funciones `public.admin_*`, `prereg_private.admin_audit_events` con RLS y 2 triggers append-only, `EXECUTE` sólo para `service_role` y la auditoría vacía; los 12 registros y la unicidad por estudiante no se tocaron (ver evidencia en `odd/tasks/preinscripciones-produccion.md`, L7–L8). **`202611170001_prereg_cancelled_resubmission` sigue sin aplicar**: elimina la unicidad global `(course_year, student_hash)` a favor de un índice parcial, así que debe correr en la misma ventana que el deploy que trae la reinscripción tras cancelar. Consecuencia práctica del resto: el panel privado **todavía no puede listar ni gestionar** esos 12 registros, porque falta desplegar el código que llama a esas funciones; los 12 siguen en `recibida`.
+>
+> **No hay respaldo.** Database → Backups del proyecto de producción informa literalmente *«Free Plan does not include project backups.»* Las 12 filas con datos de menores no tienen copia automática, y el plan Free pausa proyectos inactivos.
+>
+> **Vercel sí está configurado.** `teksi75s-projects/ingenium-web` tiene `SUPABASE_URL` y `SUPABASE_SERVICE_ROLE_KEY` en **Production** (agregadas el 17/11), lo que explica el primer registro del 17/11 a las 14:31. Las cinco variables `ADMIN_*` existen **sólo en Preview**, sumado a la falta de RPC: por eso el panel no puede funcionar en producción. Política de datos de familias: [documento propio](preinscripciones-privacidad.md). Pasaron las aserciones SQL reales con rollback, escritura/lectura administrativa, catorce denegaciones bajo roles reales y las carreras concurrentes de cupos, replay, duplicado y conflicto. Sólo se usaron datos ficticios. Las pruebas Node del SQL siguen siendo **estructurales** y se distinguen de esa ejecución PostgreSQL.
 
 La concurrencia se observó mediante `pg_stat_activity`: A mantenía su transacción y B esperaba un bloqueo en otro backend. Quedaron ocho confirmaciones únicas; la novena siguió recibida sin slot. Replay conservó el comprobante y los rechazos no incrementaron contadores. El esquema privado está excluido de la Data API. Pasaron cinco comprobaciones HTTP con una clave pública válida: control positivo Auth 200; lectura privada, cambio de estado y función administrativa rechazados con 406/PGRST106; tabla pública inexistente con 404/PGRST205; RPC de envío directo denegado con 401/42501. Una consulta administrativa nueva confirmó que esos intentos no alteraron las doce solicitudes ni el contador total de doce. El endpoint raíz REST exige una clave secreta: su 401 previo no invalidaba la clave pública ni probaba aislamiento. Después pasó la autenticación con una clave secreta moderna del proyecto de prueba: tanto `apikey` solo como `apikey` más el Bearer usado por la aplicación devolvieron 200. No hizo falta cambiar el código de autenticación.
 
