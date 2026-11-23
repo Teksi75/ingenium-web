@@ -3,6 +3,9 @@ import type { RegistrationStatus } from "./types";
 const courseYear = 2027;
 const entryYear = 2028;
 const maxStudentsPerGroup = 8;
+// Declared data-policy deadlines: docs/preinscripciones-privacidad.md. Changing
+// either value changes what families accept, so privacy.version must change too.
+const retention = { nonEnrolledDays: 90, cancelledDays: 30 };
 
 export const targetSchoolOptions = [
   { value: "uncuyo", label: "Colegios de la UNCuyo." },
@@ -58,8 +61,10 @@ export const preinscripcionConfig = {
     acceptanceLabel: "Leí y acepto la información del programa y las condiciones informativas de esta preinscripción.",
   },
   privacy: {
-    version: "2",
-    notice: "El Instituto Ingenium usará los datos del estudiante y de su responsable para gestionar la preinscripción, contactarte y organizar los horarios. La solicitud se guarda mediante un proveedor de alojamiento de datos que presta el servicio por cuenta de Ingenium. No se divulgarán los datos públicamente ni se usarán para promociones. Podés contactar al instituto para solicitar el acceso, la rectificación o la supresión de tus datos.",
+    version: "3",
+    retention,
+    notice: "El Instituto Ingenium usará los datos del estudiante y de su responsable para gestionar la preinscripción, contactarte y organizar los horarios. La solicitud se guarda mediante un proveedor de alojamiento de datos que presta el servicio por cuenta de Ingenium. No se divulgarán los datos públicamente ni se usarán para promociones, y cuando la inscripción se completa no se ceden a terceros ni se usan comercialmente. Podés contactar al instituto para solicitar el acceso, la rectificación o la supresión de tus datos.",
+    retentionNotice: `Los datos no se conservan indefinidamente. Si la inscripción no se concreta, se eliminan ${retention.nonEnrolledDays} días después de iniciadas las clases; si se concreta, se eliminan ${retention.nonEnrolledDays} días después de terminado el cursado y rendidas las evaluaciones de ingreso; si cancelás la solicitud, se eliminan ${retention.cancelledDays} días después de la cancelación. Podés pedir la supresión antes de ese plazo.`,
     sensitiveDataNotice: "No incluyas diagnósticos médicos, certificados ni información sensible en las observaciones. No solicitamos DNI, domicilio completo ni documentación en esta etapa.",
     contactHref: "/#contacto",
     acceptanceLabel: "Leí el aviso de privacidad y doy mi consentimiento informado para gestionar esta solicitud.",

@@ -261,6 +261,7 @@ test("review includes every visible entered field and independent unmarked requi
   assert.ok(html.includes(config.terms.fees));
   assert.ok(html.includes(config.terms.agreement));
   assert.ok(html.includes(config.privacy.notice));
+  assert.ok(html.includes(config.privacy.retentionNotice));
   assert.ok(html.includes('href="/#contacto"'));
   const contact = fs.readFileSync(path.join(root, "components/sections/ContactCTA.tsx"), "utf8");
   assert.match(contact, /id="contacto"/);
