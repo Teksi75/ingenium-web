@@ -58,6 +58,7 @@ export function Review({ data, errors, onChange, onEdit }: { data: Preinscripcio
     <section aria-labelledby="privacy-notice" className="space-y-3 text-sm leading-relaxed">
       <h3 id="privacy-notice" className="font-semibold">Aviso de privacidad</h3>
       <p>{config.privacy.notice}</p>
+      <p>{config.privacy.retentionNotice}</p>
       <a className="inline-flex min-h-11 items-center font-semibold text-[var(--brand-copper-deep)] underline underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-2" href={config.privacy.contactHref}>Contactar a Ingenium para ejercer tus derechos</a>
     </section>
     <div>

@@ -69,13 +69,21 @@ test("public program, terms and versioned privacy copy state the limits of prere
   assert.equal(terms.version, "1");
   assert.match(terms.fees, /mensuales.*comienzo de cada mes/);
   assert.match(terms.agreement, /posteriormente.*detalles del curso.*condiciones económicas/);
-  assert.equal(privacy.version, "2");
+  assert.equal(privacy.version, "3");
   assert.match(privacy.notice, /Instituto Ingenium.*preinscripción.*contactarte.*horarios/);
   assert.match(privacy.notice, /proveedor de alojamiento de datos.*por cuenta de Ingenium/);
   assert.doesNotMatch(privacy.notice, /Supabase/i);
   assert.match(privacy.notice, /No.*públicamente.*promociones/);
+  assert.match(privacy.notice, /no se ceden a terceros ni se usan comercialmente/);
   assert.match(privacy.notice, /acceso, la rectificación.*supresión/);
   assert.equal(privacy.contactHref, "/#contacto");
+  assert.equal(privacy.retention.nonEnrolledDays, 90);
+  assert.equal(privacy.retention.cancelledDays, 30);
+  assert.match(privacy.retentionNotice, /no se conservan indefinidamente/i);
+  assert.match(privacy.retentionNotice, /se eliminan 90 días después de iniciadas las clases/);
+  assert.match(privacy.retentionNotice, /se eliminan 90 días después de terminado el cursado/);
+  assert.match(privacy.retentionNotice, /se eliminan 30 días después de la cancelación/);
+  assert.match(privacy.retentionNotice, /Podés pedir la supresión antes de ese plazo/);
   assert.match(privacy.sensitiveDataNotice, /diagnósticos médicos.*certificados.*información sensible/);
 });
 
