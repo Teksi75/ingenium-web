@@ -1,3 +1,4 @@
 Contact: mailto:pablosiklosi@gmail.com
-Expires: Wed, 31 Dec 2026 23:59:59 GMT
-Policy: https://ingenium-web.vercel.app
+Preferred-Languages: es, en
+Expires: 2026-07-15
+Canonical: https://huella-mendoza-site.vercel.app/.well-known/security.txt
